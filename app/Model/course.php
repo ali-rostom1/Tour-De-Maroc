@@ -10,7 +10,7 @@ class course
     private string $statut;
     private array $Etape = [];
     
-    public function __construct($id , $nom ,$anne ,$nombreEtapes ,$statut ,$Etape)
+    public function __construct(int $id ,string $nom , int $anne ,int $nombreEtapes ,string $statut ,array $Etape)
     {
         $this->id = $id;
         $this->nom = $nom;
@@ -31,5 +31,5 @@ class course
             $this->$attr = $value;
         }
     }
-    
+
 }
