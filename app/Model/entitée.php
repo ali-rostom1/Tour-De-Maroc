@@ -11,8 +11,11 @@ class Etape
     private string $description;
     private array $cyclistes = [];
     private array $document = [];
+    private array $fans = [];
+    private array $categories = [];
+    
 
-    public function __construct(int $id,string $nom,float $distance,string $lieuDepart,string $lieuArrivee,string $status,string $description, array $cyclistes, array $document) {
+    public function __construct(int $id,string $nom,float $distance,string $lieuDepart,string $lieuArrivee,string $status,string $description, array $cyclistes, array $document,array $fans, array $categories) {
         $this->id = $id;
         $this->nom = $nom;
         $this->distance = $distance;
@@ -22,6 +25,8 @@ class Etape
         $this->description = $description;
         $this->cyclistes = $cyclistes;
         $this->document = $document;
+        $this->categories = $categories;
+        $this->fans = $fans; 
     }
 
     public function __get($attr)
