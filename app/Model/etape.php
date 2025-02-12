@@ -12,10 +12,10 @@ class Etape
     private array $cyclistes = [];
     private array $document = [];
     private array $fans = [];
-    private array $categories = [];
+    private Categorie $categorie;
     
 
-    public function __construct(int $id,string $nom,float $distance,string $lieuDepart,string $lieuArrivee,string $status,string $description, array $cyclistes, array $document,array $fans, array $categories) {
+    public function __construct(int $id,string $nom,float $distance,string $lieuDepart,string $lieuArrivee,string $status,string $description, array $cyclistes, array $document,array $fans, Categorie $categories) {
         $this->id = $id;
         $this->nom = $nom;
         $this->distance = $distance;
@@ -25,7 +25,7 @@ class Etape
         $this->description = $description;
         $this->cyclistes = $cyclistes;
         $this->document = $document;
-        $this->categories = $categories;
+        $this->categorie = $categorie;
         $this->fans = $fans; 
     }
 
