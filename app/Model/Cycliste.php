@@ -1,5 +1,7 @@
 <?php
-namespace Model;
+namespace App\Model;
+
+
 
 class Cycliste extends User {
     private string $dateNaissance;

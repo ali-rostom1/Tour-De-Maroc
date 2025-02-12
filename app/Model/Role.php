@@ -3,9 +3,9 @@ namespace App\Model;
 
 class Role {
     private int $id;
-    private string $nom;
+    private ?string $nom;
 
-    public function __construct(int $id, string $nom) {
+    public function __construct(int $id, ?string $nom) {
         $this->id = $id;
         $this->nom = $nom;
     }

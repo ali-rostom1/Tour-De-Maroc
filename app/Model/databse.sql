@@ -8,10 +8,14 @@ CREATE TYPE type_erreur AS ENUM ('ERREUR_TEMPS', 'ERREUR_CLASSEMENT', 'AUTRE');
 
 CREATE TABLE role (
     role_id SERIAL PRIMARY KEY,
-    nom VARCHAR(50) UNIQUE NOT NULL -- Ex: 'admin', 'cycliste', 'fan'
+    nom VARCHAR(50) UNIQUE NOT NULL 
 );
+INSERT INTO role (nom) VALUES ('admin');
+INSERT INTO role (nom) VALUES ('fan');
+INSERT INTO role (nom) VALUES ('cycliste');
 
-CREATE TABLE user (
+
+CREATE TABLE person (
     user_id SERIAL PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -35,8 +39,8 @@ CREATE TABLE equipe (
 );
 
 CREATE TABLE admin (
-    CHECK (role = 'admin')
-) INHERITS (user);
+    CHECK (role_id =1)
+) INHERITS (person);
 ALTER TABLE admin ADD PRIMARY KEY (user_id);
 
 
@@ -46,15 +50,16 @@ CREATE TABLE cycliste (
     equipe_id INTEGER REFERENCES equipe(equipe_id),
     poids DOUBLE PRECISION, 
     biographie TEXT,
-    CHECK (role = 'cycliste')
-) INHERITS (user);
+    CHECK (role_id =3)
+) INHERITS (person);
 ALTER TABLE cycliste ADD PRIMARY KEY (user_id);
 
 CREATE TABLE fan (
     pointsTotal INTEGER DEFAULT 0,
     badge_id INTEGER REFERENCES badge(badge_id) ON DELETE SET NULL DEFAULT NULL
-    CHECK (role = 'fan')
-) INHERITS (user);
+    CHECK (role_id =2)
+
+) INHERITS (person);
 
 ALTER TABLE fan ADD PRIMARY KEY (user_id);
 
@@ -64,7 +69,7 @@ CREATE TABLE historique (
     description TEXT,
     dateEvenement DATE NOT NULL,
     classement INTEGER ,
-    cycliste_id INTEGER REFERENCES cycliste(cycliste_id) ON DELETE CASCADE
+    cycliste_id INTEGER REFERENCES cycliste(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE course (
@@ -76,6 +81,13 @@ CREATE TABLE course (
     date_fin DATE NOT NULL,
     statut statut_general NOT NULL DEFAULT 'encours'
 );
+CREATE TABLE categorie (
+    categorie_id SERIAL PRIMARY KEY,
+    description TEXT,
+    type categorie_type NOT NULL,
+    basePoints INTEGER NOT NULL,
+    coefficient DOUBLE PRECISION NOT NULL
+);
 
 CREATE TABLE etape (
     etape_id SERIAL PRIMARY KEY,
@@ -83,7 +95,6 @@ CREATE TABLE etape (
     distance DOUBLE PRECISION NOT NULL,
     lieuDepart VARCHAR(255) NOT NULL,
     lieuArrivee VARCHAR(255) NOT NULL,
-    statut statut_general NOT NULL DEFAULT 'encours',
     description TEXT,
     categorie_id INTEGER REFERENCES categorie(categorie_id) ON DELETE CASCADE,
     course_id INTEGER REFERENCES course(course_id) ON DELETE CASCADE,
@@ -92,11 +103,11 @@ CREATE TABLE etape (
 
 CREATE TABLE document (
     document_id SERIAL PRIMARY KEY,
-    url VARCHAR(255) NOT NULL,
+    url VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE image (
-    user_id INTEGER REFERENCES user(user_id)  ON DELETE CASCADE,
+    user_id INTEGER REFERENCES person(user_id)  ON DELETE CASCADE,
     is_profil BOOLEAN DEFAULT false
 )INHERITS (document);
 
@@ -104,9 +115,9 @@ ALTER TABLE image ADD PRIMARY KEY (document_id);
 
 CREATE TABLE video (
     typeReference reference_type NOT NULL,
-    course_id INTEGER REFERENCES course(course_id) DEFAULT NULL ON DELETE CASCADE,
-    etape_id INTEGER REFERENCES etape(etape_id) DEFAULT NULL ON DELETE CASCADE,
-)INHERITS (document);
+    course_id INTEGER REFERENCES course(course_id) ON DELETE CASCADE DEFAULT NULL ,
+    etape_id INTEGER REFERENCES etape(etape_id)  ON DELETE CASCADE DEFAULT NULL
+) INHERITS (document);
 
 ALTER TABLE video ADD PRIMARY KEY (document_id);
 
@@ -117,7 +128,7 @@ CREATE TABLE performance_course (
     pointsTotal INTEGER NOT NULL,
     pointsGrimpeur INTEGER NOT NULL,
     pointsSprint INTEGER NOT NULL,
-    cycliste_id INTEGER REFERENCES cycliste(cycliste_id),
+    cycliste_id INTEGER REFERENCES cycliste(user_id),
     course_id INTEGER REFERENCES course(course_id)
 );
 
@@ -128,7 +139,7 @@ CREATE TABLE resultat_etape (
     pointsEtape INTEGER NOT NULL,
     classementEtape INTEGER NOT NULL,
     etape_id INTEGER REFERENCES etape(etape_id),
-    cycliste_id INTEGER REFERENCES cycliste(cycliste_id)
+    cycliste_id INTEGER REFERENCES cycliste(user_id)
 );
 
 
@@ -145,14 +156,7 @@ CREATE TABLE reponse (
     question_id INTEGER REFERENCES question(question_id)
 );
 
-CREATE TABLE categorie (
-    categorie_id SERIAL PRIMARY KEY,
-    nom VARCHAR(100) NOT NULL,
-    description TEXT,
-    type categorie_type NOT NULL,
-    basePoints INTEGER NOT NULL,
-    coefficient DOUBLE PRECISION NOT NULL
-);
+
 
 CREATE TABLE favoris (
     fan_id INTEGER REFERENCES fan(user_id),
@@ -169,24 +173,23 @@ CREATE TABLE signale (
     PRIMARY KEY (fan_id, etape_id)
 );
 CREATE TABLE signal (
-    id SERIAL PRIMARY KEY,
-    idFan INTEGER REFERENCES fan(user_id),
-    idEtape INTEGER REFERENCES etape(etape_id),
+    fan_id INTEGER REFERENCES fan(user_id),
+    etape_id INTEGER REFERENCES etape(etape_id),
     type type_erreur NOT NULL,
     description VARCHAR(255) NOT NULL,
-    statut statut_signal DEFAULT 'EN_ATTENTE',
-    dateCreation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    dateCreation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (fan_id,etape_id)
 );
 
 CREATE TABLE likes (
     fan_id INTEGER REFERENCES fan(user_id),
-    etape_id INTEGER REFERENCES etape(user_id),
+    etape_id INTEGER REFERENCES etape(etape_id),
     PRIMARY KEY (fan_id, etape_id)
 );
 
 CREATE TABLE inscription (
     fan_id INTEGER REFERENCES fan(user_id),
-    etape_id INTEGER REFERENCES etape(user_id),
+    etape_id INTEGER REFERENCES etape(etape_id),
     PRIMARY KEY (fan_id, etape_id)
 );
 
@@ -196,32 +199,7 @@ CREATE TABLE comment (
     statut comment_status ,
     dateCreation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fan_id INTEGER REFERENCES fan(user_id),
-    etape_id INTEGER REFERENCES etape(user_id)
+    etape_id INTEGER REFERENCES etape(etape_id)
 );
 
 
--- Example of inserting data with inheritance
--- Insert an admin
-INSERT INTO admin (nom, email, password, role)
-VALUES ('Admin Name', 'admin@example.com', 'hashedpassword', 'admin');
-
--- Insert a cyclist
-INSERT INTO cycliste (nom, email, password, role, dateNaissance, nationalite)
-VALUES ('Cyclist Name', 'cyclist@example.com', 'hashedpassword', 'cyclist', '1990-01-01', 'French');
-
--- Insert a fan
-INSERT INTO fan (nom, email, password, role, pointsTotal)
-VALUES ('Fan Name', 'fan@example.com', 'hashedpassword', 'fan', 0);
-
--- Query examples
--- Get all users including all types
-SELECT * FROM users;
-
--- Get only cyclists
-SELECT * FROM ONLY cycliste;
-
--- Get only fans
-SELECT * FROM ONLY fan;
-
--- Get only admins
-SELECT * FROM ONLY admin;

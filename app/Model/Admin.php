@@ -1,5 +1,5 @@
 <?php
-namespace Model;
+namespace App\Model;
 
 class Admin extends User {
     public function __construct(int $id, string $nom, string $email, string $password) {

@@ -2,7 +2,7 @@
 namespace App\Model;
 
 class Fan extends User {
-    private int $pointsTotal;
+    private ?int $pointsTotal;
     private ?int $badgeId;
 
     public function __construct(

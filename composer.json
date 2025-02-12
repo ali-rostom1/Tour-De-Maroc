@@ -2,7 +2,9 @@
     "name": "youco/tour-de-maroc",
     "autoload": {
         "psr-4": {
-            "App\\": "App/"
+           "App\\": "app/",
+            "Core\\": "core/",
+            "Config\\": "config/"
         }
     },
     "authors": [
