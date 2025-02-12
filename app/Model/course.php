@@ -8,9 +8,11 @@ class course
     private int $anne;
     private int $nombreEtapes;
     private string $statut;
+    private array $document = [];
     private array $Etape = [];
-    
-    public function __construct($id , $nom ,$anne ,$nombreEtapes ,$statut ,$Etape)
+    private array $cyclistes = [];
+
+    public function __construct(int $id ,string $nom , int $anne ,int $nombreEtapes ,string $statut ,array $Etape, array $document, array $cyclistes)
     {
         $this->id = $id;
         $this->nom = $nom;
@@ -18,6 +20,8 @@ class course
         $this->nombreEtapes = $nombreEtapes;
         $this->statut = $statut;
         $this->Etape = $Etape;
+        $this->document = $document;
+        $this->cyclistes = $cyclistes;
     }
 
 
@@ -31,5 +35,5 @@ class course
             $this->$attr = $value;
         }
     }
-    
+
 }
