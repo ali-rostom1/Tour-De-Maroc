@@ -1,5 +1,4 @@
 CREATE TYPE badge_type AS ENUM ('bronze', 'silver', 'gold');
-CREATE TYPE user_role AS ENUM ('admin', 'cycliste', 'fan');
 CREATE TYPE categorie_type AS ENUM ('MONTAGNE', 'PLAINE', 'TERRAIN', 'VELODROME');
 CREATE TYPE reference_type AS ENUM ('ETAPE', 'COURSE', 'CYCLISTE');
 CREATE TYPE media_type AS ENUM ('IMAGE', 'VIDEO');
@@ -7,14 +6,17 @@ CREATE TYPE comment_status AS ENUM ('active', 'hidden');
 CREATE TYPE statut_general AS ENUM ('encours', 'ferme');
 CREATE TYPE type_erreur AS ENUM ('ERREUR_TEMPS', 'ERREUR_CLASSEMENT', 'AUTRE');
 
-
+CREATE TABLE role (
+    role_id SERIAL PRIMARY KEY,
+    nom VARCHAR(50) UNIQUE NOT NULL -- Ex: 'admin', 'cycliste', 'fan'
+);
 
 CREATE TABLE user (
     user_id SERIAL PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role user_role NOT NULL
+    role_id INTEGER NOT NULL REFERENCES role(role_id)
 );
 
 
@@ -50,7 +52,7 @@ ALTER TABLE cycliste ADD PRIMARY KEY (user_id);
 
 CREATE TABLE fan (
     pointsTotal INTEGER DEFAULT 0,
-    badge_id INTEGER REFERENCES badge(badge_id) ON DELETE SET NULL,
+    badge_id INTEGER REFERENCES badge(badge_id) ON DELETE SET NULL DEFAULT NULL
     CHECK (role = 'fan')
 ) INHERITS (user);
 

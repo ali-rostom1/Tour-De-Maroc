@@ -1,14 +1,14 @@
 <?php
-namespace Model;
+namespace App\Model;
 
 class User {
     protected int $id;
     protected string $nom;
     protected string $email;
     protected string $password;
-    protected string $role;
+    protected Role $role;
 
-    public function __construct($id, $nom, $email, $password, $role) {
+    public function __construct(int $id, string $nom, string $email, string $password, Role $role) {
         $this->id = $id;
         $this->nom = $nom;
         $this->email = $email;
@@ -32,7 +32,7 @@ class User {
         return $this->password;
     }
 
-    public function getRole(): string {
+    public function getRole(): Role {
         return $this->role;
     }
 }
