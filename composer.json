@@ -1,19 +1,19 @@
 {
-    "name": "youco/tour-de-maroc",
+    "name": "aliro/tour-de-maroc",
+    "require": {
+        "symfony/var-dumper": "^7.2"
+    },
     "autoload": {
         "psr-4": {
-           "App\\": "app/",
+            "App\\": "app/",
             "Core\\": "core/",
             "Config\\": "config/"
         }
     },
     "authors": [
         {
-            "name": "laamiri-kaoutar",
-            "email": "kaoutarlaamiri355@gmail.com"
+            "name": "ali-rostom1",
+            "email": "ali.rostom220@gmail.com"
         }
-    ],
-    "require": {
-        "php": ">=7.4"
-    }
+    ]
 }

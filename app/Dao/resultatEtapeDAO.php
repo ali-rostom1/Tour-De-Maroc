@@ -12,8 +12,12 @@ class ResultatEtapeDAO {
 
     public function getResultatEtapes() {
         $stmt = $this->db->prepare("
-            SELECT re.id, re.tempsDepart, re.tempsArrivee, re.pointsEtape, re.classementEtape, 
-                   e.nom AS etape_nom, c.nom AS cycliste_nom 
+            SELECT  
+                re.*, 
+                e.*, 
+                c.*, 
+                e.nom AS etape_nom, 
+                c.nom AS cycliste_nom 
             FROM resultat_etape re
             INNER JOIN etape e ON re.etape_id = e.etape_id
             INNER JOIN cycliste c ON re.cycliste_id = c.user_id
