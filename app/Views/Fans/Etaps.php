@@ -208,5 +208,163 @@
             </div>
         </div>
     </footer>
+    <!-- Ajoutez ce HTML juste avant la fermeture du body -->
+<div id="commentsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-lg w-full max-w-lg relative max-h-[80vh] flex flex-col">
+        <!-- En-tête -->
+        <div class="flex justify-between items-center p-4 border-b">
+            <h3 class="text-xl font-bold">Commentaires</h3>
+            <button onclick="closeCommentsModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- Liste des commentaires -->
+        <div class="overflow-y-auto p-4 flex-1">
+            <div id="commentsList" class="space-y-4">
+                <!-- Les commentaires seront insérés ici dynamiquement -->
+            </div>
+        </div>
+        
+        <!-- Formulaire de commentaire -->
+        <div class="border-t p-4">
+            <form id="commentForm" class="flex gap-2" onsubmit="handleCommentSubmit(event)">
+                <input 
+                    type="text" 
+                    id="newComment"
+                    placeholder="Votre commentaire..." 
+                    class="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                >
+                <button 
+                    type="submit"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Données simulées des commentaires
+const commentsData = {
+    'etape1': [
+        { author: 'Sophie', text: 'Superbe étape!', date: '2025-02-13' },
+        { author: 'Marc', text: 'Le paysage est magnifique', date: '2025-02-13' }
+    ],
+    'etape2': [
+        { author: 'Julie', text: 'Une étape inoubliable', date: '2025-02-13' }
+    ]
+};
+
+// Sélectionner tous les boutons de commentaire
+document.querySelectorAll('.fa-comment').forEach(button => {
+    button.parentElement.addEventListener('click', (e) => {
+        const stageId = e.currentTarget.closest('.bg-white').dataset.stageId || 'etape1';
+        openCommentsModal(stageId);
+    });
+});
+
+let currentStageId = null;
+
+function openCommentsModal(stageId) {
+    currentStageId = stageId;
+    const modal = document.getElementById('commentsModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    renderComments(stageId);
+}
+
+function closeCommentsModal() {
+    const modal = document.getElementById('commentsModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    currentStageId = null;
+}
+
+function renderComments(stageId) {
+    const commentsList = document.getElementById('commentsList');
+    commentsList.innerHTML = '';
+    
+    const comments = commentsData[stageId] || [];
+    
+    comments.forEach(comment => {
+        const commentElement = createCommentElement(comment);
+        commentsList.appendChild(commentElement);
+    });
+}
+
+function createCommentElement(comment) {
+    const div = document.createElement('div');
+    div.className = 'bg-gray-50 rounded-lg p-4';
+    div.innerHTML = `
+        <div class="flex justify-between items-start mb-2">
+            <div class="font-bold">${comment.author}</div>
+            <div class="text-sm text-gray-500">${formatDate(comment.date)}</div>
+        </div>
+        <p class="text-gray-700">${comment.text}</p>
+    `;
+    return div;
+}
+
+function handleCommentSubmit(event) {
+    event.preventDefault();
+    
+    if (!currentStageId) return;
+    
+    const input = document.getElementById('newComment');
+    const commentText = input.value.trim();
+    
+    if (!commentText) return;
+    
+    const newComment = {
+        author: 'Vous',
+        text: commentText,
+        date: new Date().toISOString().split('T')[0]
+    };
+    
+    if (!commentsData[currentStageId]) {
+        commentsData[currentStageId] = [];
+    }
+    
+    commentsData[currentStageId].push(newComment);
+    
+    // Mettre à jour l'affichage
+    renderComments(currentStageId);
+    
+    // Réinitialiser le formulaire
+    input.value = '';
+    
+    // Mettre à jour le compteur de commentaires
+    updateCommentCount(currentStageId);
+}
+
+function updateCommentCount(stageId) {
+    const stageElement = document.querySelector(`[data-stage-id="${stageId}"]`);
+    if (stageElement) {
+        const countElement = stageElement.querySelector('.fa-comment').nextElementSibling;
+        const commentCount = commentsData[stageId]?.length || 0;
+        countElement.textContent = commentCount;
+    }
+}
+
+function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString('fr-FR');
+}
+
+// Fermer la modale si on clique en dehors
+document.getElementById('commentsModal').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) {
+        closeCommentsModal();
+    }
+});
+
+// Empêcher la propagation du clic depuis la boîte de dialogue
+document.querySelector('#commentsModal > div').addEventListener('click', (e) => {
+    e.stopPropagation();
+});
+</script>
 </body>
 </html>
