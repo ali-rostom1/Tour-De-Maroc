@@ -4,13 +4,14 @@ namespace  App\Controllers;
 use App\Service\AuthService;
 use Exception;
 use Config\Database; 
+use Core\Controller;
 
-class AuthController {
+class AuthController extends Controller{
     private AuthService $authService;
 
     public function __construct() {
-        $pdo = Database::getInstance()->getConnection(); // Récupère la connexion PDO
-        $this->authService = new AuthService($pdo); // Passe la connexion
+        $pdo = Database::getInstance()->getConnection(); 
+        $this->authService = new AuthService($pdo); 
     }
 
     public function create() {
@@ -18,9 +19,9 @@ class AuthController {
 
         try {
             $registerFan = $this->authService->register(
-                "Kaoutar",
-                "kaoutar@gmail.com",
-                "kaoutar123",
+                "Ali",
+                "Ali@gmail.com",
+                "ali123",
                 2, // ID du rôle Fan
                 [
                     "pointsTotal" => 600,
@@ -33,8 +34,12 @@ class AuthController {
             echo "❌ Erreur : " . $e->getMessage() . "\n";
         }
     }
+     function resetpasssword(){
+        $email = $_POST['email'];
+        
+        }
+
 }
 
 // Lancer le test
-$controller = new AuthController();
-$controller->create();
+
