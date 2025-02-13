@@ -56,16 +56,16 @@
         <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
             <div class="container mx-auto">
                 <div class="flex items-end gap-6">
-                    <img src="https://media.istockphoto.com/id/119197734/photo/racing.jpg?s=612x612&w=0&k=20&c=uaEhjoT3zRCKJCoq5u2lcpDFU7rXA_uq35UTbz6pVEE=" alt="Tadej Pogačar portrait" class="w-32 h-32 rounded-full border-4 border-white shadow-lg">
+                    <img src="<?php echo $cycliste->img;?>" alt="Tadej Pogačar portrait" class="w-32 h-32 rounded-full border-4 border-white shadow-lg">
                     <div>
                         <div class="flex items-center gap-4 mb-2">
-                            <span class="text-2xl">🇸🇮</span>
+                            <span class="text-2xl">TM</span>
                             <span class="bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold">
-                                #1 MONDIAL
+                                <?php echo $cycliste->id; ?> MONDIAL
                             </span>
                         </div>
-                        <h1 class="text-4xl font-bold mb-2">Tadej POGAČAR</h1>
-                        <p class="text-xl opacity-90">UAE Team Emirates</p>
+                        <h1 class="text-4xl font-bold mb-2"><?php echo $cycliste->name ?></h1>
+                        <p class="text-xl opacity-90"><?php echo $cycliste->nationalite;?></p>
                     </div>
                 </div>
             </div>
@@ -85,55 +85,27 @@
                             <i class="fas fa-calendar-alt w-6 text-gray-500"></i>
                             <div>
                                 <p class="text-sm text-gray-600">Date de naissance</p>
-                                <p class="font-medium">13 septembre 1998 (24 ans)</p>
+                                <p class="font-medium"><?php echo $cycliste->dateNaissance;?></p>
                             </div>
                         </div>
                         <div class="flex items-center gap-4">
                             <i class="fas fa-map-marker-alt w-6 text-gray-500"></i>
                             <div>
                                 <p class="text-sm text-gray-600">Lieu de naissance</p>
-                                <p class="font-medium">Klanec, Slovénie</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <i class="fas fa-ruler-vertical w-6 text-gray-500"></i>
-                            <div>
-                                <p class="text-sm text-gray-600">Taille</p>
-                                <p class="font-medium">176 cm</p>
+                                <p class="font-medium"><?php echo $cycliste->nationalite;?></p>
                             </div>
                         </div>
                         <div class="flex items-center gap-4">
                             <i class="fas fa-weight w-6 text-gray-500"></i>
                             <div>
                                 <p class="text-sm text-gray-600">Poids</p>
-                                <p class="font-medium">66 kg</p>
+                                <p class="font-medium"><?php echo $cycliste->poids;?></p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Carte Statistiques -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h2 class="text-xl font-bold mb-6 border-b pb-2">Statistiques 2024</h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="text-center p-4 bg-gray-50 rounded-lg">
-                            <div class="text-3xl font-bold text-yellow-500 mb-1">63</div>
-                            <div class="text-sm text-gray-600">Victoires</div>
-                        </div>
-                        <div class="text-center p-4 bg-gray-50 rounded-lg">
-                            <div class="text-3xl font-bold text-yellow-500 mb-1">2</div>
-                            <div class="text-sm text-gray-600">Tours gagnés</div>
-                        </div>
-                        <div class="text-center p-4 bg-gray-50 rounded-lg">
-                            <div class="text-3xl font-bold text-yellow-500 mb-1">#1</div>
-                            <div class="text-sm text-gray-600">Classement UCI</div>
-                        </div>
-                        <div class="text-center p-4 bg-gray-50 rounded-lg">
-                            <div class="text-3xl font-bold text-yellow-500 mb-1">12</div>
-                            <div class="text-sm text-gray-600">Victoires 2024</div>
-                        </div>
-                    </div>
-                </div>
+            
             </div>
 
             <!-- Colonne Principale -->
@@ -142,38 +114,8 @@
                 <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
                     <h2 class="text-xl font-bold mb-6">Biographie</h2>
                     <div class="prose max-w-none">
-                        <p class="mb-4">Tadej Pogačar est largement considéré comme l'un des plus grands talents du cyclisme moderne. Né en Slovénie, il a commencé le cyclisme à l'âge de 9 ans et a rapidement gravi les échelons du sport.</p>
-                        <p class="mb-4">Vainqueur du Tour de France à seulement 21 ans, il est devenu le plus jeune vainqueur depuis 1904. Sa capacité à exceller dans tous les terrains - que ce soit en montagne, contre-la-montre ou sur le plat - en fait un coureur complet et redoutable.</p>
-                        <p>Son style de course agressif et sa capacité à attaquer de loin ont révolutionné le cyclisme moderne, rappelant l'époque des grands champions d'antan.</p>
-                    </div>
-                </div>
-
-                <!-- Palmarès -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h2 class="text-xl font-bold mb-6">Palmarès Majeur</h2>
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                            <i class="fas fa-trophy text-yellow-500 text-2xl"></i>
-                            <div>
-                                <p class="font-bold">Tour de Morocco</p>
-                                <p class="text-gray-600">Vainqueur 2020, 2021</p>
-                            </div>
+                        <p class="mb-4"><?php echo $cycliste->biographie;?></p>
                         </div>
-                        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                            <i class="fas fa-medal text-yellow-500 text-2xl"></i>
-                            <div>
-                                <p class="font-bold">Monuments</p>
-                                <p class="text-gray-600">Tour des Flandres 2023, Liège-Bastogne-Liège 2021</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                            <i class="fas fa-award text-yellow-500 text-2xl"></i>
-                            <div>
-                                <p class="font-bold">Courses par étapes</p>
-                                <p class="text-gray-600">Paris-Nice 2023, Tirreno-Adriatico 2022, 2023</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
