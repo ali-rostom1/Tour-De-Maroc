@@ -1,0 +1,19 @@
+{
+    "name": "youco/tour-de-maroc",
+    "autoload": {
+        "psr-4": {
+           "App\\": "app/",
+            "Core\\": "core/",
+            "Config\\": "config/"
+        }
+    },
+    "authors": [
+        {
+            "name": "laamiri-kaoutar",
+            "email": "kaoutarlaamiri355@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    }
+}

@@ -1,3 +1,4 @@
+
 <?php
 
 namespace Core;
@@ -35,7 +36,7 @@ class Router {
                 unset($url[1]);
             } else {
                 require_once '../app/Controllers/NotFoundController.php';
-                $this->currentController = new \app\controller\NotFoundController();
+                $this->currentController = new \app\Controllers\NotFoundController();
                 $this->currentMethod = 'index';
             }
 
