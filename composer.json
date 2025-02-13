@@ -11,8 +11,9 @@
         {
             "name": "laamiri-kaoutar",
             "email": "kaoutarlaamiri355@gmail.com"
-
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=7.4"
+    }
 }
