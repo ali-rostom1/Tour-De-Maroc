@@ -1,28 +1,27 @@
 <?php 
-    namespace App\Dao\Implementation;
+    namespace App\Dao;
 
-    use App\Dao\Interface\EtapeDao;
     use App\Model\Etape;
-    use Core\Database;
-    use App\Dao\Implementation\CyclisteDaoImpl;
-    use App\Dao\Implementation\MediaDaoImpl;
-    use App\Dao\Implementation\FansDaoImpl;
-    use App\Dao\Implementation\CategorieDaoImpl;
+    use Config\Database;
+    use App\Dao\CyclisteDao;
+    use App\Dao\MediaDao;
+    use App\Dao\FanDao;
+    use App\Dao\CategorieDao;
 
-    class EtapeDaoImpl implements EtapeDao{
+    class EtapeDao{
 
         private \PDO $db;
-        private CyclisteDaoImpl $cyclisteDaoImpl;
-        private MediaDaoImpl $mediaDaoImpl;
-        private FansDaoImpl $fanDaoImpl;
-        private CategorieDaoImpl $categorieDaoImpl;
+        private CyclisteDao $cyclisteDaoImpl;
+        private MediaDao $mediaDaoImpl;
+        private FanDao $fanDaoImpl;
+        private CategorieDao $categorieDaoImpl;
 
         public function __construct(){
             $this->db = Database::getInstance(); 
-            $this->cyclisteDaoImpl = new CyclisteDaoImpl();
-            $this->mediaDaoImpl = new MediaDaoImpl();
-            $this->fanDaoImpl = new FansDaoImpl;
-            $this->categorieDaoImpl = new CategorieDaoImpl();
+            $this->cyclisteDaoImpl = new CyclisteDao();
+            $this->mediaDaoImpl = new MediaDao();
+            $this->fanDaoImpl = new FanDao;
+            $this->categorieDaoImpl = new CategorieDao();
         }
         private function mapRowToEtape(array $row) : Etape
         {
