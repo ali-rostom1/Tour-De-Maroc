@@ -1,26 +1,26 @@
 <?php 
 
-    namespace App\Dao\Implementation;
+    namespace App\Dao;
 
     use App\Model\Course;
     use App\Model\Cycliste;
-    use App\Dao\interface\CourseDao;
-    use App\Dao\Implementation\EtapeDaoImpl;
-    use App\Dao\Implementation\CyclisteDaoImpl;
-    use App\Dao\Implementation\MediaDaoImpl;    
+    use App\Dao\EtapeDao;
+    use App\Dao\CyclisteDao;
+    use App\Dao\MediaDao;  
+    use Config\Database;  
 
-    class CourseDaoImpl implements CourseDao{
+    class CourseDao{
 
         private \PDO $db;
-        private EtapeDaoImpl $etapeDaoImpl;
-        private CyclisteDaoImpl $cyclisteDaoImpl;
-        private MediaDaoImpl $mediaDaoImpl;
+        private EtapeDao $etapeDaoImpl;
+        private CyclisteDao $cyclisteDaoImpl;
+        private MediaDao $mediaDaoImpl;
 
         public function __construct(){
             $this->db = Database::getInstance();
-            $this->etapeDaoImpl = new EtapeDaoImpl();
-            $this->cyclisteDaoImpl = new CyclisteDaoImpl();
-            $this->mediaDaoImpl = new MediaDaoImpl();
+            $this->etapeDaoImpl = new EtapeDao();
+            $this->cyclisteDaoImpl = new CyclisteDao();
+            $this->mediaDaoImpl = new MediaDao();
         }
         private function mapRowToCourse(array $row) : Course
         {
