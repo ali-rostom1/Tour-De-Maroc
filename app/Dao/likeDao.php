@@ -5,7 +5,6 @@ namespace App\DAO;
 use App\Model\Like;
 use App\Model\Fan;
 use App\Model\Etape;
-use Etape as GlobalEtape;
 use PDO;
 
 class LikeDAO {
@@ -13,7 +12,7 @@ class LikeDAO {
     private $fanDAO;
     private $etapeDAO;
 
-    public function __construct(PDO $pdo, FanDAO $fanDAO, EtapeDAO $etapeDAO) {
+    public function __construct(PDO $pdo = null, FanDAO $fanDAO = null, EtapeDAO $etapeDAO = null) {
         $this->pdo = $pdo;
         $this->fanDAO = $fanDAO;
         $this->etapeDAO = $etapeDAO;
@@ -21,7 +20,7 @@ class LikeDAO {
 
     private function createObject($row) {
         $fan = $this->fanDAO->findById($row['fan_id']);
-        $etape = $this->etapeDAO->find($row['etape_id']);
+        $etape = $this->etapeDAO->getByID($row['etape_id']);
         return new Like($fan, $etape);
     }
 
@@ -52,23 +51,23 @@ class LikeDAO {
         return $likes;
     }
 
-    public function addLike(Fan $fan) {
+    public function addLike(Fan $fan,Etape $Etape) {
         $stmt = $this->pdo->prepare("INSERT INTO likes (fan_id, etape_id) VALUES (:fan, :etape)");
         $stmt->bindParam(":fan", $fan->getId(), PDO::PARAM_INT);
-        $stmt->bindParam(":etape", $this->etapeDAO->id, PDO::PARAM_INT);
+        $stmt->bindParam(":etape", $Etape->id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 
-    public function removeLike(Fan $fan, $etapeId) {
+    public function removeLike(Fan $fan,Etape $Etape) {
         $stmt = $this->pdo->prepare("DELETE FROM likes WHERE fan_id = :fan AND etape_id = :etape");
-        $stmt->bindParam(":etape", $this->etapeDAO->id, PDO::PARAM_INT);
+        $stmt->bindParam(":etape", $Etape->id, PDO::PARAM_INT);
         $stmt->bindParam(":fan", $fan->getId(), PDO::PARAM_INT);
         return $stmt->execute();
     }
 
-    public function exists(Fan $fan) {
+    public function exists(Fan $fan,Etape $Etape) {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM likes WHERE fan_id = :fan AND etape_id = :etape");
-        $stmt->bindParam(":etape", $this->etapeDAO->id, PDO::PARAM_INT);
+        $stmt->bindParam(":etape", $Etape->id, PDO::PARAM_INT);
         $stmt->bindParam(":fan", $fan->getId(), PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchColumn() > 0;
