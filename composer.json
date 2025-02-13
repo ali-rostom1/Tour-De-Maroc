@@ -1,17 +1,16 @@
 {
-    "name": "ycode/tour-de-maroc",
-    "version": "1.0.0",
+    "name": "youco/tour-de-maroc",
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
+           "App\\": "app/",
             "Core\\": "core/",
             "Config\\": "config/"
         }
     },
     "authors": [
         {
-            "name": "Hamza Lhadouchi",
-            "email": "hamzabniss16@gmail.com"
+            "name": "laamiri-kaoutar",
+            "email": "kaoutarlaamiri355@gmail.com"
         }
     ],
     "require": {
