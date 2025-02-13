@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Model\ResultatEtapeDAO;
+use App\Dao\ResultatEtapeDAO;
 use App\Model\ResultatEtape;
 
 class ResultatEtapeService {
