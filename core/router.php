@@ -36,7 +36,7 @@ class Router {
                 unset($url[1]);
             } else {
                 require_once '../app/Controllers/NotFoundController.php';
-                $this->currentController = new \app\Controllers\NotFoundController();
+                $this->currentController = new \app\Controller\NotFoundController();
                 $this->currentMethod = 'index';
             }
 
