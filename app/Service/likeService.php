@@ -6,6 +6,7 @@ use App\DAO\LikeDAO;
 use App\DAO\FanDAO;
 use App\DAO\EtapeDAO;
 use App\Model\Like;
+use PDO;
 
 class LikeService {
     private $likeDAO;

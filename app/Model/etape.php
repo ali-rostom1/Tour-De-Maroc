@@ -1,6 +1,8 @@
 <?php
 namespace App\Model;
+
 use App\Model\Categorie;
+
 class Etape
 {
     private int $id;
