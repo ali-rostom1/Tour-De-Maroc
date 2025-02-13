@@ -5,6 +5,7 @@ namespace App\DAO;
 use App\Model\Like;
 use App\Model\Fan;
 use App\Model\Etape;
+use Etape as GlobalEtape;
 use PDO;
 
 class LikeDAO {
@@ -19,7 +20,7 @@ class LikeDAO {
     }
 
     private function createObject($row) {
-        $fan = $this->fanDAO->find($row['fan_id']);
+        $fan = $this->fanDAO->findById($row['fan_id']);
         $etape = $this->etapeDAO->find($row['etape_id']);
         return new Like($fan, $etape);
     }
@@ -36,9 +37,11 @@ class LikeDAO {
         return $likes;
     }
 
-    public function findByFan($fanId) {
-        $stmt = $this->pdo->prepare("SELECT * FROM likes WHERE fan_id = ?");
-        $stmt->execute([$fanId]);
+
+    public function findByFan(Fan $fan) {
+        $stmt = $this->pdo->prepare("SELECT * FROM likes WHERE fan_id = :fan_id");
+        $stmt->bindParam(":fan_id", $fan->getId(), PDO::PARAM_INT);
+        $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $likes = [];
@@ -49,19 +52,32 @@ class LikeDAO {
         return $likes;
     }
 
-    public function addLike($fanId, $etapeId) {
-        $stmt = $this->pdo->prepare("INSERT INTO likes (fan_id, etape_id) VALUES (?, ?)");
-        return $stmt->execute([$fanId, $etapeId]);
+    public function addLike(Fan $fan) {
+        $stmt = $this->pdo->prepare("INSERT INTO likes (fan_id, etape_id) VALUES (:fan, :etape)");
+        $stmt->bindParam(":fan", $fan->getId(), PDO::PARAM_INT);
+        $stmt->bindParam(":etape", $this->etapeDAO->id, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 
-    public function removeLike($fanId, $etapeId) {
-        $stmt = $this->pdo->prepare("DELETE FROM likes WHERE fan_id = ? AND etape_id = ?");
-        return $stmt->execute([$fanId, $etapeId]);
+    public function removeLike(Fan $fan, $etapeId) {
+        $stmt = $this->pdo->prepare("DELETE FROM likes WHERE fan_id = :fan AND etape_id = :etape");
+        $stmt->bindParam(":etape", $this->etapeDAO->id, PDO::PARAM_INT);
+        $stmt->bindParam(":fan", $fan->getId(), PDO::PARAM_INT);
+        return $stmt->execute();
     }
 
-    public function exists($fanId, $etapeId) {
-        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM likes WHERE fan_id = ? AND etape_id = ?");
-        $stmt->execute([$fanId, $etapeId]);
+    public function exists(Fan $fan) {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM likes WHERE fan_id = :fan AND etape_id = :etape");
+        $stmt->bindParam(":etape", $this->etapeDAO->id, PDO::PARAM_INT);
+        $stmt->bindParam(":fan", $fan->getId(), PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchColumn() > 0;
+    }
+
+    public function AjaxLike(Etape $Etap) {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM likes WHERE etape_id = :etap_id");
+        $stmt->bindParam(":etap_id", $Etap->id, PDO::PARAM_INT);
+        $stmt->execute();
         return $stmt->fetchColumn() > 0;
     }
 }
