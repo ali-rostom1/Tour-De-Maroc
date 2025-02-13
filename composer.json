@@ -1,0 +1,19 @@
+{
+    "name": "ycode/tour-de-maroc",
+    "autoload": {
+
+        "psr-4": {
+            "Ycode\\TourDeMaroc\\": "src/",
+            "App\\": "app/",
+            "Core\\": "core/",
+            "Config\\": "config/"
+        }
+    },
+    "authors": [
+        {
+            "name": "laamiri-kaoutar",
+            "email": "kaoutarlaamiri355@gmail.com"
+        }
+    ],
+    "require": {}
+}
