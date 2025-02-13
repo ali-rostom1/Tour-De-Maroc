@@ -3,7 +3,10 @@ namespace App\Model;
 
 use App\Model\Categorie;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> fdeee54bcf875ad624615c60433cfe242983fded
 class Etape
 {
     private int $id;

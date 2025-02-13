@@ -80,7 +80,3 @@ class LikeDAO {
         return $stmt->fetchColumn() > 0;
     }
 }
-$fan = new Fan();
-$etape = new Etape();
-$user = new LikeDAO();
-$result   = $user->exists($fan,$etape);
