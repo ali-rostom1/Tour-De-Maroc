@@ -6,11 +6,11 @@ class Fan extends User {
     private ?int $badgeId;
 
     public function __construct(
-        int $id,
-        string $nom,
-        string $email,
-        string $password,
-        Role $role,
+        int $id=null,
+        string $nom=null,
+        string $email=null,
+        string $password=null,
+        Role $role=null,
         int $pointsTotal = 0,
         ?int $badgeId = null
     ) {

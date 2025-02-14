@@ -3,11 +3,14 @@
 namespace App\DAO;
 use Config\Database;
 
+use Config\Database;
+
 
 use App\Model\Equipe;
 use PDO;
 
 class EquipeDAO {
+    private PDO $pdo;
     private PDO $pdo;
 
     public function __construct() {

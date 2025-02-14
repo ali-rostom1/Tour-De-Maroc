@@ -2,18 +2,22 @@
 namespace App\Model;
 
 use PDO;
+use App\DAO\EtapeDAO;
+use App\DAO\CyclisteDAO;
+
 
 class ResultatEtapeDAO {
     private $db;
+    private $etapeDAO;
 
     public function __construct($db) {
+        $this->etapeDAO = new EtapeDAO($db);
         $this->db = $db;
     }
 
     public function getResultatEtapes() {
         $stmt = $this->db->prepare("
-            SELECT re.id, re.tempsDepart, re.tempsArrivee, re.pointsEtape, re.classementEtape, 
-                   e.nom AS etape_nom, c.nom AS cycliste_nom 
+            SELECT  *
             FROM resultat_etape re
             INNER JOIN etape e ON re.etape_id = e.etape_id
             INNER JOIN cycliste c ON re.cycliste_id = c.user_id
@@ -23,27 +27,52 @@ class ResultatEtapeDAO {
 
         $resultats = [];
         foreach ($rows as $row) {
-            $etape = new Etape($row['etape_nom']); // Assuming Etape constructor has these properties
-            $cycliste = new Cycliste($row['cycliste_nom']); // Assuming Cycliste constructor has these properties
 
-            $resultats[] = new ResultatEtape(
-                $row['id'], 
-                $row['tempsDepart'], 
-                $row['tempsArrivee'], 
-                $row['pointsEtape'], 
-                $row['classementEtape'],
-                $etape,
-                $cycliste
-            );
+            $resultats[] = $this->createObject($row);
         }
 
         return $resultats;
     }
 
+    
+
+    public function createObject($row){
+
+        $etape = $this->etapeDAO->getByID($row['etape_id']);
+        $cycliste = $this->cyclisteDAO->getCyclisteById($row['user_id']);
+      
+        return $resultatEtape = new ResultatEtape(
+            $row['id'], 
+            $row['tempsDepart'], 
+            $row['tempsArrivee'], 
+            $row['pointsEtape'], 
+            $row['classementEtape'],
+            $etape,
+            $cycliste
+        );
+
+    }
+
+    public function getResultatEtapeByCyclisteId($id) {
+        $stmt = $this->db->prepare("
+            SELECT * 
+            FROM resultat_etape re
+            INNER JOIN etape e ON re.etape_id = e.etape_id
+            INNER JOIN cycliste c ON re.cycliste_id = c.user_id
+            WHERE c.user_id = :id
+        ");
+        $stmt->execute([':id' => $id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row) {
+            return $this->createObject($row);   
+        }
+        return null;
+    }
+
     public function getResultatEtapeById($id) {
         $stmt = $this->db->prepare("
-            SELECT re.id, re.tempsDepart, re.tempsArrivee, re.pointsEtape, re.classementEtape, 
-                   e.nom AS etape_nom, c.nom AS cycliste_nom 
+            SELECT * 
             FROM resultat_etape re
             INNER JOIN etape e ON re.etape_id = e.etape_id
             INNER JOIN cycliste c ON re.cycliste_id = c.user_id
@@ -53,19 +82,8 @@ class ResultatEtapeDAO {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($row) {
-            $etape = new Etape($row['etape_nom']);
-            $cycliste = new Cycliste($row['cycliste_nom']);
-            return new ResultatEtape(
-                $row['id'],
-                $row['tempsDepart'],
-                $row['tempsArrivee'],
-                $row['pointsEtape'],
-                $row['classementEtape'],
-                $etape,
-                $cycliste
-            );
+            return $this->createObject($row);   
         }
-
         return null;
     }
 

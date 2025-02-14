@@ -2,11 +2,11 @@
 namespace App\Model;
 
 class User {
-    protected int $id;
-    protected string $nom;
-    protected string $email;
-    protected string $password;
-    protected Role $role;
+    protected ?int $id;
+    protected ?string $nom;
+    protected ?string $email;
+    protected ?string $password;
+    protected ?Role $role;
 
     public function __construct(int $id, string $nom, string $email, string $password, Role $role) {
         $this->id = $id;
@@ -35,4 +35,30 @@ class User {
     public function getRole(): Role {
         return $this->role;
     }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    public function setNom($nom)
+    {
+        $this->nom = $nom;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    public function setRole( $role)
+    {
+        $this->role = $role;
+    }
 }
+

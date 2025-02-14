@@ -39,4 +39,20 @@ class UserDAO {
         }
     }
 
+    public function getUserById(int $id) :?User
+    {
+        $stmt = $this->pdo->prepare("SELECT u.*, r.nom as role_nom FROM person u
+                                    JOIN role r ON u.role_id = r.role_id
+                                    WHERE u.user_id = ?");
+        $stmt->execute([$id]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($data) {
+            $role = new Role($data['role_id'], $data['role_nom']);
+            return new User($data['user_id'], $data['nom'], $data['email'], $data['password'], $role);
+        }
+        return null;
+    }
+
+ 
 }
