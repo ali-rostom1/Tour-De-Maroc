@@ -13,4 +13,11 @@ class HomeController extends Controller{
         
     }
 
+    public function index(){
+        $data = ["title"=>"welcome"];
+        require_once '../app/Views/Admin/Admin_Dashboard.php';
+
+        // return $this->view("register",$data);
+    }
+
 }

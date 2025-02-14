@@ -5,12 +5,15 @@ namespace App\DAO;
 use App\Model\Reponse;
 use App\Model\Question;
 use PDO;
+use Config\Database;
+
 
 class ReponseDAO {
-    private $pdo;
+    private PDO $pdo;
 
     public function __construct(PDO $pdo) {
-        $this->pdo = $pdo;
+        $this->pdo = Database::getInstance(); 
+
     }
 
     public function find($reponse_id) {

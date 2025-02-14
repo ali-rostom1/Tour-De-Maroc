@@ -8,8 +8,8 @@ use App\Model\Equipe;
 class EquipeService {
     private $equipeDAO;
 
-    public function __construct(EquipeDAO $equipeDAO) {
-        $this->equipeDAO = $equipeDAO;
+    public function __construct() {
+        $this->equipeDAO = new EquipeDAO();
     }
 
     public function getAllEquipes() {
