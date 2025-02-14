@@ -45,25 +45,25 @@
         <aside class="w-64 bg-white h-screen shadow-lg">
             <nav class="p-4">
                 <div class="space-y-4">
-                    <a href="#" class="flex items-center space-x-2 bg-[#FED100] text-black p-3 rounded-lg">
+                    <a href="Admin_Dashboard.php" class="flex items-center space-x-2 bg-[#FED100] text-black p-3 rounded-lg">
                         <i class="fas fa-home"></i>
                         <span>Vue d'ensemble</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-2 text-gray-600 hover:bg-gray-100 p-3 rounded-lg">
+                    <a href="Utilisateurs.php" class="flex items-center space-x-2 text-gray-600 hover:bg-gray-100 p-3 rounded-lg">
                         <i class="fas fa-users"></i>
                         <span>Utilisateurs</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-2 text-gray-600 hover:bg-gray-100 p-3 rounded-lg">
+                    <a href="Etapes.php" class="flex items-center space-x-2 text-gray-600 hover:bg-gray-100 p-3 rounded-lg">
                         <i class="fas fa-bicycle"></i>
                         <span>Étapes</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-2 text-gray-600 hover:bg-gray-100 p-3 rounded-lg">
+                    <a href="Classements.php" class="flex items-center space-x-2 text-gray-600 hover:bg-gray-100 p-3 rounded-lg">
                         <i class="fas fa-trophy"></i>
                         <span>Classements</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-2 text-gray-600 hover:bg-gray-100 p-3 rounded-lg">
-                        <i class="fas fa-video"></i>
-                        <span>Médias</span>
+                    <a href="Category.php" class="flex items-center space-x-2 text-gray-600 hover:bg-gray-100 p-3 rounded-lg">
+                        <i class="fas fa-tag"></i>
+                        <span>Category</span>
                     </a>
                 </div>
             </nav>
