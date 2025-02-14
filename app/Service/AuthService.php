@@ -8,7 +8,6 @@ use App\Model\User;
 use App\Model\Cycliste;
 use App\Model\Fan;
 use App\Model\Role;
-use PDO;
 use Exception;
 
 class AuthService {
@@ -16,20 +15,18 @@ class AuthService {
     private CyclisteDAO $cyclisteDAO;
     private FanDAO $fanDAO;
 
-    public function __construct(PDO $pdo) {
-        $this->userDAO = new UserDAO($pdo);
-        $this->cyclisteDAO = new CyclisteDAO($pdo);
-        $this->fanDAO = new FanDAO($pdo);
+    public function __construct() {
+        $this->userDAO = new UserDAO();
+        $this->cyclisteDAO = new CyclisteDAO();
+        $this->fanDAO = new FanDAO();
     }
 
     public function register(string $nom, string $email, string $password, int $roleId, array $extraData = []): bool {
-        // Vérifier si l'email existe déjà
         if ($this->userDAO->getUserByEmail($email)) {
             throw new Exception("L'email est déjà utilisé.");
         }
 
 
-        // Création de l'utilisateur
         $role = new Role($roleId, null);
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
@@ -37,8 +34,6 @@ class AuthService {
             if (!isset($extraData['dateNaissance']) || !isset($extraData['nationalite'])) {
                 throw new Exception("Les informations du cycliste sont incomplètes.");
             }
-
-            // Récupération des valeurs optionnelles
             $equipeId = $extraData['equipeId'] ?? null;
             $poids = isset($extraData['poids']) ? (float) $extraData['poids'] : null;
             $biographie = $extraData['biographie'] ?? null;
@@ -55,7 +50,7 @@ class AuthService {
             $pointsTotal = $extraData['pointsTotal'] ?? 0;
             $badgeId = $extraData['badgeId'] ?? null;
 
-            $fan = new Fan(0, $nom, $email, $hashedPassword, $role, $pointsTotal, $badgeId);
+            $fan = new Fan(0, $nom, $email, $hashedPassword, $role, 0, $badgeId);
             return $this->fanDAO->createFan($fan);
         } 
         
@@ -72,6 +67,11 @@ class AuthService {
         }
         return null;
     }
+    public function updatePassword(int $userId, string $newPassword): bool {
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        return $this->userDAO->updatPassword($hashedPassword, $userId);
+    }
+    
     
 
     
