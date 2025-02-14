@@ -1,4 +1,3 @@
-
 <?php
 
 namespace Core;
@@ -10,7 +9,7 @@ class Router {
 
     public function __construct(){
         $url = $this->getUrl();
-
+        
         if(isset($url[0]) ){
             if(file_exists('../app/Controllers/' . ucwords($url[0]). 'Controller.php'))
             {
@@ -19,7 +18,6 @@ class Router {
 
             }else {
                 $this->currentController = 'NotFoundController';
-
             }
 
         }

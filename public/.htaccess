@@ -1,7 +1,6 @@
 <IfModule mod_rewrite.c>
   Options -Multiviews
   RewriteEngine On
-  RewriteBase /Tour-De-Maroc/public
 
   # Allow access to assets (CSS, JS, images, etc.)
   RewriteCond %{REQUEST_FILENAME} -f [OR]
