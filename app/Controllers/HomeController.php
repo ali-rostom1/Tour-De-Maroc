@@ -7,10 +7,7 @@ use App\DAO\RoleDAO ;
 
 class HomeController extends Controller{
 
-    public function index() {
-        // return $this->view("index",$data);
-
-    }
+    
     public function register(){
         $equipeService= new EquipeService();
         $roleDao = new RoleDAO();
