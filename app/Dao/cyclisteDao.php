@@ -2,6 +2,7 @@
 namespace App\DAO;
 
 use App\Model\Cycliste;
+use App\Model\Role;
 use Config\Database;
 use PDO;
 
@@ -25,4 +26,17 @@ class CyclisteDAO {
             'nationalite' => $cycliste->getNationalite()
         ]);
     }
+    public function getById(int $id) : Cycliste
+    {
+        $query = "SELECT u.*, r.nom as role_nom FROM person u
+                                    JOIN role r ON u.role_id = r.role_id
+                                    WHERE u.user_id = ?";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(["id"=>$id]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $role = new Role($row['role_id'], $row['role_nom']);
+        return new Cycliste($row["user_id"],$row["nom"],$row["email"],NULL,$role,$row["datenaissance"],$row["nationalite"],$row["equipe_id"],$row["poids"],$row["biographie"]);
+
+    }
+
 }

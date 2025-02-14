@@ -16,6 +16,7 @@ class HomeController extends Controller{
     public function index() : void
     {
         
-        $this->view("/Visiteurs/Home");
+        $this->view("/auth/login");
+        
     }
 }   
