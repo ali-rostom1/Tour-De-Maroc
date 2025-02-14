@@ -19,8 +19,8 @@ class SignalDAO {
     }
 
     private function createObject($row) {
-        $fan = $this->fanDAO->find($row['fan_id']);
-        $etape = $this->etapeDAO->find($row['etape_id']);
+        $fan = $this->fanDAO->findById($row['fan_id']);
+        $etape = $this->etapeDAO->getByID($row['etape_id']);
         return new Signal($fan, $etape, $row['type'], $row['description'], $row['dateCreation']);
     }
 

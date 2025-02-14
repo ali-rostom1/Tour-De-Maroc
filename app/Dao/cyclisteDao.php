@@ -26,6 +26,7 @@ class CyclisteDAO {
             'nationalite' => $cycliste->getNationalite()
         ]);
     }
+<<<<<<< HEAD
     public function getById(int $id) : Cycliste
     {
         $query = "SELECT u.*, r.nom as role_nom FROM person u
@@ -39,4 +40,22 @@ class CyclisteDAO {
 
     }
 
+=======
+
+    public function getCyclisteById($id) {
+        $stmt = $this->pdo->prepare("SELECT u.*, r.nom as role_nom FROM cycliste u
+                                    JOIN role r ON u.role_id = r.role_id
+                                    WHERE u.email = ?");
+        $stmt->execute([$id]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($data) {
+            $role = new Role($data['role_id'], $data['role_nom']);
+            return new Cycliste($data['user_id'], $data['nom'], $data['email'], $data['password'], $role ,$data['dateNaissance'],$data['nationalite'],$data['equipe_id'],$data['poids'],$data['biographie']);
+        }
+        return null;
+    }
+
+
+>>>>>>> 07fae740a658afe50bdfc01012090cc45f86ad4c
 }

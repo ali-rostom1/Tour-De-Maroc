@@ -1,6 +1,7 @@
 <?php
 namespace App\Dao;
 
+use App\Model\Categorie;
 class CategorieDAO {
     private $pdo;
 
@@ -29,10 +30,9 @@ class CategorieDAO {
     private function mapRowToCategorie($row) {
         return new Categorie(
             $row['categorie_id'],
-            $row['nom'],
             $row['description'],
             $row['type'],
-            $row['basePoints'],
+            $row['basepoints'],
             $row['coefficient']
         );
     }

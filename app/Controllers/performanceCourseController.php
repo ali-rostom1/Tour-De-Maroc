@@ -1,5 +1,5 @@
 <?php
-namespace App\Contoller;
+namespace App\Contollers;
 use App\Service;
 use onfig\Database;
 
@@ -20,8 +20,8 @@ class PerformanceCourseController{
     }
 
     // this is to show the tree top cyclists of a cours 
-    public function getPerformanceCourseByCoursId($id) {
-        return $this->performanceCourseService->getPerformanceCourseByCoursId($id);
+    public function PodiumPerformanceCourseByCoursId($id) {
+        return $this->performanceCourseService->PodiumPerformanceCourseByCoursId($id);
     }
 
 

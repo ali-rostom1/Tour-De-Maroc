@@ -1,14 +1,18 @@
 <?php
 namespace App\Dao;
 use App\Dao\FanDAO;
+use Config\Database;
+
 use App\Dao\CyclisteDAO;
 
 
 class QuestionDAO {
-    private $pdo;
+    private PDO $pdo;
 
-    public function __construct(PDO $pdo) {
-        $this->pdo = $pdo;
+
+    public function __construct() {
+        $this->pdo = Database::getInstance(); 
+
     }
 
     public function find($question_id) {

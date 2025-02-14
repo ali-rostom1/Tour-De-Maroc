@@ -27,10 +27,11 @@
         private function mapRowToEtape(array $row) : Etape
         {
             $cyclistes = $this->getCyclistesById($row["etape_id"]);
-            $medias = $this->getMediaById($row["etape_id"]);
+            // $medias = $this->getMediaById($row["etape_id"]);
             $fans = $this->getFansById($row["etape_id"]);
             $categorie = $this->categorieDaoImpl->find($row["etape_id"]);
-            return new Etape($row["etape_id"],$row["nom"],$row["distance"],$row["lieudepart"],$row["lieuarrivee"],$row["statut"],$row["description"],$cyclistes,$medias,$fans,$categorie);
+            return new Etape($row["etape_id"],$row["nom"],$row["distance"],$row["lieudepart"],$row["lieuarrivee"],$row["statut"],$row["description"],$cyclistes,null,$fans,$categorie);
+
         }
         private function getCyclistesById(int $id) : array
         {
@@ -41,22 +42,22 @@
             $cyclistes = [];
             foreach($rows as $row){
 
-                $cyclistes[] = $this->cyclisteDaoImpl->getById($row["etape_id"]);
+                $cyclistes[] = $this->cyclisteDaoImpl->getCyclisteById($row["etape_id"]);
             }
             return $cyclistes;
         }
-        private function getMediaById(int $id) : array
-        {
-            $query = "SELECT * from document where etape_id=:id";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(["id"=>$id]);
-            $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            $medias = [];
-            foreach($rows as $row){
-                $medias[] = $this->mediaDaoImpl->getById($row["document_id"]);
-            }
-            return $medias;
-        }
+        // private function getMediaById(int $id) : array
+        // {
+        //     $query = "SELECT * from document where etape_id=:id";
+        //     $stmt = $this->db->prepare($query);
+        //     $stmt->execute(["id"=>$id]);
+        //     $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        //     $medias = [];
+        //     foreach($rows as $row){
+        //         $medias[] = $this->mediaDaoImpl->getById($row["document_id"]);
+        //     }
+        //     return $medias;
+        // }
         private function getFansById(int $id) : array
         {
             $query = "SELECT * from inscription where etape_id=:id";
