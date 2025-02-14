@@ -9,6 +9,7 @@ use App\Service\etapeService;
 
 class HomeController extends Controller{
 
+
     private CourseService $courseService;
     private etapeService $etapeService;
 
@@ -17,6 +18,31 @@ class HomeController extends Controller{
         $this->courseService = new CourseService();
         $this->etapeService = new EtapeService();
     }
+    public function register(){
+        $equipeService= new EquipeService();
+        $roleDao = new RoleDAO();
+        $data = [
+            "title"=>"welcome",
+            "equipes"=> $equipeService->getAllEquipes(),
+            "roles"=> $roleDao->getAllRoles()
+
+        ];
+        return $this->view("register",$data);
+    }
+    public function login(){
+        $data = ["title"=>"welcome"];
+        return $this->view("login",$data);
+    }
+    public function resetpassword(){
+
+        return $this->view("reset");
+
+    }
+    public function resetForm($token){
+        $data = ["title"=>"welcome"];
+        return $this->view("resetForm",$data);
+    }
+    
 
     public function index() : void
     {
