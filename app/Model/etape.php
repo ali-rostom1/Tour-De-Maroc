@@ -3,7 +3,6 @@ namespace App\Model;
 
 use App\Model\Categorie;
 
-
 class Etape
 {
     private int $id;
@@ -16,10 +15,10 @@ class Etape
     private array $cyclistes = [];
     private array $document = [];
     private array $fans = [];
-    private Categorie $categorie;
+    private  $categorie;
     
 
-    public function __construct(int $id,string $nom,float $distance,string $lieuDepart,string $lieuArrivee,string $status,string $description, array $cyclistes, array $document,array $fans, Categorie $categorie) {
+    public function __construct(int $id=null,string $nom=null,float $distance=null,string $lieuDepart=null,string $lieuArrivee=null,string $status=null,string $description=null, array $cyclistes=null, array $document=null,array $fans=null, Categorie $categorie=null) {
         $this->id = $id;
         $this->nom = $nom;
         $this->distance = $distance;

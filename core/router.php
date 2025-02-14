@@ -9,7 +9,7 @@ class Router {
 
     public function __construct(){
         $url = $this->getUrl();
-
+        
         if(isset($url[0]) ){
             if(file_exists('../app/Controllers/' . ucwords($url[0]). 'Controller.php'))
             {
@@ -18,7 +18,6 @@ class Router {
 
             }else {
                 $this->currentController = 'NotFoundController';
-
             }
 
         }
@@ -35,7 +34,7 @@ class Router {
                 unset($url[1]);
             } else {
                 require_once '../app/Controllers/NotFoundController.php';
-                $this->currentController = new \app\Controllers\NotFoundController();
+                $this->currentController = new \app\Controller\NotFoundController();
                 $this->currentMethod = 'index';
             }
 

@@ -17,11 +17,11 @@
         private CategorieDao $categorieDaoImpl;
 
         public function __construct(){
-            $this->db = Database::getInstance(); 
+            $this->db = Database::getInstance()->getConnection(); 
             $this->cyclisteDaoImpl = new CyclisteDao();
             $this->mediaDaoImpl = new MediaDao();
-            $this->fanDaoImpl = new FanDao;
-            $this->categorieDaoImpl = new CategorieDao();
+            $this->fanDaoImpl = new FanDao($this->db);
+            $this->categorieDaoImpl = new CategorieDao($this->db);
         }
         private function mapRowToEtape(array $row) : Etape
         {
