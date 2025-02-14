@@ -12,7 +12,7 @@
         private string $statut;
         private array $cyclistes = [];
         private array $Etapes = [];
-        private array $media = [];
+        private ?array $media = [];
         
         public function __construct($id , $nom ,$anne ,$nombreEtapes ,$statut,$cyclistes,$Etapes,$media)
         {

@@ -14,20 +14,17 @@
         private \PDO $db;
         private EtapeDao $etapeDaoImpl;
         private CyclisteDao $cyclisteDaoImpl;
-        private MediaDao $mediaDaoImpl;
 
         public function __construct(){
             $this->db = Database::getInstance()->getConnection();
             $this->etapeDaoImpl = new EtapeDao();
             $this->cyclisteDaoImpl = new CyclisteDao();
-            $this->mediaDaoImpl = new MediaDao();
         }
         private function mapRowToCourse(array $row) : Course
         {
             $etapes = $this->getEtapesById($row["course_id"]);
             $cyclistes = $this->getCyclistesById($row["course_id"]);
-            $medias = $this->getMediaById($row["course_id"]);
-            return new Course($row["course_id"],$row["nom"],$row["anne"],$row["nombreEtapes"],$row["statut"],$cyclistes,$etapes,$medias);
+            return new Course($row["course_id"],$row["nom"],$row["annee"],$row["nombreetapes"],$row["statut"],$cyclistes,$etapes,NULL);
             
         }
         private function getEtapesById(int $id) : array
@@ -52,21 +49,9 @@
             $cyclistes = [];
             foreach($rows as $row){
 
-                $cyclistes[] = $this->cyclisteDaoImpl->getById($row["id"]);
+                $cyclistes[] = $this->cyclisteDaoImpl->getCyclisteById($row["id"]);
             }
             return $cyclistes;
-        }
-        private function getMediaById(int $id) : array
-        {
-            $query = "SELECT * from document where course_id=:id";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute(["id"=>$id]);
-            $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            $medias = [];
-            foreach($rows as $row){
-                $medias[] = $this->mediaDaoImpl->getById($row["document_id"]);
-            }
-            return $medias;
         }
         private function saveCyclist(int $idCourse,Cycliste $cyclist) : bool
         {

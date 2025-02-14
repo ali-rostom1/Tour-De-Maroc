@@ -53,7 +53,7 @@ class CategorieDAO {
         $stmt = $this->pdo->prepare("UPDATE categorie SET nom = :nom, description = :description, 
                                      type = :type, basePoints = :basePoints, coefficient = :coefficient 
                                      WHERE categorie_id = :categorie_id");
-        $stmt->bindParam(':categorie_id', $categorie->getId());
+        $stmt->bindParam(':categorie_id', $categorie->getCategorieId());
         $stmt->bindParam(':nom', $categorie->getNom());
         $stmt->bindParam(':description', $categorie->getDescription());
         $stmt->bindParam(':type', $categorie->getType());

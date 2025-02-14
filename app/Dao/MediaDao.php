@@ -13,13 +13,15 @@
     class MediaDao{
         private \PDO $db;
         private UserDAO $userDao;
-        private int $courseId;
-        private int $etapeId;
+        private CourseDao $courseDao;
+        private EtapeDao $etapeDao;
 
         public function __construct()
         {
             $this->db = Database::getInstance()->getConnection();
             $this->userDao = new UserDAO();
+            $this->courseDao = new CourseDao();
+            $this->etapeDao = new EtapeDao();
         }
         private function mapRowToMedia(array $row) : ?Media
         {

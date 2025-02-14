@@ -11,7 +11,6 @@ class Router {
     public function __construct($uri){
          
         $url = $this->getUrl($uri);
-        var_dump($url[1],$url[2]);
         if(isset($url[1]) ){
             if(file_exists('../app/Controllers/' . ucwords($url[1]). 'Controller.php'))
 

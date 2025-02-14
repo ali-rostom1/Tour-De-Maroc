@@ -104,7 +104,7 @@
             <a href="#" class="text-lg hover:text-yellow-600 transition-colors duration-200 whitespace-nowrap border-b-2 border-transparent hover:border-yellow-600">Édition 2024</a>
             <a href="#" class="text-lg hover:text-yellow-600 transition-colors duration-200 whitespace-nowrap border-b-2 border-transparent hover:border-yellow-600">Grands Départs</a>
             <a href="#" class="text-lg hover:text-yellow-600 transition-colors duration-200 whitespace-nowrap border-b-2 border-transparent hover:border-yellow-600">Culture Tour</a>
-            <a href="Highlights.html" class="text-lg hover:text-yellow-600 transition-colors duration-200 whitespace-nowrap border-b-2 border-transparent hover:border-yellow-600">Vidéos</a>
+            <a href="home/media" class="text-lg hover:text-yellow-600 transition-colors duration-200 whitespace-nowrap border-b-2 border-transparent hover:border-yellow-600">Vidéos</a>
         </div>
         
         <div class="flex items-center space-x-8">
@@ -149,13 +149,13 @@
         <h1 class="text-white text-4xl md:text-6xl font-bold max-w-3xl leading-tight mb-8">
             Découvrez le Parcours du Tour de Morocco 2025
         </h1>
-        <button class="bg-tour-yellow text-black px-8 py-3 font-bold hover:bg-yellow-400 transition-all duration-200 transform hover:-translate-y-1 rounded-lg flex items-center gap-2">
+        <a href="home/media"><button  class="bg-tour-yellow text-black px-8 py-3 font-bold hover:bg-yellow-400 transition-all duration-200 transform hover:-translate-y-1 rounded-lg flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             Voir la Vidéo
-        </button>
+        </button></a>
     </div>
 
 
@@ -210,7 +210,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Carte Vidéo 1 -->
-            <article class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+            <a href="home/media"><article class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                 <img src="https://t3.ftcdn.net/jpg/04/05/78/16/360_F_405781638_mTCf6NNcMafERrfpVlhLgfMG0FjVOyV0.jpg" alt="Parcours Officiel du Tour de France 2025" class="w-full h-64 object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                 <div class="absolute bottom-0 p-4 text-white w-full">
@@ -218,27 +218,27 @@
                     <h3 class="text-xl font-bold mb-1">LE PARCOURS OFFICIEL</h3>
                     <p class="text-sm font-medium">THE OFFICIAL ROUTE</p>
                 </div>
-            </article>
+            </article></a>
 
             <!-- Carte Vidéo 2 -->
-            <article class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+            <a href="home/media"><article class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                 <img src="https://static.vecteezy.com/system/resources/previews/028/058/295/non_2x/cyclist-riding-down-the-road-free-photo.jpg" alt="Meilleurs moments du Tour de France 2024" class="w-full h-64 object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                 <div class="absolute bottom-0 p-4 text-white w-full">
                     <div class="bg-yellow-400 text-black inline-block px-2 py-1 text-sm mb-2 rounded">#TDF2025</div>
                     <h3 class="text-xl font-bold">BEST OF 2024</h3>
                 </div>
-            </article>
+            </article></a>
 
             <!-- Carte Vidéo 3 -->
-            <article class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+            <a href="home/media"><article class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
                 <img src="https://img.freepik.com/premium-photo/man-riding-bike-down-road-with-mountains-background_1000124-260222.jpg" alt="L'étape du Mont Ventoux" class="w-full h-64 object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                 <div class="absolute bottom-0 p-4 text-white w-full">
                     <div class="bg-yellow-400 text-black inline-block px-2 py-1 text-sm mb-2 rounded">#TDF2025</div>
                     <h3 class="text-xl font-bold">LE MONT VENTOUX</h3>
                 </div>
-            </article>
+            </article></a>
         </div>
     </section>
 
@@ -248,15 +248,19 @@
         <section class="lg:col-span-2" aria-labelledby="route-title">
             <h2 id="route-title" class="text-3xl font-bold italic mb-6">PARCOURS</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
-                    <img src="https://img.freepik.com/premium-photo/cyclist-road-with-cloudy-sky-background_853115-1082.jpg?w=360" alt="Étape 1 du parcours" class="w-full h-48 object-cover">
-                </div>
-                <div class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
-                    <img src="https://img.freepik.com/premium-photo/cyclist-rides-background-nature_982153-138.jpg" alt="Étape 2 du parcours" class="w-full h-48 object-cover">
-                </div>
-                <div class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
-                    <img src="https://img.freepik.com/premium-photo/early-morning-asian-men-ride-road-bikes_28914-46661.jpg" alt="Étape 3 du parcours" class="w-full h-48 object-cover">
-                </div>
+                <a href="home/etapes"><div class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+                        <img src="https://img.freepik.com/premium-photo/cyclist-road-with-cloudy-sky-background_853115-1082.jpg?w=360" alt="Étape 1 du parcours" class="w-full h-48 object-cover">
+                    </div>
+                </a>
+                <a href="home/etapes"><div class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+                        <img src="https://img.freepik.com/premium-photo/cyclist-rides-background-nature_982153-138.jpg" alt="Étape 2 du parcours" class="w-full h-48 object-cover">
+                    </div>
+                </a>
+                <a href="home/etapes">
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105">
+                        <img src="https://img.freepik.com/premium-photo/early-morning-asian-men-ride-road-bikes_28914-46661.jpg" alt="Étape 3 du parcours" class="w-full h-48 object-cover">
+                    </div>
+                </a>
             </div>
         </section>
 
