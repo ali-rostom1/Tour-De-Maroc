@@ -17,7 +17,7 @@
         private MediaDao $mediaDaoImpl;
 
         public function __construct(){
-            $this->db = Database::getInstance();
+            $this->db = Database::getInstance()->getConnection();
             $this->etapeDaoImpl = new EtapeDao();
             $this->cyclisteDaoImpl = new CyclisteDao();
             $this->mediaDaoImpl = new MediaDao();
