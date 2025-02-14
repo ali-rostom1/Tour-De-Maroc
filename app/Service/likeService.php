@@ -3,44 +3,35 @@
 namespace App\Service;
 
 use App\DAO\LikeDAO;
-use App\DAO\FanDAO;
-use App\DAO\EtapeDAO;
-use App\Model\Like;
-use PDO;
+use App\Model\Fan;
+use App\Model\Etape;
 
 class LikeService {
     private $likeDAO;
-    private $fanDAO;
-    private $etapeDAO;
 
-    public function __construct(LikeDAO $likeDAO, FanDAO $fanDAO, EtapeDAO $etapeDAO) {
-        $this->likeDAO = $likeDAO;
-        $this->fanDAO = $fanDAO;
-        $this->etapeDAO = $etapeDAO;
+    public function __construct() {
+        $this->likeDAO = new likeDAO();
     }
 
-    public function getLikesByFan($fanId) {
-        return $this->likeDAO->findByFan($fanId);
+    public function addLike(Fan $fan, Etape $etape) {
+        if (!$this->likeDAO->exists($fan, $etape)) {
+            return $this->likeDAO->addLike($fan, $etape);
+        }
+        return false;
     }
 
-    public function addLike($fanId, $etapeId) {
-        $fan = $this->fanDAO->find($fanId);
-        $etape = $this->etapeDAO->find($etapeId);
-
-        if (!$fan) {
-            throw new \Exception("Fan not found");
+    public function removeLike(Fan $fan, Etape $etape) {
+        if ($this->likeDAO->exists($fan, $etape)) {
+            return $this->likeDAO->removeLike($fan, $etape);
         }
-        if (!$etape) {
-            throw new \Exception("Etape not found");
-        }
-        if ($this->likeDAO->exists($fanId, $etapeId)) {
-            throw new \Exception("Like already exists");
-        }
-
-        return $this->likeDAO->addLike($fanId, $etapeId);
+        return false; 
     }
 
-    public function removeLike($fanId, $etapeId) {
-        return $this->likeDAO->removeLike($fanId, $etapeId);
+    public function getLikesByFan(Fan $fan) {
+        return $this->likeDAO->findByFan($fan);
+    }
+
+    public function countLikesForEtape() {
+        return $this->likeDAO->AjaxLike();
     }
 }

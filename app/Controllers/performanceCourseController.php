@@ -1,5 +1,5 @@
 <?php
-namespace App\Contoller;
+namespace App\Contollers;
 use App\Service;
 use onfig\Database;
 

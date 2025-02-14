@@ -11,11 +11,13 @@ class CommentDAO {
     private $pdo;
     private $fanDAO;
     private $etapeDAO;
+    private $comment;
 
-    public function __construct(PDO $pdo, FanDAO $fanDAO, EtapeDAO $etapeDAO) {
+    public function __construct(PDO $pdo, FanDAO $fanDAO, EtapeDAO $etapeDAO,comment $comment) {
         $this->pdo = $pdo;
         $this->fanDAO = $fanDAO;
         $this->etapeDAO = $etapeDAO;
+        $this->comment = $comment;
     }
 
     private function createObject($row) {
@@ -57,8 +59,12 @@ class CommentDAO {
         return $comments;
     }
 
-    public function addComment($contenu, $statut, $fanId, $etapeId) {
-        $stmt = $this->pdo->prepare("INSERT INTO comment (contenu, statut, fan_id, etape_id) VALUES (?, ?, ?, ?)");
+    public function addComment() {
+        $stmt = $this->pdo->prepare("INSERT INTO comment (contenu, statut, fan_id, etape_id) VALUES (:contenu,:statut, :fanId, :etapeId)");
+        $stmt->bindParam(":fan", $this->comment->getContenu(), PDO::PARAM_INT);
+        $stmt->bindParam(":etape", $this->comment->getStatut(), PDO::PARAM_INT);
+        $stmt->bindParam(":fan", $this->fanDAO->getId(), PDO::PARAM_INT);
+        $stmt->bindParam(":etape", $this->etapeDAO->id, PDO::PARAM_INT);
         return $stmt->execute([$contenu, $statut, $fanId, $etapeId]);
     }
 

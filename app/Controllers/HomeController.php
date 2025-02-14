@@ -8,5 +8,8 @@ class HomeController extends Controller{
         $data = ["title"=>"welcome"];
         return $this->view("register",$data);
     }
+    public function index(){
+        echo "aaaaaaaaaaaaaaaa";
+    }
 
 }
