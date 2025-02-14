@@ -53,6 +53,7 @@ CREATE TABLE cycliste (
     CHECK (role_id =3)
 ) INHERITS (person);
 ALTER TABLE cycliste ADD PRIMARY KEY (user_id);
+ALTER TABLE cycliste ADD COLUMN active BOOLEAN DEFAULT false ;
 
 CREATE TABLE fan (
     pointsTotal INTEGER DEFAULT 0,

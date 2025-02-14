@@ -12,10 +12,10 @@ class QuestionService {
     private $fanDAO;
     private $cyclisteDAO;
 
-    public function __construct(QuestionDAO $questionDAO, FanDAO $fanDAO, CyclisteDAO $cyclisteDAO) {
-        $this->questionDAO = $questionDAO;
-        $this->fanDAO = $fanDAO;
-        $this->cyclisteDAO = $cyclisteDAO;
+    public function __construct() {
+        $this->questionDAO = new QuestionDAO();
+        $this->fanDAO = new FanDAO();
+        $this->cyclisteDAO = new CyclisteDAO();
     }
 
     public function getQuestionById($id) {
