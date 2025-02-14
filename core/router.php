@@ -14,13 +14,13 @@ class Router {
         var_dump($url[1],$url[2]);
         if(isset($url[1]) ){
             if(file_exists('../app/Controllers/' . ucwords($url[1]). 'Controller.php'))
+
             {
                 $this->currentController = ucwords($url[1])."Controller";
                 unset($url[1]);
 
             }else {
                 $this->currentController = 'NotFoundController';
-
             }
 
         }

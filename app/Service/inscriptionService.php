@@ -12,10 +12,10 @@ class InscriptionService {
     private $fanDAO;
     private $etapeDAO;
 
-    public function __construct(InscriptionDAO $inscriptionDAO, FanDAO $fanDAO, EtapeDAO $etapeDAO) {
-        $this->inscriptionDAO = $inscriptionDAO;
-        $this->fanDAO = $fanDAO;
-        $this->etapeDAO = $etapeDAO;
+    public function __construct() {
+        $this->inscriptionDAO = new  InscriptionDAO();
+        $this->fanDAO = new FanDAO();
+        $this->etapeDAO = new EtapeDAO();
     }
 
     public function getInscriptionsByEtape($etapeId) {

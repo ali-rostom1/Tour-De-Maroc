@@ -1,10 +1,11 @@
 <?php
 namespace App\Dao;
 
+use App\Model\Categorie;
 class CategorieDAO {
     private $pdo;
 
-    public function __construct(PDO $pdo) {
+    public function __construct(\PDO $pdo) {
         $this->pdo = $pdo;
     }
 
@@ -12,7 +13,7 @@ class CategorieDAO {
         $stmt = $this->pdo->prepare("SELECT * FROM categorie WHERE categorie_id = :categorie_id");
         $stmt->bindParam(':categorie_id', $categorie_id);
         $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         return $row ? $this->mapRowToCategorie($row) : null;
     }
@@ -20,7 +21,7 @@ class CategorieDAO {
     public function findAll() {
         $stmt = $this->pdo->query("SELECT * FROM categorie");
         $categories = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $categories[] = $this->mapRowToCategorie($row);
         }
         return $categories;
@@ -29,10 +30,9 @@ class CategorieDAO {
     private function mapRowToCategorie($row) {
         return new Categorie(
             $row['categorie_id'],
-            $row['nom'],
             $row['description'],
             $row['type'],
-            $row['basePoints'],
+            $row['basepoints'],
             $row['coefficient']
         );
     }

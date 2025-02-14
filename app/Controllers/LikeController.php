@@ -11,6 +11,7 @@ use App\Service\etapeService;
 class LikeController extends Controller {
     private $likeService;
     private $etapeServise;
+    public $db;
 
     public function __construct() {
         $this->likeService = new LikeService();
@@ -67,11 +68,11 @@ class LikeController extends Controller {
         $this->view("etape_likes", ["count"]);
     }
 
-    public function getAllEtape()
-    {
-        $etapes = $this->etapeServise->getAllEtape();
-        $this->likeService->countLikesForEtape($etapes);
-
-        require_once __DIR__."/../Views/Fans/Etapes.php";
-    }
+    public function getAll(): void
+        {
+            
+            $etapes = $this->etapeServise->getAllEtape();
+           
+            require_once __DIR__."/../Views/Fans/Etapes.php";
+        }
 }

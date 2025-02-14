@@ -61,13 +61,7 @@
         </div>
 
         <!-- Étapes -->
-
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-        <?php 
-        foreach($etapes as $row){
-            
-        ?>
             <!-- Étape 1 -->
             <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
                 <div class="relative">
@@ -80,8 +74,8 @@
                     </div>
                 </div>
                 <div class="p-4">
-                    <h3 class="text-xl font-bold mb-2">Étape 1: <?= $row->nom ?></h3>
-                    <p class="text-gray-600 mb-4"><?= $row->description ?></p>
+                    <h3 class="text-xl font-bold mb-2">Étape 1: Ascension de l'Atlas</h3>
+                    <p class="text-gray-600 mb-4">Une étape montagneuse spectaculaire avec des vues imprenables.</p>
                     
                     <!-- Section interaction -->
                     <div class="flex items-center justify-between mt-4 pt-4 border-t">
@@ -101,7 +95,7 @@
 
                     <!-- Section commentaires -->
                     <div class="mt-4 pt-4 border-t">
-                        <form action="Comment/AddComment/<?=$row->id ?>" class="flex gap-2">
+                        <form class="flex gap-2">
                             <input type="text" placeholder="Votre commentaire..." class="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
                                 <i class="fas fa-paper-plane"></i>
@@ -110,7 +104,6 @@
                     </div>
                 </div>
             </div>
-            <?php } ?>
 
             <!-- Étape 2 -->
             <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
@@ -129,17 +122,10 @@
                     
                     <!-- Section interaction -->
                     <div class="flex items-center justify-between mt-4 pt-4 border-t">
-                        <form action="/like/addLikeAction"
-                        method="POST"
-                        >
-                        <input type="hidden" name="fan" value="<?= $_SESSION['user_id'] ?>">
-                        <input type="hidden" name="etape" value="<?= $etape->id ?>">
-                        <button type="submit" class="flex items-center gap-2 text-gray-400 hover:text-red-500 transition-colors">
-                        <i class="fas fa-heart"></i>
+                        <button class="flex items-center gap-2 text-gray-400 hover:text-red-500 transition-colors">
+                            <i class="fas fa-heart"></i>
                             <span>189</span>
                         </button>
-                        </form>
-
                         <button class="flex items-center gap-2 text-blue-500 hover:text-blue-600 transition-colors">
                             <i class="fas fa-comment"></i>
                             <span>32</span>
@@ -152,7 +138,7 @@
 
                     <!-- Section commentaires -->
                     <div class="mt-4 pt-4 border-t">
-                        <form action="" class="flex gap-2">
+                        <form class="flex gap-2">
                             <input type="text" placeholder="Votre commentaire..." class="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
                                 <i class="fas fa-paper-plane"></i>
@@ -162,7 +148,7 @@
                 </div>
             </div>
         </div>
-    
+
         <!-- Section Badges et Récompenses -->
         <div class="mt-12 bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-2xl font-bold mb-6">Vos Badges et Récompenses</h2>

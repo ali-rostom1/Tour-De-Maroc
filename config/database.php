@@ -15,7 +15,7 @@ class Database {
 
         } catch (PDOException $e) {
             error_log("Database connection error: " . $e->getMessage());
-            throw new Exception("Database connection failed.");
+            throw new \Exception("Database connection failed.");
         }
     }
 

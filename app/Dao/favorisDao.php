@@ -1,6 +1,8 @@
 <?php
 
 namespace App\DAO;
+use Config\Database;
+
 
 use App\Model\Favoris;
 use App\Model\Fan;
@@ -13,8 +15,10 @@ class FavorisDAO {
     private $cyclisteDAO;
 
     public function __construct(PDO $pdo, FanDAO $fanDAO, CyclisteDAO $cyclisteDAO) {
+        $this->pdo = Database::getInstance(); 
+
         $this->pdo = $pdo;
-        $this->fanDAO = $fanDAO;
+        $this->fanDAO = new FavorisDAO($db);;
         $this->cyclisteDAO = $cyclisteDAO;
     }
 
