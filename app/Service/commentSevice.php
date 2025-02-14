@@ -12,7 +12,7 @@ class CommentService {
     private $fanDAO;
     private $etapeDAO;
 
-    public function __construct(CommentDAO $commentDAO, FanDAO $fanDAO, EtapeDAO $etapeDAO) {
+    public function __construct(CommentDAO $commentDAO = null, FanDAO $fanDAO = null, EtapeDAO $etapeDAO = null) {
         $this->commentDAO = $commentDAO;
         $this->fanDAO = $fanDAO;
         $this->etapeDAO = $etapeDAO;
@@ -22,22 +22,13 @@ class CommentService {
         return $this->commentDAO->findByEtape($etapeId);
     }
 
-    public function addComment($contenu, $statut, $fanId, $etapeId) {
-        $fan = $this->fanDAO->find($fanId);
-        $etape = $this->etapeDAO->find($etapeId);
-
-        if (!$fan) {
-            throw new \Exception("Fan not found");
-        }
-        if (!$etape) {
-            throw new \Exception("Etape not found");
-        }
-
-        return $this->commentDAO->addComment($contenu, $statut, $fanId, $etapeId);
+    public function addComment() {
+        
+        return $this->commentDAO->addComment();
     }
 
-    public function updateComment($commentId, $contenu, $statut) {
-        return $this->commentDAO->updateComment($commentId, $contenu, $statut);
+    public function updateComment() {
+        return $this->commentDAO->updateComment();
     }
 
     public function deleteComment($commentId) {

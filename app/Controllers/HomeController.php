@@ -37,5 +37,8 @@ class HomeController extends Controller{
         $data = ["title"=>"welcome"];
         return $this->view("resetForm",$data);
     }
+    public function index(){
+        echo "aaaaaaaaaaaaaaaa";
+    }
 
 }

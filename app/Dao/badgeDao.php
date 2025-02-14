@@ -11,7 +11,6 @@ class BadgeDAO {
     public function __construct(PDO $pdo) {
         $this->pdo = $pdo;
     }
-
     private function createObject($row) {
         return new Badge(
             $row['badge_id'],
