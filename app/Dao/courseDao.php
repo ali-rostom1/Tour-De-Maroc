@@ -17,7 +17,7 @@
         private MediaDao $mediaDaoImpl;
 
         public function __construct(){
-            $this->db = Database::getInstance();
+            $this->db = Database::getInstance()->getConnection();
             $this->etapeDaoImpl = new EtapeDao();
             $this->cyclisteDaoImpl = new CyclisteDao();
             $this->mediaDaoImpl = new MediaDao();
@@ -90,7 +90,6 @@
             $query = "select * from course";
             $stmt = $this->db->query($query);
             $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
             $courses = [];
 
             foreach($rows as $row){

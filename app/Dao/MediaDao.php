@@ -13,17 +13,15 @@
     class MediaDao{
         private \PDO $db;
         private UserDAO $userDao;
-        private CourseDao $courseDao;
-        private EtapeDao $etapeDao;
+        private int $courseId;
+        private int $etapeId;
 
         public function __construct()
         {
             $this->db = Database::getInstance()->getConnection();
             $this->userDao = new UserDAO();
-            $this->courseDao = new CourseDao();
-            $this->etapeDao = new EtapeDao();
         }
-        private function mapRowToMedia(array $row) : Media
+        private function mapRowToMedia(array $row) : ?Media
         {
             if(isset($row["user_id"])){
                 $user = $this->userDao->getUserById($row["user_id"]);
@@ -37,6 +35,7 @@
                     return new Video($row["document_id"],$row["url"],$row["typeReference"],NULL,$etape);
                 }
             }
+            return NULL;
         }
         public function getAll() : array
         {

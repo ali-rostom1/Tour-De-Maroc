@@ -7,6 +7,7 @@
     use App\Dao\MediaDao;
     use App\Dao\FanDao;
     use App\Dao\CategorieDao;
+    use App\Model\Categorie;
 
     class EtapeDao{
 
@@ -28,8 +29,8 @@
             $cyclistes = $this->getCyclistesById($row["etape_id"]);
             $medias = $this->getMediaById($row["etape_id"]);
             $fans = $this->getFansById($row["etape_id"]);
-            $categorie = $this->getCategorieById($row["etape_id"]);
-            return new Etape($row["id"],$row["nom"],$row["distance"],$row["lieuDepart"],$row["lieuArrive"],$row["status"],$row["description"],$cyclistes,$medias,$fans,$categorie);
+            $categorie = $this->categorieDaoImpl->find($row["etape_id"]);
+            return new Etape($row["etape_id"],$row["nom"],$row["distance"],$row["lieudepart"],$row["lieuarrivee"],$row["statut"],$row["description"],$cyclistes,$medias,$fans,$categorie);
         }
         private function getCyclistesById(int $id) : array
         {
@@ -64,7 +65,7 @@
             $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             $fans = [];
             foreach($rows as $row){
-                $fans[] = $this->fanDaoImpl->getById($row["fan_id"]);
+                $fans[] = $this->fanDaoImpl->findById($row["fan_id"]);
             }
             return $fans;
         }
@@ -95,8 +96,8 @@
                 return $stmt->execute([
                     "nom"=>$etape->nom,
                     "distance"=>$etape->distance,
-                    "lieuDepart"=>$etape->lieuDepart,
-                    "lieuArrivee"=>$etape->lieuArrivee,
+                    "lieudepart"=>$etape->lieuDepart,
+                    "lieuarrivee"=>$etape->lieuArrivee,
                     "description"=>$etape->description,
                 ]);
 
@@ -112,10 +113,10 @@
                 return $stmt->execute([
                     "nom"=>$etape->nom,
                     "distance"=>$etape->distance,
-                    "lieuDepart"=>$etape->lieuDepart,
-                    "lieuArrivee"=>$etape->lieuArrivee,
+                    "lieudepart"=>$etape->lieuDepart,
+                    "lieuarrivee"=>$etape->lieuArrivee,
                     "description"=>$etape->description,
-                    "id"=>$etape->id
+                    "etape_id"=>$etape->id
                 ]);
 
             }catch(\PDOException $e){
@@ -128,7 +129,7 @@
                 $query = "delete from etape where etape_id = :id";
                 $stmt = $this->db->prepare($query);
                 return $stmt->execute([
-                    "id"=>$etape->id
+                    "etape_id"=>$etape->id
                 ]);
 
             }catch(\PDOException $e){

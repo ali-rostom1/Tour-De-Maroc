@@ -1,3 +1,5 @@
 /vendor/
 /node_modules/
 public/assets/css/output.css
+composer.json
+composer.package
