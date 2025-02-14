@@ -12,10 +12,10 @@ class FavorisService {
     private $fanDAO;
     private $cyclisteDAO;
 
-    public function __construct(FavorisDAO $favorisDAO, FanDAO $fanDAO, CyclisteDAO $cyclisteDAO) {
-        $this->favorisDAO = $favorisDAO;
-        $this->fanDAO = $fanDAO;
-        $this->cyclisteDAO = $cyclisteDAO;
+    public function __construct() {
+        $this->favorisDAO = new FavorisDAO();
+        $this->fanDAO = new FanDAO();
+        $this->cyclisteDAO = new CyclisteDAO();
     }
 
     public function getFavorisByFan($fanId) {

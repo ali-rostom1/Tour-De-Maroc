@@ -13,9 +13,9 @@ class QuestionService {
     private $cyclisteDAO;
 
     public function __construct() {
-        $this->questionDAO = new QuestionDAO($db);
-        $this->fanDAO = new FanDAO($db);
-        $this->cyclisteDAO = new CyclisteDAO($db);
+        $this->questionDAO = new QuestionDAO();
+        $this->fanDAO = new FanDAO();
+        $this->cyclisteDAO = new CyclisteDAO();
     }
 
     public function getQuestionById($id) {

@@ -5,12 +5,15 @@ use App\Model\PerformanceCourse;
 use App\Model\Cycliste;
 use App\Model\Course;
 use PDO;
+use Config\Database;
+
 class PerformanceCourseDAO {
 
     private $pdo;
 
     public function __construct(PDO $pdo) {
-        $this->pdo = $pdo;
+        $this->pdo = Database::getInstance(); 
+
     }
 
     private function mapRowToPerformanceCourse($row) {

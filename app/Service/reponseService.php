@@ -10,9 +10,9 @@ class ReponseService {
     private $reponseDAO;
     private $questionDAO;
 
-    public function __construct($db) {
-        $this->reponseDAO = new ReponseDAO($db);
-        $this->questionDAO = new QuestionDAO($db);
+    public function __construct() {
+        $this->reponseDAO = new ReponseDAO();
+        $this->questionDAO = new QuestionDAO();
     }
 
     public function getReponseById($id) {

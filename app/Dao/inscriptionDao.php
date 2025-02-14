@@ -1,6 +1,7 @@
 <?php
 
 namespace App\DAO;
+use Config\Database;
 
 use App\Model\Inscription;
 use App\Model\Fan;
@@ -8,14 +9,15 @@ use App\Model\Etape;
 use PDO;
 
 class InscriptionDAO {
-    private $pdo;
+    private PDO $pdo;
     private $fanDAO;
     private $etapeDAO;
 
     public function __construct(PDO $pdo, FanDAO $fanDAO, EtapeDAO $etapeDAO) {
-        $this->pdo = $pdo;
-        $this->fanDAO = $fanDAO;
-        $this->etapeDAO = $etapeDAO;
+        $this->pdo = Database::getInstance(); 
+        
+        $this->fanDAO = new FanDAO();
+        $this->etapeDAO = new EtapeDAO();
     }
 
     private function createObject($row) {
