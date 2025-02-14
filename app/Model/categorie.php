@@ -12,7 +12,6 @@ class Categorie {
 
     public function __construct($categorie_id = null, $nom = null, $description = null, $type = null, $basePoints = null, $coefficient = null) {
         $this->categorie_id = $categorie_id;
-        $this->nom = $nom;
         $this->description = $description;
         $this->type = $type;
         $this->basePoints = $basePoints;
