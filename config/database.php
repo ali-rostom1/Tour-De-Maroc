@@ -22,7 +22,7 @@ class Database {
         if (self::$instance === null) {
             $dsn = $dsn ?? 'pgsql:host=localhost;port=5432;dbname=TourMaroc';
             $username = $username ?? 'postgres';
-            $password = $password ?? 'root';
+            $password = $password ?? 'kaoutar2002';
             self::$instance = new Database($dsn, $username, $password);
         }
         return self::$instance;

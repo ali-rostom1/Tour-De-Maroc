@@ -4,15 +4,13 @@ namespace App\Model;
 
 class Categorie {
     private $categorie_id;
-    private $nom;
     private $description;
     private $type;
     private $basePoints;
     private $coefficient;
 
-    public function __construct($categorie_id = null, $nom = null, $description = null, $type = null, $basePoints = null, $coefficient = null) {
+    public function __construct($categorie_id = null, $description = null, $type = null, $basePoints = null, $coefficient = null) {
         $this->categorie_id = $categorie_id;
-        $this->nom = $nom;
         $this->description = $description;
         $this->type = $type;
         $this->basePoints = $basePoints;
@@ -23,9 +21,7 @@ class Categorie {
         return $this->categorie_id;
     }
 
-    public function getNom() {
-        return $this->nom;
-    }
+  
 
     public function getDescription() {
         return $this->description;
@@ -47,9 +43,7 @@ class Categorie {
         $this->categorie_id = $categorie_id;
     }
 
-    public function setNom($nom) {
-        $this->nom = $nom;
-    }
+    
 
     public function setDescription($description) {
         $this->description = $description;
@@ -66,4 +60,5 @@ class Categorie {
     public function setCoefficient($coefficient) {
         $this->coefficient = $coefficient;
     }
+
 }

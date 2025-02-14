@@ -1,6 +1,5 @@
 <?php
-
-namespace App\Service;
+namespace App\Service; 
 
 use App\DAO\CategorieDAO;
 use App\Model\Categorie;
@@ -8,8 +7,8 @@ use App\Model\Categorie;
 class CategorieService {
     private $categorieDAO;
 
-    public function __construct(CategorieDAO $categorieDAO) {
-        $this->categorieDAO = $categorieDAO;
+    public function __construct() {
+        $this->categorieDAO = new CategorieDAO();
     }
 
     public function getCategorieById($id) {
@@ -20,13 +19,14 @@ class CategorieService {
         return $this->categorieDAO->findAll();
     }
 
-    public function addCategorie($nom, $description, $type, $basePoints, $coefficient) {
-        $categorie = new Categorie(null, $nom, $description, $type, $basePoints, $coefficient);
+    public function addCategorie($description, $type, $basePoints, $coefficient) {
+        $categorie = new Categorie(null, $description, $type, $basePoints, $coefficient);
+        // var_dump($categorie);
         return $this->categorieDAO->create($categorie);
     }
 
-    public function updateCategorie($id, $nom, $description, $type, $basePoints, $coefficient) {
-        $categorie = new Categorie($id, $nom, $description, $type, $basePoints, $coefficient);
+    public function updateCategorie($id,  $description, $type, $basePoints, $coefficient) {
+        $categorie = new Categorie($id,  $description, $type, $basePoints, $coefficient);
         return $this->categorieDAO->update($categorie);
     }
 

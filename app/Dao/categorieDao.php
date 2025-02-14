@@ -1,11 +1,17 @@
 <?php
 namespace App\Dao;
+use Config\Database;
+use App\Model\Categorie;
+
+
 
 class CategorieDAO {
     private $pdo;
 
-    public function __construct(\PDO $pdo) {
-        $this->pdo = $pdo;
+    public function __construct() {
+        // $this->pdo = $pdo;
+        $this->pdo = Database::getInstance()->getConnection(); 
+
     }
 
     public function find($categorie_id) {
@@ -29,37 +35,49 @@ class CategorieDAO {
     private function mapRowToCategorie($row) {
         return new Categorie(
             $row['categorie_id'],
-            $row['nom'],
             $row['description'],
             $row['type'],
-            $row['basePoints'],
+            $row['basepoints'],
             $row['coefficient']
         );
     }
 
     public function create(Categorie $categorie) {
-        $stmt = $this->pdo->prepare("INSERT INTO categorie (nom, description, type, basePoints, coefficient) 
-                                     VALUES (:nom, :description, :type, :basePoints, :coefficient)");
-        $stmt->bindParam(':nom', $categorie->getNom());
-        $stmt->bindParam(':description', $categorie->getDescription());
-        $stmt->bindParam(':type', $categorie->getType());
-        $stmt->bindParam(':basePoints', $categorie->getBasePoints());
-        $stmt->bindParam(':coefficient', $categorie->getCoefficient());
 
+
+$stmt = $this->pdo->prepare("INSERT INTO categorie (description, type, basePoints, coefficient) 
+                             VALUES (:description, :type, :basePoints, :coefficient)");
+
+  
+$description = $categorie->getDescription();
+$type = $categorie->getType();
+$basePoints = $categorie->getBasePoints();
+$coefficient = $categorie->getCoefficient();
+ 
+$stmt->bindParam(':description', $description);
+$stmt->bindParam(':type', $type);
+$stmt->bindParam(':basePoints', $basePoints);
+$stmt->bindParam(':coefficient', $coefficient);
         return $stmt->execute();
     }
 
     public function update(Categorie $categorie) {
-        $stmt = $this->pdo->prepare("UPDATE categorie SET nom = :nom, description = :description, 
+        $stmt = $this->pdo->prepare("UPDATE categorie SET description = :description, 
                                      type = :type, basePoints = :basePoints, coefficient = :coefficient 
                                      WHERE categorie_id = :categorie_id");
-        $stmt->bindParam(':categorie_id', $categorie->getId());
-        $stmt->bindParam(':nom', $categorie->getNom());
-        $stmt->bindParam(':description', $categorie->getDescription());
-        $stmt->bindParam(':type', $categorie->getType());
-        $stmt->bindParam(':basePoints', $categorie->getBasePoints());
-        $stmt->bindParam(':coefficient', $categorie->getCoefficient());
-
+          
+        $description = $categorie->getDescription();
+        $id = $categorie->getCategorieId();
+        $type = $categorie->getType();
+        $basePoints = $categorie->getBasePoints();
+        $coefficient = $categorie->getCoefficient(); 
+        
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':type', $type);
+        $stmt->bindParam(':basePoints', $basePoints);
+        $stmt->bindParam(':coefficient', $coefficient);
+        $stmt->bindParam(':categorie_id', $id);
+     
         return $stmt->execute();
     }
 
