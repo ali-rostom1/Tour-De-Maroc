@@ -8,14 +8,14 @@ class HomeController extends Controller{
         $data = ["title"=>"welcome"];
         return $this->view("/auth/register",$data);
     }
-    public function index() : void
-    {
+    // public function index() : void
+    // {
         
-    }
+    // }
 
     public function index(){
         $data = ["title"=>"welcome"];
-        require_once '../app/Views/Admin/Admin_Dashboard.php';
+        require_once '../app/Views/Admin/Etapes.php';
 
         // return $this->view("register",$data);
     }
