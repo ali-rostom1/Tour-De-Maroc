@@ -6,7 +6,11 @@ use Core\Controller ;
 class HomeController extends Controller{
     public function register(){
         $data = ["title"=>"welcome"];
-        return $this->view("register",$data);
+        return $this->view("/auth/register",$data);
+    }
+    public function index() : void
+    {
+        
     }
 
 }
