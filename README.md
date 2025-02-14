@@ -4,7 +4,6 @@
 
 [![PHP Version](https://img.shields.io/badge/PHP-8.x-blue.svg)](https://www.php.net)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-12+-blue.svg)](https://www.postgresql.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Vue d'Ensemble
 
@@ -45,19 +44,7 @@ public enum UserRole {
 - 📊 Tableaux de classement en temps réel
 - 🎥 Galerie multimédia
 
-#### Pour les Fans
-```javascript
-// Exemple de système de notification
-class NotificationService {
-    async subscribe(userId, stageId) {
-        // Logique d'inscription aux notifications
-    }
-    
-    async notify(event) {
-        // Système de notification en temps réel
-    }
-}
-```
+
 
 #### Pour les Cyclistes
 - 📈 Dashboard personnalisé
@@ -71,20 +58,6 @@ class NotificationService {
 - 🔍 Outils de modération
 - 📨 Système de messagerie
 
-### 🔒 Sécurité
-
-```php
-// Exemple de middleware d'authentification
-class AuthMiddleware {
-    public function handle(Request $request, Closure $next) {
-        if (!$this->isAuthenticated()) {
-            return redirect('/login');
-        }
-        
-        return $next($request);
-    }
-}
-```
 
 ## Architecture Technique
 
@@ -93,25 +66,8 @@ class AuthMiddleware {
 #### Backend
 - **Framework**: PHP 8.x MVC personnalisé
 - **Base de données**: PostgreSQL 12+
-- **Cache**: Redis
-- **API**: RESTful avec JWT
-- **Tests**: PHPUnit
 
-#### Frontend
-- **Framework**: JavaScript ES6+
-- **UI**: Bootstrap 5/TailwindCSS
-- **State Management**: Context API
-- **Tests**: Jest
 
-```mermaid
-graph TD
-    A[Client] --> B[Load Balancer]
-    B --> C[Web Server]
-    C --> D[Application Server]
-    D --> E[Database]
-    D --> F[Cache]
-    D --> G[File Storage]
-```
 
 ### 📦 Structure du Projet
 
