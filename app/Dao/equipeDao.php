@@ -1,15 +1,17 @@
 <?php
 
 namespace App\DAO;
+use Config\Database;
+
 
 use App\Model\Equipe;
 use PDO;
 
 class EquipeDAO {
-    private $pdo;
+    private PDO $pdo;
 
-    public function __construct(PDO $pdo) {
-        $this->pdo = $pdo;
+    public function __construct() {
+        $this->pdo = Database::getInstance()->getConnection(); 
     }
 
     private function createObject($row) {

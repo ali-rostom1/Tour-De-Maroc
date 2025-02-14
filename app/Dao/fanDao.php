@@ -8,7 +8,7 @@ use PDO;
 class FanDAO {
     private PDO $pdo;
 
-    public function __construct(PDO $pdo) {
+    public function __construct() {
         $this->pdo =Database::getInstance()->getConnection();
     }
 

@@ -26,4 +26,17 @@ class UserDAO {
         }
         return null;
     }
+    public function updatPassword($password,$userId){
+        $stmt = $this->pdo->prepare("UPDATE person SET password = :password WHERE user_id = :user_id");
+        $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $data=$stmt->execute();
+
+        if ($data) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }
