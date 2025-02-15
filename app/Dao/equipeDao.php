@@ -64,26 +64,28 @@ class EquipeDAO {
         return $stmt->execute([$equipeId]);
     }
 
-    public function searchEquipes($query) {
-        $query = "%$query%";
-        $stmt = $this->pdo->prepare("
-            SELECT * FROM equipe
-            WHERE nom LIKE :query 
-            OR pays LIKE :query
-            LIMIT 10
-        ");
-        $stmt->execute(['query' => $query]);
-        
-        $results = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $results[] = [
-                'id' => $row['equipe_id'],
-                'nom' => htmlspecialchars($row['nom']),
-                'pays' => htmlspecialchars($row['pays']),
-                'type' => 'equipe'
-            ];
+    public function search($query) {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    id,
+                    nom,
+                    pays
+                FROM equipes
+                WHERE 
+                    nom LIKE :query OR 
+                    pays LIKE :query
+                LIMIT 5
+            ");
+            
+            $searchTerm = "%" . $query . "%";
+            $stmt->bindParam(':query', $searchTerm, PDO::PARAM_STR);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            error_log('EquipeDAO search error: ' . $e->getMessage());
+            return [];
         }
-        
-        return $results;
     }
 }
