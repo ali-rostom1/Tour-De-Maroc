@@ -4,16 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
     "content-hash": "57e4065cec589fd37cc959fc83218eb3",
-=======
-    "content-hash": "32d64d6f0353ec473f64068713347147",
->>>>>>> c1890e1c2da75f068c32ae6755a12cbfa8aa452a
     "packages": [
         {
             "name": "phpmailer/phpmailer",
             "version": "v6.9.3",
-<<<<<<< HEAD
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
@@ -95,8 +90,6 @@
         {
             "name": "symfony/polyfill-mbstring",
             "version": "v1.31.0",
-=======
->>>>>>> c1890e1c2da75f068c32ae6755a12cbfa8aa452a
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",

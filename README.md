@@ -100,10 +100,11 @@ tour-maroc/
 
 ## 🙏 Remerciements
 
-- Fédération Marocaine de Cyclisme
-- Équipe de développement
-- Contributeurs open source
-- Communauté cycliste marocaine
+- Mohammed Ali Rostom 
+- Hamza Chehlaoui 
+- Hamza Lhadouchi
+- Malika EL Abiad
+- Kaoutar Laamiri 
 
 ---
 

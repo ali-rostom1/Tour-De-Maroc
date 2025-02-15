@@ -1,6 +1,7 @@
 <?php
 namespace App\Model;
 
+
 class User {
     protected ?int $id;
     protected ?string $nom;
@@ -8,7 +9,11 @@ class User {
     protected ?string $password;
     protected ?Role $role;
 
+<<<<<<< HEAD
     public function __construct(int $id, string $nom, string $email, ?string $password, Role $role) {
+=======
+    public function __construct(int $id =null, string $nom = null, string $email =null, string $password = null, Role $role = null) {
+>>>>>>> 9da0640aa6309e5b13fe75d909d4642a352d9647
         $this->id = $id;
         $this->nom = $nom;
         $this->email = $email;
@@ -16,23 +21,23 @@ class User {
         $this->role = $role;
     }
 
-    public function getId(): int {
+    public function getId() {
         return $this->id;
     }
 
-    public function getNom(): string {
+    public function getNom() {
         return $this->nom;
     }
 
-    public function getEmail(): string {
+    public function getEmail() {
         return $this->email;
     }
 
-    public function getPassword(): string {
+    public function getPassword() {
         return $this->password;
     }
 
-    public function getRole(): Role {
+    public function getRole() {
         return $this->role;
     }
 

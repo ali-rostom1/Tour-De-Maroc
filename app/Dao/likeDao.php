@@ -53,10 +53,41 @@ class LikeDAO {
 
     public function addLike(Fan $fan,Etape $Etape) {
         $stmt = $this->pdo->prepare("INSERT INTO likes (fan_id, etape_id) VALUES (:fan, :etape)");
-        $stmt->bindParam(":fan", $fan->getId(), PDO::PARAM_INT);
-        $stmt->bindParam(":etape", $Etape->id, PDO::PARAM_INT);
-        return $stmt->execute();
+        $stmt->bindValue(":fan", $fan->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(":etape", $Etape->id, PDO::PARAM_INT);
+        
+        if ($stmt->execute()) {
+            echo 'g,gkg,g,egegk,ege,kk';
+        }
     }
+
+    public function getAllLikesByEtape() {
+        // Prepare the SQL query to get all likes for a specific etape
+        $stmt = $this->pdo->prepare("
+            SELECT *
+            FROM likes
+            ");
+        
+        // Bind the etape_id parameter to the query
+        
+
+        $stmt->execute();
+        
+        // Fetch all rows
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $likes = [];
+
+        foreach ($rows as $row) {
+        
+            
+            
+            $likes[] = new Like($row['fan_id'], $row['etape_id']);
+        }
+        
+        return $likes;
+    }
+    
 
     public function removeLike(Fan $fan,Etape $Etape) {
         $stmt = $this->pdo->prepare("DELETE FROM likes WHERE fan_id = :fan AND etape_id = :etape");
@@ -67,14 +98,14 @@ class LikeDAO {
 
     public function exists(Fan $fan,Etape $Etape) {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM likes WHERE fan_id = :fan AND etape_id = :etape");
-        $stmt->bindParam(":etape", $Etape->id, PDO::PARAM_INT);
-        $stmt->bindParam(":fan", $fan->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(":etape", $Etape->id, PDO::PARAM_INT);
+        $stmt->bindValue(":fan", $fan->getId(), PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchColumn() > 0;
     }
 
     public function AjaxLike(Etape $Etap) {
-        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM likes WHERE etape_id = :etap_id");
+        $stmt = $this->pdo->prepare("SELECT  COUNT(etap_id) FROM etape e join likes s on e.etape WHERE etape_id = :etap_id");
         $stmt->bindParam(":etap_id", $Etap->id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchColumn() > 0;

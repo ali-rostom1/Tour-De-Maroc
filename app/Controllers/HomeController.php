@@ -42,18 +42,22 @@ class HomeController extends Controller{
         $data = ["title"=>"welcome"];
         return $this->view("resetForm",$data);
     }
-    
+
 
     public function index() : void
     {
         $this->courseService->getAll();
         $this->view("/Visiteurs/home");
-        
+    }
+
+    public function profilCycliste(){
+        $data = ["title"=>"welcome"];
+        return $this->view("Cycliste/Profil_Cycliste",$data);
     }
     public function media() : void
     {
         $this->etapeService->getAllEtape();
         $this->view("/Visiteurs/Highlights");
     }
-
+    
 }   

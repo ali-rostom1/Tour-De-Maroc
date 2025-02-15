@@ -115,23 +115,57 @@
                 <img src="https://www.locmarrakech.com/tourisme/wp-content/uploads/2024/06/Maroc.jpeg" alt="Morocco flag" class="h-4 w-6" loading="lazy">
             </div>
             
-            <!-- Search Form -->
-            <form class="relative flex items-center">
-                <input 
-                    type="search" 
-                    placeholder="Rechercher..." 
-                    class="pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:border-yellow-600 transition-colors duration-200"
-                >
-                <button 
-                    type="submit" 
-                    class="absolute left-3 hover:text-yellow-600 transition-colors duration-200"
-                    aria-label="Search"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </button>
-            </form>
+            
+   
+    
+    <!-- Search Form with Results Container -->
+    <div class="search-container relative max-w-2xl mx-auto">
+        <form class="relative flex items-center" id="search-form">
+            <input 
+                type="search" 
+                id="search-input"
+                placeholder="Rechercher un cycliste, une équipe ou une étape..." 
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:border-yellow-600 transition-colors duration-200"
+            >
+            <button 
+                type="submit" 
+                class="absolute left-3 hover:text-yellow-600 transition-colors duration-200"
+                aria-label="Search"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </button>
+        </form>
+        
+        <!-- Search Results Container -->
+        <div id="search-results" class="absolute z-10 mt-2 w-full bg-white shadow-lg rounded-lg hidden">
+            <div class="p-4">
+                <!-- Cyclistes Section -->
+                <div id="cyclistes-results" class="mb-4">
+                    <h3 class="font-bold text-gray-700 mb-2">Cyclistes</h3>
+                    <ul class="divide-y divide-gray-200"></ul>
+                </div>
+                
+                <!-- Equipes Section -->
+                <div id="equipes-results" class="mb-4">
+                    <h3 class="font-bold text-gray-700 mb-2">Équipes</h3>
+                    <ul class="divide-y divide-gray-200"></ul>
+                </div>
+                
+                <!-- Etapes Section -->
+                <div id="etapes-results" class="mb-4">
+                    <h3 class="font-bold text-gray-700 mb-2">Étapes</h3>
+                    <ul class="divide-y divide-gray-200"></ul>
+                </div>
+                
+                <!-- No Results Message -->
+                <p id="no-results" class="text-gray-500 text-center py-4 hidden">Aucun résultat trouvé</p>
+            </div>
+        </div>
+    </div>
+    
+  
         </div>
     </div>
 </nav>
@@ -323,26 +357,232 @@
         </div>
     </div>
 </footer>
-<script>
-    // Mobile menu toggle
-    const menuButton = document.querySelector('[aria-label="Toggle menu"]');
-    const mobileMenu = document.createElement('div');
-    mobileMenu.className = 'fixed inset-0 bg-black/90 z-40 transform translate-x-full transition-transform duration-300 md:hidden';
-    document.body.appendChild(mobileMenu);
+<script>  
+ document.addEventListener('DOMContentLoaded', function() {
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    const cyclistesResults = document.querySelector('#cyclistes-results ul');
+    const equipesResults = document.querySelector('#equipes-results ul');
+    const etapesResults = document.querySelector('#etapes-results ul');
+    const noResults = document.getElementById('no-results');
 
-    menuButton.addEventListener('click', () => {
-        const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
-        menuButton.setAttribute('aria-expanded', !isExpanded);
-        mobileMenu.style.transform = isExpanded ? 'translateX(100%)' : 'translateX(0)';
+    // Base URL configuration
+    const BASE_URL = '/Tour-De-Maroc';
+    
+    // Debug flag
+    const DEBUG = true;
+
+    function log(...args) {
+        if (DEBUG) {
+            console.log('[Search Debug]:', ...args);
+        }
+    }
+
+    searchInput.addEventListener('focus', function() {
+        if (searchInput.value.trim() !== '') {
+            searchResults.classList.remove('hidden');
+        }
     });
 
-    // Intersection Observer for navbar
-    const navbar = document.querySelector('nav.sticky');
-    const observer = new IntersectionObserver(
-        ([e]) => navbar.classList.toggle('shadow-lg', e.intersectionRatio < 1),
-        { threshold: [1] }
-    );
-    observer.observe(navbar);
+    document.addEventListener('click', function(event) {
+        if (!searchForm.contains(event.target) && !searchResults.contains(event.target)) {
+            searchResults.classList.add('hidden');
+        }
+    });
+
+    let debounceTimer;
+    const MINIMUM_SEARCH_LENGTH = 2;
+    const DEBOUNCE_DELAY = 300;
+
+    searchInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        
+        const query = searchInput.value.trim();
+        
+        if (query.length < MINIMUM_SEARCH_LENGTH) {
+            searchResults.classList.add('hidden');
+            return;
+        }
+        
+        debounceTimer = setTimeout(() => performSearch(query), DEBOUNCE_DELAY);
+    });
+
+    searchForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const query = searchInput.value.trim();
+        
+        if (query.length >= MINIMUM_SEARCH_LENGTH) {
+            performSearch(query);
+        }
+    });
+
+    async function performSearch(query) {
+        log('Initiating search for:', query);
+        showLoadingState();
+
+        // Updated endpoints with correct base URL
+        const endpoints = {
+            primary: `${BASE_URL}/search`,
+            fallback: `${BASE_URL}/api/search`,
+            backup: `${BASE_URL}/home/search`
+        };
+
+        for (const [name, endpoint] of Object.entries(endpoints)) {
+            try {
+                log(`Trying ${name} endpoint:`, endpoint);
+                const url = `${endpoint}?q=${encodeURIComponent(query)}`;
+                
+                const response = await fetch(url, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    signal: AbortSignal.timeout(5000)
+                });
+
+                log(`${name} endpoint status:`, response.status);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Server did not return JSON');
+                }
+
+                const data = await response.json();
+                displayResults(data);
+                return;
+                
+            } catch (error) {
+                log(`Error with ${name} endpoint:`, error);
+                
+                if (name === 'backup') {
+                    handleSearchError(error, {
+                        endpoint: name,
+                        query: query,
+                        url: endpoint
+                    });
+                }
+                continue;
+            }
+        }
+    }
+
+    function showLoadingState() {
+        const loadingHTML = '<li class="py-2 text-gray-500">Chargement...</li>';
+        cyclistesResults.innerHTML = loadingHTML;
+        equipesResults.innerHTML = loadingHTML;
+        etapesResults.innerHTML = loadingHTML;
+        noResults.classList.add('hidden');
+        searchResults.classList.remove('hidden');
+    }
+
+    function displayResults(data) {
+        log('Displaying results:', data);
+        
+        cyclistesResults.innerHTML = '';
+        equipesResults.innerHTML = '';
+        etapesResults.innerHTML = '';
+        
+        let hasResults = false;
+        
+        const resultTypes = {
+            cyclistes: {
+                element: cyclistesResults,
+                container: document.getElementById('cyclistes-results'),
+                render: (item) => `
+                    <a href="${BASE_URL}/cycliste/view/${item.id}" class="block">
+                        <div class="font-medium">${escapeHtml(item.nom)}</div>
+                        <div class="text-sm text-gray-500">
+                            ${escapeHtml(item.nationalite)}
+                            ${item.equipe ? ' • ' + escapeHtml(item.equipe) : ''}
+                        </div>
+                    </a>
+                `
+            },
+            equipes: {
+                element: equipesResults,
+                container: document.getElementById('equipes-results'),
+                render: (item) => `
+                    <a href="${BASE_URL}/equipe/view/${item.id}" class="block">
+                        <div class="font-medium">${escapeHtml(item.nom)}</div>
+                        <div class="text-sm text-gray-500">${escapeHtml(item.pays)}</div>
+                    </a>
+                `
+            },
+            etapes: {
+                element: etapesResults,
+                container: document.getElementById('etapes-results'),
+                render: (item) => `
+                    <a href="${BASE_URL}/etape/view/${item.id}" class="block">
+                        <div class="font-medium">${escapeHtml(item.nom)}</div>
+                        <div class="text-sm text-gray-500">
+                            ${escapeHtml(item.distance)} km • 
+                            ${escapeHtml(item.lieuDepart)} → ${escapeHtml(item.lieuArrivee)}
+                            ${item.categorie ? ' • ' + escapeHtml(item.categorie) : ''}
+                        </div>
+                    </a>
+                `
+            }
+        };
+
+        for (const [type, config] of Object.entries(resultTypes)) {
+            if (data[type]?.length > 0) {
+                hasResults = true;
+                config.container.classList.remove('hidden');
+                
+                data[type].forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'py-2 hover:bg-gray-50';
+                    li.innerHTML = config.render(item);
+                    config.element.appendChild(li);
+                });
+            } else {
+                config.container.classList.add('hidden');
+            }
+        }
+        
+        if (!hasResults) {
+            noResults.textContent = 'Aucun résultat trouvé';
+            noResults.classList.remove('hidden');
+        } else {
+            noResults.classList.add('hidden');
+        }
+    }
+
+    function handleSearchError(error, context) {
+        log('Search error:', error, 'Context:', context);
+        
+        let errorMessage;
+        if (error.name === 'TimeoutError') {
+            errorMessage = 'La recherche a pris trop de temps. Veuillez réessayer.';
+        } else if (error.message.includes('404')) {
+            errorMessage = 'Le service de recherche est temporairement indisponible. Notre équipe a été notifiée.';
+        } else {
+            errorMessage = `Une erreur s'est produite lors de la recherche. Veuillez réessayer dans quelques instants.`;
+        }
+
+        noResults.textContent = errorMessage;
+        noResults.classList.remove('hidden');
+        
+        document.getElementById('cyclistes-results').classList.add('hidden');
+        document.getElementById('equipes-results').classList.add('hidden');
+        document.getElementById('etapes-results').classList.add('hidden');
+    }
+
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+});
 </script>
+<!-- <script src="/public/assets/js/search.js"></script> -->
 </body>
 </html>
