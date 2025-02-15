@@ -1,6 +1,5 @@
 <?php
 namespace  App\Controllers;
-
 use App\Service\AuthService;
 use Exception;
 use Config\Database; 
