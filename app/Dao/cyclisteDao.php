@@ -3,6 +3,7 @@ namespace App\DAO;
 
 use App\Model\Cycliste;
 use Config\Database;
+use App\Model\Equipe;
 use PDO;
 
 class CyclisteDAO {
@@ -13,8 +14,8 @@ class CyclisteDAO {
     }
 
     public function createCycliste(Cycliste $cycliste): bool {
-        $stmt = $this->pdo->prepare("INSERT INTO cycliste (nom, email, password, role_id, dateNaissance, nationalite) 
-                                    VALUES (:nom, :email, :password, :role_id, :dateNaissance, :nationalite)");
+        $stmt = $this->pdo->prepare("INSERT INTO cycliste (nom, email, password, role_id, dateNaissance, nationalite , poids , biographie,equipe_id) 
+                                    VALUES (:nom, :email, :password, :role_id, :dateNaissance, :nationalite , :poids , :biographie ,:equipe_id)");
 
         return $stmt->execute([
             'nom' => $cycliste->getNom(),
@@ -22,7 +23,10 @@ class CyclisteDAO {
             'password' => $cycliste->getPassword(),
             'role_id' => $cycliste->getRole()->getId(),
             'dateNaissance' => $cycliste->getDateNaissance(),
-            'nationalite' => $cycliste->getNationalite()
+            'nationalite' => $cycliste->getNationalite(),
+            'poids'=>$cycliste->getPoids(),
+            'biographie'=>$cycliste->getBiographie(),
+            'equipe_id'=>$cycliste->getEquipe()->getEquipeId()
         ]);
     }
 
