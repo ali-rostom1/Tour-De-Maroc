@@ -11,7 +11,7 @@ class PerformanceCourseDAO {
 
     private $pdo;
 
-    public function __construct(PDO $pdo) {
+    public function __construct() {
         $this->pdo = Database::getInstance(); 
 
     }
@@ -51,7 +51,8 @@ class PerformanceCourseDAO {
         );
     }
 
-    public function getPerformanceCourses($id) {
+    public function getPerformanceCourses($id=null) {
+        $id=1;
         $stmt = $this->pdo->query("
             SELECT * , 
             c.nom AS course_nom, cy.nom AS cycliste_nom
@@ -73,14 +74,13 @@ class PerformanceCourseDAO {
         return $performanceCourses;
     }
 
-    public function getRankedPerformanceCoursesByRace($id) {
+    public function getPerformanceCoursesByCycliste($id) {
         $stmt = $this->pdo->prepare("
             SELECT * 
             FROM performance_course pc
             INNER JOIN course c ON pc.course_id = c.course_id
             INNER JOIN cycliste cy ON pc.cycliste_id = cy.user_id
-             WHERE c.id = :id
-            ORDER BY pc.classementGeneral DESC  
+             WHERE cy.user_id = :id  
         ");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();

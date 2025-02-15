@@ -76,4 +76,36 @@ class ResultatEtape {
     public function setCycliste($cycliste) {
         $this->cycliste = $cycliste;
     }
+
+
+    public function toArray() {
+        $tempsDepart = new DateTime($this->tempsDepart);
+        $tempsArrivee = new DateTime($this->tempsArrivee);
+        $intervalle = $tempsDepart->diff($tempsArrivee);
+    
+        $hours = $intervalle->h + ($intervalle->i / 60);
+        $distance = $this->etape->getDistance();
+        if ($hours > 0) {
+            $vitesse = $distance / $hours;
+        }else {
+            $vitesse = 0; 
+        }
+        
+    
+        return [
+            "id" => $this->id,
+            "tempsDepart" => $this->tempsDepart,
+            "tempsArrivee" => $this->tempsArrivee,
+            "points" => $this->pointsEtape,
+            "classement" => $this->classementEtape,
+            "distance" => $distance,
+            "nom" => $this->etape->getNom(),
+            "vitesse" => round($vitesse, 2) 
+        ];
+    }
+    
+    
+
+
+
 }

@@ -15,11 +15,12 @@ use App\Model\Etape;
 class ResultatEtapeService {
     private $resultatEtapeDAO;
 
-    public function __construct($db) {
-        $this->resultatEtapeDAO = new ResultatEtapeDAO($db);
+    public function __construct() {
+        $this->resultatEtapeDAO = new ResultatEtapeDAO();
     }
 
     public function getAllResultats() {
+        $this->calculeResultatsEtapePoints();
         return $this->resultatEtapeDAO->getResultatEtapes();
     }
 
@@ -92,11 +93,68 @@ class ResultatEtapeService {
 
     }
 
+    public function calculeMoyenneVitesseCycliste($id){
+
+        $resultatsEtapes= $this->resultatEtapeDAO->getResultatEtapeByCyclisteId($id);
+
+        $vitesse= [] ;
+
+        foreach ($resultatsEtapes as $resultatsEtape) {
+            $tempsDepart = $resultatsEtape->getTempsDepart(); 
+            $tempsArrivee = $resultatsEtape->getTempsArrivee();
+        
+            $depart = new DateTime($tempsDepart);
+            $arrivee = new DateTime($tempsArrivee);
+            
+            $intervalle = $depart->diff($arrivee);
+            $hours = $intervalle->h + ($intervalle->i / 60) + ($intervalle->s / 3600);
+            if ($hours > 0) { 
+                $distance = $resultatsEtape->getEtape()->distance;
+                $vitesse[] = $distance / $hours; 
+            }
+            
+        }
+
+        return $moyenne = array_sum($vitesse) / count($vitesse);
+
+    }
+
+
+    public function calculeDistanceParcourueCycliste($id){
+
+        $resultatsEtapes= $this->resultatEtapeDAO->getResultatEtapeByCyclisteId($id);
+
+        $totalDistance = 0;
+
+        foreach ($resultatsEtapes as $resultatsEtape) {
+            
+                $totalDistance  += $resultatsEtape->getEtape()->distance;           
+            
+        }
+
+        return $totalDistance ;
+
+    }
+
 
 
     public function getResultatById($id) {
         return $this->resultatEtapeDAO->getResultatEtapeById($id);
     }
+
+    public function getResultatEtapeByCyclisteId($id) {
+        return $this->resultatEtapeDAO->getResultatEtapeByCyclisteId($id);
+    }
+
+    public function dataResultatsByCyclisteId($id) {
+        $resultatEtapes = $this->resultatEtapeDAO->getResultatEtapeByCyclisteId($id);
+        $data = [];
+        foreach ($resultatEtapes as $resultatEtape) {
+            $data[] = $resultatEtape->toArray();    
+        }
+        return $data;
+    }
+
 
     public function createResultatEtape($tempsDepart, $tempsArrivee, $pointsEtape, $classementEtape, $etape, $cycliste) {
         $resultatEtape = new ResultatEtape(
@@ -127,4 +185,5 @@ class ResultatEtapeService {
     public function deleteResultatEtape($id) {
         $this->resultatEtapeDAO->deleteResultatEtape($id);
     }
+    
 }

@@ -25,30 +25,34 @@ class PerformanceCourseService {
 
 
 
-    public function __construct($pdo) {
-        $this->performanceCourseDAO = new PerformanceCourseDAO($pdo);
-        $this->resultatEtapeService = new ResultatEtapeService($pdo);
+    public function __construct() {
+        $this->performanceCourseDAO = new PerformanceCourseDAO();
+        $this->resultatEtapeService = new ResultatEtapeService();
 
-        $this->cyclisteDAO = new CyclisteDAO($pdo);
-        $this->resultatEtapeDAO = new ResultatEtapeDAO($pdo);
+        $this->cyclisteDAO = new CyclisteDAO();
+        $this->resultatEtapeDAO = new ResultatEtapeDAO();
 
 
     }
 
     public function getAllPerformanceCourses($cours_id) {
         // so befor we get the course performace we need to check and calculate the performance
-        $this->updatePerformanceCourse($cours_id);
+        $this->updatePerformanceCourse();
 
         return $this->performanceCourseDAO->getPerformanceCourses($cours_id);
     }
 
-    public function getRankedPerformanceCoursesByRace($id) {
-        return $this->performanceCourseDAO->getRankedPerformanceCoursesByRace($id);
+    public function getPerformanceCoursesByCycliste($id) {
+        // so befor we get the course performace we need to check and calculate the performance
+        $this->updatePerformanceCourse();
+
+
+        return $this->performanceCourseDAO->getPerformanceCoursesByCycliste($id);
     }
 
     public function PodiumPerformanceCourseByCoursId($id) {
          // so befor we get the course performace we need to check and calculate the performance
-         $this->updatePerformanceCourse($cours_id);
+         $this->updatePerformanceCourse();
 
         return $this->performanceCourseDAO->PodiumPerformanceCourseByCoursId($id);
     }
@@ -75,7 +79,11 @@ class PerformanceCourseService {
         return $this->performanceCourseDAO->deletePerformanceCourse($id);
     }
 
-    public function calculePerformanceCourse($cours_id){
+    public function calculePerformanceCourse($cours_id =null){
+        if ($cours_id == null) {
+            $cours_id =1;
+        }
+
         $cyclistes = $this->cyclisteDAO->getall();
 
         foreach ($cyclistes as $cycliste) {
@@ -99,7 +107,10 @@ class PerformanceCourseService {
 
     }
 
-    public function classerPerformanceCourse($cours_id){
+    public function classerPerformanceCourse($cours_id =null){
+        if ($cours_id == null) {
+            $cours_id =1;
+        }
         $performanceCourses = $this->performanceCourseDAO->getPerformanceCourses($cours_id);
     
         if (!is_array($performanceCourses) || empty($performanceCourses)) {
@@ -122,7 +133,10 @@ class PerformanceCourseService {
 
 
 
-    public function updatePerformanceCourse($cours_id) {
+    public function updatePerformanceCourse($cours_id = null) {
+        if ($cours_id == null) {
+            $cours_id =1;
+        }
         // this is to calculate the points for  cylistes in a given course
         $this->calculePerformanceCourse($cours_id);
         // this is to order or classer the cylistes in a given course

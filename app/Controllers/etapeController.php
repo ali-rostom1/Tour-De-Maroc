@@ -31,8 +31,9 @@ class EtapeController extends Controller{
 
         ];
         extract($data);
-
         require_once '../app/Views/Admin/Etapes.php';
+
+
 
     }
 

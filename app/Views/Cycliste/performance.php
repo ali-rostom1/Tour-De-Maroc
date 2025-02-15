@@ -209,95 +209,202 @@
     </div>
 
     <script>
+
+
+// Initialize charts and fetch data
+document.addEventListener('DOMContentLoaded', function() {
+    const cyclisteId = '123'; // Replace this with the actual cyclist ID you want to fetch
+    fetch(`/tour-de-maroc/cyclistePerformance/dataResultatsByCyclisteId/${cyclisteId}`)
+        .then(response => response.json())
+        .then(data => {
+            // Assuming the response is an array of stages with relevant data
+            const performanceData = { stages: data };
+
+            // Initialize charts
+            initializeCharts(performanceData);
+
+            // Populate the table with the fetched data
+            populatePerformanceTable(performanceData);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+});
+
+// Initialize charts
+function initializeCharts(performanceData) {
+    // Speed Chart
+    const speedCtx = document.getElementById('speedChart').getContext('2d');
+    new Chart(speedCtx, {
+        type: 'line',
+        data: {
+            labels: performanceData.stages.map(stage => stage.stage),
+            datasets: [{
+                label: 'Vitesse Moyenne (km/h)',
+                data: performanceData.stages.map(stage => stage.vitesse), // assuming 'vitesse' in your API response
+                borderColor: '#004D98',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Comparison Chart
+    const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
+    new Chart(comparisonCtx, {
+        type: 'bar',
+        data: {
+            labels: performanceData.stages.map(stage => stage.stage),
+            datasets: [{
+                label: 'Votre Position',
+                data: performanceData.stages.map(stage => stage.position),
+                backgroundColor: '#FED100'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    reverse: true,
+                    min: 1,
+                    max: 10
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+
+// Populate table with fetched data
+function populatePerformanceTable(performanceData) {
+    const tableBody = document.getElementById('performanceTableBody');
+    tableBody.innerHTML = ''; // Clear the table first
+
+    performanceData.stages.forEach(stage => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap">${stage.stage}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${stage.date}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${stage.distance} km</td>
+            <td class="px-6 py-4 whitespace-nowrap">${stage.vitesse} km/h</td> <!-- Assuming 'vitesse' field -->
+            <td class="px-6 py-4 whitespace-nowrap">${stage.position}${getOrdinalSuffix(stage.position)}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${stage.points}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+// Helper function to get ordinal suffix (e.g. 1st, 2nd, 3rd, etc.)
+function getOrdinalSuffix(position) {
+    const j = position % 10,
+          k = position % 100;
+    if (j === 1 && k !== 11) {
+        return 'st';
+    }
+    if (j === 2 && k !== 12) {
+        return 'nd';
+    }
+    if (j === 3 && k !== 13) {
+        return 'rd';
+    }
+    return 'th';
+}
+
         // Sample data
-        const performanceData = {
-            stages: [
-                { stage: 'Étape 1', date: '2025-02-10', distance: 180, speed: 41.2, position: 4, points: 40 },
-                { stage: 'Étape 2', date: '2025-02-11', distance: 165, speed: 39.8, position: 3, points: 45 },
-                { stage: 'Étape 3', date: '2025-02-12', distance: 179, speed: 42.5, position: 2, points: 50 }
-            ]
-        };
+        // const performanceData = {
+        //     stages: [
+        //         { stage: 'Étape 1', date: '2025-02-10', distance: 180, speed: 41.2, position: 4, points: 40 },
+        //         { stage: 'Étape 2', date: '2025-02-11', distance: 165, speed: 39.8, position: 3, points: 45 },
+        //         { stage: 'Étape 3', date: '2025-02-12', distance: 179, speed: 42.5, position: 2, points: 50 }
+        //     ]
+        // };
 
-        // Initialize charts
-        document.addEventListener('DOMContentLoaded', function() {
-            // Speed Chart
-            const speedCtx = document.getElementById('speedChart').getContext('2d');
-            new Chart(speedCtx, {
-                type: 'line',
-                data: {
-                    labels: performanceData.stages.map(stage => stage.stage),
-                    datasets: [{
-                        label: 'Vitesse Moyenne (km/h)',
-                        data: performanceData.stages.map(stage => stage.speed),
-                        borderColor: '#004D98',
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
+        // // Initialize charts
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     // Speed Chart
+        //     const speedCtx = document.getElementById('speedChart').getContext('2d');
+        //     new Chart(speedCtx, {
+        //         type: 'line',
+        //         data: {
+        //             labels: performanceData.stages.map(stage => stage.stage),
+        //             datasets: [{
+        //                 label: 'Vitesse Moyenne (km/h)',
+        //                 data: performanceData.stages.map(stage => stage.speed),
+        //                 borderColor: '#004D98',
+        //                 tension: 0.1
+        //             }]
+        //         },
+        //         options: {
+        //             responsive: true,
+        //             plugins: {
+        //                 legend: {
+        //                     position: 'bottom'
+        //                 }
+        //             }
+        //         }
+        //     });
 
-            // Comparison Chart
-            const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
-            new Chart(comparisonCtx, {
-                type: 'bar',
-                data: {
-                    labels: performanceData.stages.map(stage => stage.stage),
-                    datasets: [{
-                        label: 'Votre Position',
-                        data: performanceData.stages.map(stage => stage.position),
-                        backgroundColor: '#FED100'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            reverse: true,
-                            min: 1,
-                            max: 10
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
+        //     // Comparison Chart
+        //     const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
+        //     new Chart(comparisonCtx, {
+        //         type: 'bar',
+        //         data: {
+        //             labels: performanceData.stages.map(stage => stage.stage),
+        //             datasets: [{
+        //                 label: 'Votre Position',
+        //                 data: performanceData.stages.map(stage => stage.position),
+        //                 backgroundColor: '#FED100'
+        //             }]
+        //         },
+        //         options: {
+        //             responsive: true,
+        //             scales: {
+        //                 y: {
+        //                     reverse: true,
+        //                     min: 1,
+        //                     max: 10
+        //                 }
+        //             },
+        //             plugins: {
+        //                 legend: {
+        //                     position: 'bottom'
+        //                 }
+        //             }
+        //         }
+        //     });
 
-            // Populate table
-            populatePerformanceTable();
-        });
+        //     // Populate table
+        //     populatePerformanceTable();
+        // });
 
-        function populatePerformanceTable() {
-            const tableBody = document.getElementById('performanceTableBody');
-            tableBody.innerHTML = '';
+        // function populatePerformanceTable() {
+        //     const tableBody = document.getElementById('performanceTableBody');
+        //     tableBody.innerHTML = '';
 
-            performanceData.stages.forEach(stage => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap">${stage.stage}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${stage.date}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${stage.distance} km</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${stage.speed} km/h</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${stage.position}${getOrdinalSuffix(stage.position)}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${stage.points}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
+        //     performanceData.stages.forEach(stage => {
+        //         const row = document.createElement('tr');
+        //         row.innerHTML = `
+        //             <td class="px-6 py-4 whitespace-nowrap">${stage.stage}</td>
+        //             <td class="px-6 py-4 whitespace-nowrap">${stage.date}</td>
+        //             <td class="px-6 py-4 whitespace-nowrap">${stage.distance} km</td>
+        //             <td class="px-6 py-4 whitespace-nowrap">${stage.speed} km/h</td>
+        //             <td class="px-6 py-4 whitespace-nowrap">${stage.position}${getOrdinalSuffix(stage.position)}</td>
+        //             <td class="px-6 py-4 whitespace-nowrap">${stage.points}</td>
+        //         `;
+        //         tableBody.appendChild(row);
+        //     });
+        // }
 
-        function getOrdinalSuffix(position) {
-            if (position === 1) return 'er';
-            return 'ème';
-        }
+    
 
         function exportData() {
             // Implementation for exporting data

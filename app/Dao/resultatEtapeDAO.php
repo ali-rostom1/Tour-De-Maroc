@@ -1,18 +1,22 @@
 <?php
-namespace App\Model;
+namespace App\Dao;
 
 use PDO;
 use App\DAO\EtapeDAO;
 use App\DAO\CyclisteDAO;
+use Config\Database;
+
 
 
 class ResultatEtapeDAO {
     private $db;
     private $etapeDAO;
 
-    public function __construct($db) {
-        $this->etapeDAO = new EtapeDAO($db);
-        $this->db = $db;
+    public function __construct() {
+        $this->db = Database::getInstance(); 
+
+        $this->etapeDAO = new EtapeDAO();
+       
     }
 
     public function getResultatEtapes() {
