@@ -206,5 +206,162 @@
             </div>
         </main>
     </div>
+     <!-- Modal Backdrop -->
+     <div id="modalBackdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <!-- Modal Content -->
+        <div class="bg-white rounded-lg w-full max-w-md mx-4">
+            <!-- Modal Header -->
+            <div class="p-6 border-b">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-[#004D98]">Nouvelle Étape</h2>
+                    <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="newStageForm" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Nom de l'étape
+                    </label>
+                    <input type="text" name="nom" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#004D98]"
+                        placeholder="ex: Étape 1">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Distance (km)
+                        </label>
+                        <input type="number" name="distance" required step="0.1"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#004D98]"
+                            placeholder="ex: 180">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Catégorie
+                        </label>
+                        <select name="categorie_id" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#004D98]">
+                            <option value="">Sélectionner</option>
+                            <option value="1">Plat</option>
+                            <option value="2">Accidenté</option>
+                            <option value="3">Montagne</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Lieu de départ
+                        </label>
+                        <input type="text" name="lieuDepart" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#004D98]"
+                            placeholder="ex: Casablanca">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Lieu d'arrivée
+                        </label>
+                        <input type="text" name="lieuArrivee" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#004D98]"
+                            placeholder="ex: Rabat">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Description
+                    </label>
+                    <textarea name="description" rows="3"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#004D98]"
+                        placeholder="Description de l'étape..."></textarea>
+                </div>
+
+                <div class="hidden">
+                    <input type="number" name="course_id" value="1">
+                    <input type="text" name="statut" value="encours">
+                </div>
+            </form>
+
+            <!-- Modal Footer -->
+            <div class="p-6 border-t flex justify-end space-x-4">
+                <button onclick="closeModal()" 
+                    class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                    Annuler
+                </button>
+                <button onclick="submitForm()" 
+                    class="px-4 py-2 bg-[#004D98] text-white rounded-md hover:bg-[#003d7a]">
+                    Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show modal when "Nouvelle Étape" button is clicked
+        function openModal() {
+            document.getElementById('modalBackdrop').classList.remove('hidden');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('modalBackdrop').classList.add('hidden');
+            document.getElementById('newStageForm').reset();
+        }
+
+        // Submit form
+        function submitForm() {
+            const form = document.getElementById('newStageForm');
+            if (form.checkValidity()) {
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData);
+                
+                // Convert distance to number
+                data.distance = parseFloat(data.distance);
+                data.categorie_id = parseInt(data.categorie_id);
+                data.course_id = parseInt(data.course_id);
+
+                // Here you would typically send this to your server
+                console.log('Form data:', data);
+                
+                // Example of sending to server
+                fetch('/api/etapes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    closeModal();
+                    // Optionally refresh the page or update the UI
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Une erreur est survenue lors de l\'enregistrement');
+                });
+            } else {
+                form.reportValidity();
+            }
+        }
+
+        // Add click event to "Nouvelle Étape" button
+        document.addEventListener('DOMContentLoaded', function() {
+            const newStageBtn = document.querySelector('button:has(i.fas.fa-plus)');
+            if (newStageBtn) {
+                newStageBtn.addEventListener('click', openModal);
+            }
+        });
+    </script>
 </body>
 </html>

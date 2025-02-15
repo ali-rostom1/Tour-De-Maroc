@@ -1,3 +1,7 @@
+<?php
+($data);
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -107,17 +111,7 @@
 
         <!-- Registration Form -->
         <form class="space-y-6" novalidate>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-1">
-                    <label for="firstname" class="block text-sm font-medium text-gray-700">Prénom</label>
-                    <input 
-                        type="text" 
-                        id="firstname"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
-                        required
-                    >
-                    <p class="text-red-500 text-sm hidden">Champ requis</p>
-                </div>
+            <div class="">
 
                 <div class="space-y-1">
                     <label for="lastname" class="block text-sm font-medium text-gray-700">Nom</label>
@@ -128,6 +122,54 @@
                         required
                     >
                     <p class="text-red-500 text-sm hidden">Champ requis</p>
+                </div>
+            </div>
+
+            <!-- Nouveau champ rôle -->
+            <div class="space-y-1">
+                <label for="role" class="block text-sm font-medium text-gray-700">Rôle</label>
+                <select 
+                    id="role"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
+                    required
+                >
+                    <option value="">Sélectionnez un rôle</option>
+                    <option value="fan">Fan</option>
+                    <option value="cycliste">Cycliste</option>
+                </select>
+            </div>
+
+            <!-- Champs pour cycliste -->
+            <div id="cyclisteFields" class="space-y-6 hidden">
+                <div class="space-y-1">
+                    <label for="dateNaissance" class="block text-sm font-medium text-gray-700">Date de naissance</label>
+                    <input 
+                        type="date" 
+                        id="dateNaissance"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
+                    >
+                </div>
+
+                <div class="space-y-1">
+                    <label for="nationalite" class="block text-sm font-medium text-gray-nationalite" class="block text-sm font-medium text-gray-700">Nationalité</label>
+                    <input 
+                        type="text" 
+                        id="nationalite"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
+                    >
+                </div>
+
+                <div class="space-y-1">
+                    <label for="equipe" class="block text-sm font-medium text-gray-700">Équipe</label>
+                    <select 
+                        id="equipe"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
+                    >
+                        <option value="">Sélectionnez une équipe</option>
+                        <option value="team1">Team 1</option>
+                        <option value="team2">Team 2</option>
+                        <option value="team3">Team 3</option>
+                    </select>
                 </div>
             </div>
 
@@ -143,17 +185,7 @@
                 <p class="text-red-500 text-sm hidden">Veuillez entrer une adresse email valide</p>
             </div>
 
-            <div class="space-y-1">
-                <label for="phone" class="block text-sm font-medium text-gray-700">Numéro de téléphone</label>
-                <input 
-                    type="tel" 
-                    id="phone"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
-                    placeholder="+33 6 12 34 56 78"
-                    required
-                >
-                <p class="text-red-500 text-sm hidden">Veuillez entrer un numéro de téléphone valide</p>
-            </div>
+            
 
             <div class="space-y-1">
                 <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
@@ -172,22 +204,6 @@
                 <p class="text-red-500 text-sm hidden">Le mot de passe doit contenir au moins 8 caractères</p>
             </div>
 
-            <div class="space-y-1">
-                <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirmer le mot de passe</label>
-                <div class="relative">
-                    <input 
-                        type="password" 
-                        id="confirm-password"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
-                        placeholder="8 caractères minimum"
-                        required
-                    >
-                    <button type="button" class="toggle-password text-gray-500 hover:text-gray-700">
-                        <i class="far fa-eye"></i>
-                    </button>
-                </div>
-                <p class="text-red-500 text-sm hidden">Les mots de passe ne correspondent pas</p>
-            </div>
 
             <div class="space-y-4">
                 <label class="flex items-start space-x-2 cursor-pointer">
@@ -226,143 +242,128 @@
         </div>
     </div>
 </div>
-    <script>
-        // Toggle password visibility
-      // Toggle password visibility
-document.querySelectorAll('.toggle-password').forEach(button => {
-    button.addEventListener('click', function() {
-        const input = this.previousElementSibling;
-        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-        input.setAttribute('type', type);
-        
-        // Toggle eye icon
-        const icon = this.querySelector('i');
-        icon.classList.toggle('fa-eye');
-        icon.classList.toggle('fa-eye-slash');
+
+<script>
+    // Toggle password visibility
+    document.querySelectorAll('.toggle-password').forEach(button => {
+        button.addEventListener('click', function() {
+            const input = this.previousElementSibling;
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            
+            // Toggle eye icon
+            const icon = this.querySelector('i');
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
     });
-});
 
-// Form validation
-const form = document.querySelector('form');
-const inputs = form.querySelectorAll('input[required]');
-const password = document.getElementById('password');
-const confirmPassword = document.getElementById('confirm-password');
-const email = document.getElementById('email');
-const phone = document.getElementById('phone');
-
-// Helper function to show error message
-const showError = (input, message) => {
-    const errorElement = input.parentElement.querySelector('.text-red-500');
-    errorElement.textContent = message;
-    errorElement.classList.remove('hidden');
-    input.classList.add('border-red-500');
-};
-
-// Helper function to hide error message
-const hideError = (input) => {
-    const errorElement = input.parentElement.querySelector('.text-red-500');
-    errorElement.classList.add('hidden');
-    input.classList.remove('border-red-500');
-};
-
-// Validate email format
-const isValidEmail = (email) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-};
-
-// Validate phone format (French format)
-const isValidPhone = (phone) => {
-    return /^(\+33|0)[1-9](\d{2}){4}$/.test(phone.replace(/\s/g, ''));
-};
-
-// Format phone number as user types
-phone.addEventListener('input', (e) => {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.startsWith('0')) {
-        value = '+33' + value.substring(1);
-    }
-    if (value.startsWith('33')) {
-        value = '+' + value;
-    }
-    
-    // Format with spaces
-    if (value.startsWith('+33')) {
-        value = value.replace(/(\+33)(\d{1})(\d{2})(\d{2})(\d{2})(\d{2}).*/, '$1 $2 $3 $4 $5 $6');
-    }
-    
-    e.target.value = value;
-});
-
-// Validate form on submit
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    let isValid = true;
-
-    // Check required fields
-    inputs.forEach(input => {
-        if (!input.value.trim()) {
-            isValid = false;
-            showError(input, 'Champ requis');
+    // Afficher/masquer les champs cycliste
+    document.getElementById('role').addEventListener('change', function() {
+        const cyclisteFields = document.getElementById('cyclisteFields');
+        if (this.value === 'cycliste') {
+            cyclisteFields.classList.remove('hidden');
         } else {
-            hideError(input);
+            cyclisteFields.classList.add('hidden');
         }
     });
+
+    // Form validation
+    const form = document.querySelector('form');
+    const inputs = form.querySelectorAll('input[required]');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm-password');
+    const email = document.getElementById('email');
+    const phone = document.getElementById('phone');
+
+    // Helper function to show error message
+    const showError = (input, message) => {
+        const errorElement = input.parentElement.querySelector('.text-red-500');
+        errorElement.textContent = message;
+        errorElement.classList.remove('hidden');
+        input.classList.add('border-red-500');
+    };
+
+    // Helper function to hide error message
+    const hideError = (input) => {
+        const errorElement = input.parentElement.querySelector('.text-red-500');
+        errorElement.classList.add('hidden');
+        input.classList.remove('border-red-500');
+    };
 
     // Validate email format
-    if (email.value && !isValidEmail(email.value)) {
-        isValid = false;
-        showError(email, 'Veuillez entrer une adresse email valide');
-    }
+    const isValidEmail = (email) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
 
-    // Validate phone format
-    if (phone.value && !isValidPhone(phone.value)) {
-        isValid = false;
-        showError(phone, 'Veuillez entrer un numéro de téléphone valide');
-    }
+    
 
-    // Validate password length
-    if (password.value.length < 8) {
-        isValid = false;
-        showError(password, 'Le mot de passe doit contenir au moins 8 caractères');
-    }
+    // Validate form on submit
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let isValid = true;
 
-    // Validate password match
-    if (password.value !== confirmPassword.value) {
-        isValid = false;
-        showError(confirmPassword, 'Les mots de passe ne correspondent pas');
-    }
+        // Check required fields
+        inputs.forEach(input => {
+            if (!input.value.trim()) {
+                isValid = false;
+                showError(input, 'Champ requis');
+            } else {
+                hideError(input);
+            }
+        });
 
-    // Check terms acceptance
-    const terms = document.getElementById('terms');
-    if (!terms.checked) {
-        isValid = false;
-        showError(terms, "Vous devez accepter les conditions d'utilisation");
-    }
+        // Validate email format
+        if (email.value && !isValidEmail(email.value)) {
+            isValid = false;
+            showError(email, 'Veuillez entrer une adresse email valide');
+        }
 
-    if (isValid) {
-        // Here you would typically send the form data to your server
-        console.log('Form is valid, ready to submit');
-        // form.submit(); // Uncomment this line when ready to submit to server
-    }
-});
+        
 
-// Real-time validation
-inputs.forEach(input => {
-    input.addEventListener('input', () => {
-        if (input.value.trim()) {
-            hideError(input);
+        // Validate password length
+        if (password.value.length < 8) {
+            isValid = false;
+            showError(password, 'Le mot de passe doit contenir au moins 8 caractères');
+        }
+
+        // Validate password match
+        if (password.value !== confirmPassword.value) {
+            isValid = false;
+            showError(confirmPassword, 'Les mots de passe ne correspondent pas');
+        }
+
+        // Check terms acceptance
+        const terms = document.getElementById('terms');
+        if (!terms.checked) {
+            isValid = false;
+            showError(terms, "Vous devez accepter les conditions d'utilisation");
+        }
+
+        if (isValid) {
+            // Here you would typically send the form data to your server
+            console.log('Form is valid, ready to submit');
+            // form.submit(); // Uncomment this line when ready to submit to server
         }
     });
-});
 
-// Real-time password match validation
-confirmPassword.addEventListener('input', () => {
-    if (password.value !== confirmPassword.value) {
-        showError(confirmPassword, 'Les mots de passe ne correspondent pas');
-    } else {
-        hideError(confirmPassword);
-    }
-});
+    // Real-time validation
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            if (input.value.trim()) {
+                hideError(input);
+            }
+        });
+    });
+
+    // Real-time password match validation
+    confirmPassword.addEventListener('input', () => {
+        if (password.value !== confirmPassword.value) {
+            showError(confirmPassword, 'Les mots de passe ne correspondent pas');
+        } else {
+            hideError(confirmPassword);
+        }
+    });
 </script>
 </body>
 </html>

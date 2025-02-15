@@ -10,7 +10,7 @@ class Comment {
     private $fan;
     private $etape;
 
-    public function __construct($comment_id = null, $contenu = null, $statut = null, $dateCreation = null, Fan $fan = null, Etape $etape = null) {
+    public function __construct($comment_id = null, $contenu = null, $statut = null, $dateCreation = null, $fan = null, $etape = null) {
         $this->comment_id = $comment_id;
         $this->contenu = $contenu;
         $this->statut = $statut;
@@ -59,11 +59,11 @@ class Comment {
         $this->dateCreation = $dateCreation;
     }
 
-    public function setFan(Fan $fan) {
+    public function setFan($fan) {
         $this->fan = $fan;
     }
 
-    public function setEtape(Etape $etape) {
+    public function setEtape($etape) {
         $this->etape = $etape;
     }
 }

@@ -19,6 +19,24 @@
         body {
             font-family: 'Roboto Condensed', sans-serif;
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -73,7 +91,7 @@
         <main class="flex-1 p-8">
             <div class="flex justify-between items-center mb-8">
                 <h1 class="text-3xl font-bold">Categories</h1>
-                <button class="bg-[#004D98] text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+                <button id="addCategoryBtn" class="bg-[#004D98] text-white px-4 py-2 rounded-lg flex items-center space-x-2">
                     <i class="fas fa-plus"></i>
                     <span>Nouvelle Catégorie</span>
                 </button>
@@ -152,5 +170,113 @@
             </div>
         </main>
     </div>
+
+    <!-- Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-6 border-b">
+                <h3 class="text-xl font-bold">Ajouter une nouvelle catégorie</h3>
+                <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="categoryForm" class="p-6 space-y-4">
+                <div>
+                    <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Type de catégorie</label>
+                    <select id="type" name="type" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#004D98] focus:border-[#004D98]">
+                        <option value="">Sélectionner un type</option>
+                        <option value="SPRINT">Sprint</option>
+                        <option value="MOUNTAIN">Montagne</option>
+                        <option value="YOUTH">Jeunes</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea id="description" name="description" required rows="3" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#004D98] focus:border-[#004D98]"></textarea>
+                </div>
+
+                <div>
+                    <label for="basePoints" class="block text-sm font-medium text-gray-700 mb-1">Points de base</label>
+                    <input type="number" id="basePoints" name="basePoints" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#004D98] focus:border-[#004D98]">
+                </div>
+
+                <div>
+                    <label for="coefficient" class="block text-sm font-medium text-gray-700 mb-1">Coefficient</label>
+                    <input type="number" id="coefficient" name="coefficient" step="0.1" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#004D98] focus:border-[#004D98]">
+                </div>
+            </form>
+
+            <!-- Modal Footer -->
+            <div class="flex justify-end space-x-3 p-6 border-t">
+                <button id="cancelBtn" class="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-50">
+                    Annuler
+                </button>
+                <button id="saveBtn" class="px-4 py-2 bg-[#004D98] text-white rounded-lg hover:bg-[#003d7a]">
+                    Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Get DOM elements
+        const modal = document.getElementById('categoryModal');
+        const addBtn = document.getElementById('addCategoryBtn');
+        const closeBtn = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const form = document.getElementById('categoryForm');
+
+        // Show modal
+        addBtn.addEventListener('click', () => {
+            modal.classList.add('show');
+        });
+
+        // Hide modal
+        function hideModal() {
+            modal.classList.remove('show');
+            form.reset();
+        }
+
+        closeBtn.addEventListener('click', hideModal);
+        cancelBtn.addEventListener('click', hideModal);
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                hideModal();
+            }
+        });
+
+        // Handle form submission
+        saveBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (form.checkValidity()) {
+                const formData = {
+                    type: document.getElementById('type').value,
+                    description: document.getElementById('description').value,
+                    basePoints: parseInt(document.getElementById('basePoints').value),
+                    coefficient: parseFloat(document.getElementById('coefficient').value)
+                };
+                
+                console.log('Category Data:', formData);
+                // Here you would typically send the data to your server
+                // fetch('/api/categories', {
+                //     method: 'POST',
+                //     headers: {'Content-Type': 'application/json'},
+                //     body: JSON.stringify(formData)
+                // });
+                
+                hideModal();
+            } else {
+                form.reportValidity();
+            }
+        });
+    </script>
 </body>
 </html>

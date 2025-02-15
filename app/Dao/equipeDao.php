@@ -11,7 +11,7 @@ class EquipeDAO {
     private PDO $pdo;
 
     public function __construct() {
-        $this->pdo = Database::getInstance(); 
+        $this->pdo = Database::getInstance()->getConnection(); 
     }
 
     private function createObject($row) {
