@@ -4,5 +4,7 @@ require_once '../vendor/autoload.php';
 
 
 
-$router = new Router();
+$uri = $_SERVER["REQUEST_URI"];
+// var_dump($uri);
+$router = new Router($uri);
 

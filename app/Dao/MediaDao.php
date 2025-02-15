@@ -20,8 +20,6 @@
         {
             $this->db = Database::getInstance()->getConnection();
             $this->userDao = new UserDAO();
-            $this->courseDao = new CourseDao();
-            $this->etapeDao = new EtapeDao();
         }
         private function mapRowToMedia(array $row) : Media
         {

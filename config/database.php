@@ -2,6 +2,7 @@
 namespace config;
 use PDO;
 use PDOException;
+use Exception;
 
 class Database {
     private static $instance = null;
@@ -20,9 +21,9 @@ class Database {
 
     public static function getInstance($dsn = null, $username = null, $password = null) {
         if (self::$instance === null) {
-            $dsn = $dsn ?? 'pgsql:host=localhost;port=5432;dbname=TourMaroc';
+            $dsn = $dsn ?? 'pgsql:host=localhost;port=5432;dbname=tourmaroc';
             $username = $username ?? 'postgres';
-            $password = $password ?? 'root';
+            $password = $password ?? 37533753;
             self::$instance = new Database($dsn, $username, $password);
         }
         return self::$instance;

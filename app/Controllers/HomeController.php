@@ -7,10 +7,7 @@ use App\DAO\RoleDAO ;
 
 class HomeController extends Controller{
 
-    public function index() {
-        // return $this->view("index",$data);
-
-    }
+    
     public function register(){
         $equipeService= new EquipeService();
         $roleDao = new RoleDAO();
@@ -35,10 +32,12 @@ class HomeController extends Controller{
         $data = ["title"=>"welcome"];
         return $this->view("resetForm",$data);
     }
+
     public function profilCycliste(){
         $data = ["title"=>"welcome"];
         return $this->view("Cycliste/Profil_Cycliste",$data);
     }
+
 
 
 }

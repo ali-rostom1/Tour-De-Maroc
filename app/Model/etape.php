@@ -13,8 +13,8 @@ class Etape
     private string $status;
     private string $description;
     private array $cyclistes = [];
-    private array $document = [];
-    private array $fans = [];
+    private ?array $document = [];
+    private ?array $fans = [];
     private  $categorie;
     
 
