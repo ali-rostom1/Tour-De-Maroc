@@ -30,8 +30,26 @@
             // $medias = $this->getMediaById($row["etape_id"]);
             $fans = $this->getFansById($row["etape_id"]);
             $categorie = $this->categorieDaoImpl->find($row["etape_id"]);
-            return new Etape($row["etape_id"],$row["nom"],$row["distance"],$row["lieudepart"],$row["lieuarrivee"],$row["statut"],$row["description"],$cyclistes,null,$fans,$categorie);
+        
+            // Pass the likes count into the Etape constructor
+            $likesCount = $row['likes_count'];  // This is the count of likes for this etape
+            
+            return new Etape(
+                $row["etape_id"], 
+                $row["nom"], 
+                $row["distance"], 
+                $row["lieudepart"], 
+                $row["lieuarrivee"], 
+                $row["statut"], 
+                $row["description"], 
+                $cyclistes, 
+                null, 
+                $fans, 
+                $categorie,
+                $likesCount // Pass the likes count to the Etape object
+            );
         }
+        
         private function getCyclistesById(int $id) : array
         {
             $query = "SELECT * from resultat_etape where etape_id=:id";
@@ -71,7 +89,7 @@
         }
         public function getAll(): array
         {
-            $query = "SELECT * from etape";
+            $query = "SELECT e.*, COUNT(s.etape_id) as likes_count from etape e left join likes s on s.etape_id = e.etape_id group by e.etape_id";
             $stmt = $this->db->query($query);
             $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             $etapes = [];

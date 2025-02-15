@@ -6,8 +6,8 @@ class Like {
     private $fan;
     private $etape;
 
-    public function __construct(Fan $fan = null, Etape $etape = null) {
-        $this->fan = $fan;
+    public function __construct($fan = null, $etape = null) {
+        $this->fan =$fan;
         $this->etape = $etape;
     }
 
@@ -19,11 +19,11 @@ class Like {
         return $this->etape;
     }
 
-    public function setFan(Fan $fan) {
+    public function setFan( $fan) {
         $this->fan = $fan;
     }
 
-    public function setEtape(Etape $etape) {
+    public function setEtape( $etape) {
         $this->etape = $etape;
     }
 }

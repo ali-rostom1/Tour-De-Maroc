@@ -174,7 +174,7 @@ class AuthController extends Controller{
         print_r($_SESSION);
         $userId=$_SESSION['userId'];
         $changeP = $this->authService->updatePassword($userId,$password);
-        var_dump($changeP);
+        ($changeP);
         if ($changeP) {
             unset($_SESSION['userId']);
             unset($_SESSION['token']);
