@@ -1,13 +1,23 @@
 <?php
-namespace  App\Controllers;
+namespace App\Controllers;
 
+use App\Service\CourseService;
 use Core\Controller ;
 use App\Service\EquipeService ;
 use App\DAO\RoleDAO ;
+use App\Service\etapeService;
 
 class HomeController extends Controller{
 
-    
+
+    private CourseService $courseService;
+    private etapeService $etapeService;
+
+    public function __construct()
+    {
+        $this->courseService = new CourseService();
+        $this->etapeService = new EtapeService();
+    }
     public function register(){
         $equipeService= new EquipeService();
         $roleDao = new RoleDAO();
@@ -33,11 +43,20 @@ class HomeController extends Controller{
         return $this->view("resetForm",$data);
     }
 
+    public function index() : void
+    {
+        $this->courseService->getAll();
+        $this->view("/Visiteurs/home");
+    }
+
     public function profilCycliste(){
         $data = ["title"=>"welcome"];
         return $this->view("Cycliste/Profil_Cycliste",$data);
     }
-
-
-
-}
+    public function media() : void
+    {
+        $this->etapeService->getAllEtape();
+        $this->view("/Visiteurs/Highlights");
+    }
+    
+}   

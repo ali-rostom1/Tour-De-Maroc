@@ -136,4 +136,37 @@
                 return false;
             }
         }
+
+        public function searchEtapes($query) {
+            $query = "%$query%";
+            $stmt = $this->db->prepare("
+            SELECT e.etape_id, e.nom, e.distance, e.lieuDepart, e.lieuArrivee, 
+                   c.description as categorie_nom
+            FROM etape e
+            LEFT JOIN categorie c ON e.categorie_id = c.categorie_id
+            WHERE e.nom LIKE ? 
+               OR e.lieuDepart LIKE ? 
+               OR e.lieuArrivee LIKE ?
+               OR e.description LIKE ?
+               OR (c.description IS NOT NULL AND c.description LIKE ?)
+            LIMIT 10
+        ");
+        $stmt->execute(["%$query%", "%$query%", "%$query%", "%$query%", "%$query%"]);
+        
+            
+            $results = [];
+            while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                $results[] = [
+                    'id' => $row['etape_id'],
+                    'nom' => htmlspecialchars($row['nom']),
+                    'distance' => floatval($row['distance']),
+                    'lieuDepart' => htmlspecialchars($row['lieuDepart']),
+                    'lieuArrivee' => htmlspecialchars($row['lieuArrivee']),
+                    'categorie' => $row['categorie_nom'] ? htmlspecialchars($row['categorie_nom']) : null,
+                    'type' => 'etape'
+                ];
+            }
+            
+            return $results;
+        }
     }

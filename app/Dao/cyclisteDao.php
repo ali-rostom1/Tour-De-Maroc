@@ -3,6 +3,7 @@ namespace App\DAO;
 
 use App\Model\Cycliste;
 use Config\Database;
+use App\Model\Role;
 use App\Model\Equipe;
 use PDO;
 
@@ -60,5 +61,30 @@ class CyclisteDAO {
         ]);
     }
 
-
+    public function searchCyclistes($query) {
+        $query = "%$query%";
+        $stmt = $this->pdo->prepare("
+            SELECT c.user_id, c.nom, c.nationalite, c.equipe_id, e.nom as equipe_nom 
+            FROM cycliste c
+            LEFT JOIN equipe e ON c.equipe_id = e.equipe_id
+            WHERE c.nom LIKE :query 
+            OR c.nationalite LIKE :query 
+            OR (e.nom IS NOT NULL AND e.nom LIKE :query)
+            LIMIT 10
+        ");
+        $stmt->execute(['query' => $query]);
+        
+        $results = [];
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $results[] = [
+                'id' => $row['user_id'],
+                'nom' => htmlspecialchars($row['nom']),
+                'nationalite' => htmlspecialchars($row['nationalite']),
+                'equipe' => $row['equipe_nom'] ? htmlspecialchars($row['equipe_nom']) : null,
+                'type' => 'cycliste'
+            ];
+        }
+        
+        return $results;
+    }
 }

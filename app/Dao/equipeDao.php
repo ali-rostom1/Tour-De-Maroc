@@ -63,4 +63,27 @@ class EquipeDAO {
         $stmt = $this->pdo->prepare("DELETE FROM equipe WHERE equipe_id = ?");
         return $stmt->execute([$equipeId]);
     }
+
+    public function searchEquipes($query) {
+        $query = "%$query%";
+        $stmt = $this->pdo->prepare("
+            SELECT * FROM equipe
+            WHERE nom LIKE :query 
+            OR pays LIKE :query
+            LIMIT 10
+        ");
+        $stmt->execute(['query' => $query]);
+        
+        $results = [];
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $results[] = [
+                'id' => $row['equipe_id'],
+                'nom' => htmlspecialchars($row['nom']),
+                'pays' => htmlspecialchars($row['pays']),
+                'type' => 'equipe'
+            ];
+        }
+        
+        return $results;
+    }
 }
