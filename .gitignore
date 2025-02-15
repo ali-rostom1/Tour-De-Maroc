@@ -1,9 +1,6 @@
 /vendor/
 /node_modules/
 public/assets/css/output.css
-<<<<<<< HEAD
 composer.json
 composer.package
-=======
 /.idea/
->>>>>>> 9da0640aa6309e5b13fe75d909d4642a352d9647
