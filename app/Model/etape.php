@@ -5,14 +5,14 @@ use App\Model\Categorie;
 
 class Etape
 {
-    private int $id;
-    private string $nom;
-    private float $distance;
-    private string $lieuDepart;
-    private string $lieuArrivee;
-    private string $status;
-    private string $description;
-    private array $cyclistes = [];
+    private ?int $id;
+    private ?string $nom;
+    private ?float $distance;
+    private ?string $lieuDepart;
+    private ?string $lieuArrivee;
+    private ?string $status;
+    private ?string $description;
+    private ?array $cyclistes = [];
     private ?array $document = [];
     private ?array $fans = [];
     private  $categorie;
@@ -44,5 +44,19 @@ class Etape
         if (property_exists($this, $attr)) {
             $this->$attr = $value;
         }
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'nom' => $this->nom,
+            'distance' => $this->distance,
+            'lieuDepart' => $this->lieuDepart,
+            'lieuArrivee' => $this->lieuArrivee,
+            'status' => $this->status,
+            'description' => $this->description,
+            'categorie' => $this->categorie->getCategorieId() 
+        ];
     }
 }

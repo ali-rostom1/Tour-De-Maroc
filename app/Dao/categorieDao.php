@@ -5,7 +5,6 @@ use App\Model\Categorie;
 
 
 
-use App\Model\Categorie;
 class CategorieDAO {
     private $pdo;
 

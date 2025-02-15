@@ -221,7 +221,7 @@
             </div>
 
             <!-- Modal Body -->
-            <form id="newStageForm" class="p-6 space-y-4">
+            <form id="newStageForm" class="p-6 space-y-4" action="/tour-de-maroc/etape/create" method="POST">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Nom de l'étape
@@ -248,9 +248,11 @@
                         <select name="categorie_id" required
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#004D98]">
                             <option value="">Sélectionner</option>
-                            <option value="1">Plat</option>
-                            <option value="2">Accidenté</option>
-                            <option value="3">Montagne</option>
+                            <?php foreach ($categories as $categorie) { ?>
+                            <option value="<?= $categorie->getCategorieId() ?>"> <?= $categorie->getType() ?> </option>
+                            <!-- <option value="2">Accidenté</option>
+                            <option value="3">Montagne</option> -->
+                            <?php } ?>
                         </select>
                     </div>
                 </div>
@@ -288,19 +290,20 @@
                     <input type="number" name="course_id" value="1">
                     <input type="text" name="statut" value="encours">
                 </div>
+
+                <div class="p-6 border-t flex justify-end space-x-4">
+                    <button onclick="closeModal()" 
+                        class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                        Annuler
+                    </button>
+                    <button type="submit" 
+                        class="px-4 py-2 bg-[#004D98] text-white rounded-md hover:bg-[#003d7a]">
+                        Enregistrer
+                    </button>
+                </div>
             </form>
 
-            <!-- Modal Footer -->
-            <div class="p-6 border-t flex justify-end space-x-4">
-                <button onclick="closeModal()" 
-                    class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
-                    Annuler
-                </button>
-                <button onclick="submitForm()" 
-                    class="px-4 py-2 bg-[#004D98] text-white rounded-md hover:bg-[#003d7a]">
-                    Enregistrer
-                </button>
-            </div>
+      
         </div>
     </div>
 
@@ -316,44 +319,7 @@
             document.getElementById('newStageForm').reset();
         }
 
-        // Submit form
-        function submitForm() {
-            const form = document.getElementById('newStageForm');
-            if (form.checkValidity()) {
-                const formData = new FormData(form);
-                const data = Object.fromEntries(formData);
-                
-                // Convert distance to number
-                data.distance = parseFloat(data.distance);
-                data.categorie_id = parseInt(data.categorie_id);
-                data.course_id = parseInt(data.course_id);
-
-                // Here you would typically send this to your server
-                console.log('Form data:', data);
-                
-                // Example of sending to server
-                fetch('/api/etapes', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success:', data);
-                    closeModal();
-                    // Optionally refresh the page or update the UI
-                    window.location.reload();
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    alert('Une erreur est survenue lors de l\'enregistrement');
-                });
-            } else {
-                form.reportValidity();
-            }
-        }
+    
 
         // Add click event to "Nouvelle Étape" button
         document.addEventListener('DOMContentLoaded', function() {

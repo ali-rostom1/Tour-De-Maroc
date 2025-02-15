@@ -75,7 +75,7 @@
                         <i class="fas fa-users"></i>
                         <span>Utilisateurs</span>
                     </a>
-                    <a href="Etapes.php" class="flex items-center space-x-2 text-gray-600 hover:bg-gray-100 p-3 rounded-lg">
+                    <a href="/tour-de-maroc/etape/index" class="flex items-center space-x-2 text-gray-600 hover:bg-gray-100 p-3 rounded-lg">
                         <i class="fas fa-bicycle"></i>
                         <span>Étapes</span>
                     </a>

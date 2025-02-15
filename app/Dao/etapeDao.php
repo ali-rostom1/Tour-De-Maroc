@@ -21,16 +21,21 @@
             $this->db = Database::getInstance()->getConnection(); 
             $this->cyclisteDaoImpl = new CyclisteDao();
             $this->mediaDaoImpl = new MediaDao();
-            $this->fanDaoImpl = new FanDao($this->db);
-            $this->categorieDaoImpl = new CategorieDao($this->db);
+            $this->fanDaoImpl = new FanDao();
+            $this->categorieDaoImpl = new CategorieDao();
         }
         private function mapRowToEtape(array $row) : Etape
         {
-            $cyclistes = $this->getCyclistesById($row["etape_id"]);
+            $cyclistes = null;
+            $medias = null;
+            $fans = null;
+
+            // $cyclistes = $this->getCyclistesById($row["etape_id"]);
             // $medias = $this->getMediaById($row["etape_id"]);
-            $fans = $this->getFansById($row["etape_id"]);
-            $categorie = $this->categorieDaoImpl->find($row["etape_id"]);
-            return new Etape($row["etape_id"],$row["nom"],$row["distance"],$row["lieudepart"],$row["lieuarrivee"],$row["statut"],$row["description"],$cyclistes,null,$fans,$categorie);
+            // $fans = $this->getFansById($row["etape_id"]);
+
+            $categorie = $this->categorieDaoImpl->find($row["categorie_id"]);
+            return new Etape($row["etape_id"],$row["nom"],$row["distance"],$row["lieudepart"],$row["lieuarrivee"],$row["statut"],$row["description"],$cyclistes,$medias,$fans,$categorie);
         }
         private function getCyclistesById(int $id) : array
         {
@@ -90,25 +95,38 @@
         }
         public function save(Etape $etape) : bool
         {
+
+           
             try{
-                $query = "Insert into Etape(nom,distance,lieuDepart,lieuArrivee,description) values(:nom,:distance,:lieuDepart,:lieuArrivee,:description)";
+
+                $query = "INSERT INTO Etape (course_id, nom, distance, lieuDepart, lieuArrivee, description, categorie_id) 
+                  VALUES (1, :nom, :distance, :lieuDepart, :lieuArrivee, :description, :categorie_id)";
+
+                $params = [
+                    "nom" => $etape->nom,
+                    "distance" => $etape->distance,
+                    "lieuDepart" => $etape->lieuDepart,
+                    "lieuArrivee" => $etape->lieuArrivee,
+                    "description" => $etape->description,
+                    "categorie_id" => $etape->categorie->getCategorieId()
+                ];
+                
+                
+                
                 $stmt = $this->db->prepare($query);
-                return $stmt->execute([
-                    "nom"=>$etape->nom,
-                    "distance"=>$etape->distance,
-                    "lieuDepart"=>$etape->lieuDepart,
-                    "lieuArrivee"=>$etape->lieuArrivee,
-                    "description"=>$etape->description,
-                ]);
+                $result = $stmt->execute($params);
+                return $result;
 
             }catch(\PDOException $e){
                 return false;
             }
         }
+
+
         public function update(Etape $etape): bool
         {
             try{
-                $query = "update etape set nom = :nom , distance = :distance , lieuDepart = :lieuDepart , lieuArrivee = :lieuArrivee , description = :description where etape_id = :id";
+                $query = "update etape set nom = :nom , distance = :distance , lieuDepart = :lieuDepart , lieuArrivee = :lieuArrivee , description = :description  ,categorie_id = :categorie_id where etape_id = :id";
                 $stmt = $this->db->prepare($query);
                 return $stmt->execute([
                     "nom"=>$etape->nom,
@@ -116,6 +134,7 @@
                     "lieuDepart"=>$etape->lieuDepart,
                     "lieuArrivee"=>$etape->lieuArrivee,
                     "description"=>$etape->description,
+                    "categorie_id"=>$etape->categorie->getCategorieId(),
                     "id"=>$etape->id
                 ]);
 
