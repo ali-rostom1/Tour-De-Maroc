@@ -184,4 +184,46 @@
                 return [];
             }
         }
+        public function getEtapesByRegion(string $region): array
+        
+            {
+                    // SQL query that uses pattern matching on lieuDepart and lieuArrivee
+                    // to identify stages in the specified region
+                    $query = "
+                        SELECT e.*, COUNT(s.etape_id) as likes_count 
+                        FROM etape e 
+                        LEFT JOIN likes s ON s.etape_id = e.etape_id 
+                        WHERE (
+                            LOWER(e.lieuDepart) LIKE LOWER(:regionPattern) 
+                            OR LOWER(e.lieuArrivee) LIKE LOWER(:regionPattern)
+                            OR LOWER(e.description) LIKE LOWER(:regionPattern)
+                        )
+                        GROUP BY e.etape_id
+                    ";
+
+                    // Define region-specific patterns
+                    $regionPattern = match(strtolower($region)) {
+                        'atlas' => '%atlas%',
+                        'sahara' => '%sahara%',
+                        'cote' => '%cote%',
+                        default => throw new \InvalidArgumentException('Invalid region specified. Must be Atlas, Sahara, or Cote.')
+                    };
+
+                    try {
+                        $stmt = $this->db->prepare($query);
+                        $stmt->execute(['regionPattern' => $regionPattern]);
+                        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+                        
+                        $etapes = [];
+                        foreach($rows as $row) {
+                            $etapes[] = $this->mapRowToEtape($row);
+                        }
+                        
+                        return $etapes;
+                    } catch(\PDOException $e) {
+                        // Log the error appropriately
+                        error_log('Error fetching etapes by region: ' . $e->getMessage());
+                        return [];
+                    }
+            }
     }

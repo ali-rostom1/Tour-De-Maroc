@@ -15,4 +15,7 @@ class etapeService
     public function getAllEtape(){
         return $this->etapDAO->getALL();
     }
+    public function getEtapesByRegion(string $region) {
+        return $this->etapDAO->getEtapesByRegion($region);
+    }
 }
