@@ -154,13 +154,33 @@
                                     if ($Comment->getEtape() == $row->id) {
                                 ?>
                                         <div class="bg-gray-50 rounded-lg p-4">
+                                            
                                             <div class="flex justify-between items-start mb-2">
                                                 <div class="font-bold"><?= $Comment->getContenu() ?></div>
                                                 <div class="text-sm text-gray-500"><?= $Comment->getDateCreation() ?></div>
                                             </div>
                                             <p class="text-gray-700"><?= $Comment->getContenu() ?></p>
-                                        </div>
-                                <?php }
+
+                                            <div 
+                                            class="w-full m-4">
+                                            <?php 
+                                            if ($Comment->getFan() == 66){
+                                                
+                                            
+                                            ?>
+                                            <form action="/comment/deleteComment" method="POST">
+                                                <input type="hidden" name="id_comment" value="<?= $Comment->getCommentId()?>">
+                                            <button type="submit">
+                                            <i class="fas fa-trash"></i>
+                                            </button>
+                                            </form>
+                                            </div>
+                                        </div>  
+                                        <?php
+                                            }
+                                           
+                                        
+                                }
                                 } ?>
                             </div>
                         </div>
