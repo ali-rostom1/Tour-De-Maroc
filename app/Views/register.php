@@ -111,13 +111,14 @@ var_dump($data);
         </div>
 
         <!-- Registration Form -->
-        <form class="space-y-6" novalidate>
+        <form action="/tour-de-maroc/auth/register" method="POST" class="space-y-6" novalidate>
             <div class="">
 
                 <div class="space-y-1">
                     <label for="lastname" class="block text-sm font-medium text-gray-700">Nom</label>
                     <input 
                         type="text" 
+                        name="nom"
                         id="lastname"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
                         required
@@ -129,15 +130,13 @@ var_dump($data);
             <!-- Nouveau champ rôle -->
             <div class="space-y-1">
                 <label for="role" class="block text-sm font-medium text-gray-700">Rôle</label>
-                <select 
-                    id="role"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
-                    required
-                >
+                <select id="role" name="role" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors" required>
                     <option value="">Sélectionnez un rôle</option>
-                    <option value="fan">Fan</option>
-                    <option value="cycliste">Cycliste</option>
+                    <?php foreach ($data['roles'] as $role): ?>
+                        <option value="<?= htmlspecialchars($role->getId()) ?>"><?= htmlspecialchars($role->getNom())?></option>
+                    <?php endforeach; ?>
                 </select>
+
             </div>
 
             <!-- Champs pour cycliste -->
@@ -146,6 +145,7 @@ var_dump($data);
                     <label for="dateNaissance" class="block text-sm font-medium text-gray-700">Date de naissance</label>
                     <input 
                         type="date" 
+                        name="naissance"
                         id="dateNaissance"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
                     >
@@ -154,6 +154,7 @@ var_dump($data);
                 <div class="space-y-1">
                     <label for="nationalite" class="block text-sm font-medium text-gray-nationalite" class="block text-sm font-medium text-gray-700">Nationalité</label>
                     <input 
+                        name="nationalite"
                         type="text" 
                         id="nationalite"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
@@ -162,14 +163,10 @@ var_dump($data);
 
                 <div class="space-y-1">
                     <label for="equipe" class="block text-sm font-medium text-gray-700">Équipe</label>
-                    <select 
-                        id="equipe"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
-                    >
-                        <option value="">Sélectionnez une équipe</option>
-                        <option value="team1">Team 1</option>
-                        <option value="team2">Team 2</option>
-                        <option value="team3">Team 3</option>
+                    <select id="equipe" name="equipe" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors" required>
+                        <?php foreach ($data['equipes'] as $equipe): ?>
+                            <option value="<?= htmlspecialchars($equipe->getEquipeId()) ?>"><?= htmlspecialchars($equipe->getNom()) ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
             </div>
@@ -177,6 +174,7 @@ var_dump($data);
             <div class="space-y-1">
                 <label for="email" class="block text-sm font-medium text-gray-700">Adresse email</label>
                 <input 
+                    name="email"
                     type="email" 
                     id="email"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
@@ -192,7 +190,8 @@ var_dump($data);
                 <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
                 <div class="relative">
                     <input 
-                        type="password" 
+                        type="password"
+                        name="password" 
                         id="password"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
                         placeholder="8 caractères minimum"
@@ -204,28 +203,6 @@ var_dump($data);
                 </div>
                 <p class="text-red-500 text-sm hidden">Le mot de passe doit contenir au moins 8 caractères</p>
             </div>
-
-
-            <div class="space-y-4">
-                <label class="flex items-start space-x-2 cursor-pointer">
-                    <input 
-                        type="checkbox" 
-                        id="terms" 
-                        class="mt-1 w-4 h-4 border-gray-300 rounded text-yellow-400 focus:ring-yellow-400 cursor-pointer"
-                        required
-                    >
-                    <span class="text-sm text-gray-700">J'accepte les <a href="#" class="text-yellow-600 hover:text-yellow-500 hover:underline">conditions d'utilisation</a> et la <a href="#" class="text-yellow-600 hover:text-yellow-500 hover:underline">politique de confidentialité</a></span>
-                </label>
-                <label class="flex items-start space-x-2 cursor-pointer">
-                    <input 
-                        type="checkbox" 
-                        id="newsletter" 
-                        class="mt-1 w-4 h-4 border-gray-300 rounded text-yellow-400 focus:ring-yellow-400 cursor-pointer"
-                    >
-                    <span class="text-sm text-gray-700">Je souhaite recevoir les actualités et offres du Tour de France</span>
-                </label>
-            </div>
-
             <button 
                 type="submit" 
                 class="w-full bg-yellow-400 text-black py-3 rounded-lg font-bold hover:bg-yellow-500 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400"
@@ -238,133 +215,57 @@ var_dump($data);
         <div class="mt-8 text-center space-y-2">
             <p class="text-gray-600">
                 Vous avez déjà un compte ? 
-                <a href="Login.html" class="text-yellow-600 hover:text-yellow-500 hover:underline font-medium">Connexion</a>
+                <a href="/tour-de-maroc/home/login" class="text-yellow-600 hover:text-yellow-500 hover:underline font-medium">Connexion</a>
             </p>
         </div>
     </div>
 </div>
 
 <script>
-    // Toggle password visibility
-    document.querySelectorAll('.toggle-password').forEach(button => {
-        button.addEventListener('click', function() {
-            const input = this.previousElementSibling;
-            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-            input.setAttribute('type', type);
-            
-            // Toggle eye icon
-            const icon = this.querySelector('i');
-            icon.classList.toggle('fa-eye');
-            icon.classList.toggle('fa-eye-slash');
-        });
-    });
+    // Get the role select element
+const roleSelect = document.getElementById('role');
+const cyclisteFields = document.getElementById('cyclisteFields');
 
-    // Afficher/masquer les champs cycliste
-    document.getElementById('role').addEventListener('change', function() {
-        const cyclisteFields = document.getElementById('cyclisteFields');
-        if (this.value === 'cycliste') {
-            cyclisteFields.classList.remove('hidden');
-        } else {
-            cyclisteFields.classList.add('hidden');
-        }
-    });
+// Create additional fields container for cyclist-specific fields
+const additionalFieldsHtml = `
+    <div class="space-y-1">
+        <label for="poids" class="block text-sm font-medium text-gray-700">Poids (kg)</label>
+        <input 
+            type="number" 
+            step="0.1"
+            id="poids"
+            name="poids"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
+        >
+    </div>
 
-    // Form validation
-    const form = document.querySelector('form');
-    const inputs = form.querySelectorAll('input[required]');
-    const password = document.getElementById('password');
-    const confirmPassword = document.getElementById('confirm-password');
-    const email = document.getElementById('email');
-    const phone = document.getElementById('phone');
+    <div class="space-y-1">
+        <label for="biographie" class="block text-sm font-medium text-gray-700">Biographie</label>
+        <textarea 
+            id="biographie"
+            name="biographie"
+            rows="4"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
+        ></textarea>
+    </div>
+`;
 
-    // Helper function to show error message
-    const showError = (input, message) => {
-        const errorElement = input.parentElement.querySelector('.text-red-500');
-        errorElement.textContent = message;
-        errorElement.classList.remove('hidden');
-        input.classList.add('border-red-500');
-    };
+// Add the new fields to the cyclisteFields container
+cyclisteFields.insertAdjacentHTML('beforeend', additionalFieldsHtml);
 
-    // Helper function to hide error message
-    const hideError = (input) => {
-        const errorElement = input.parentElement.querySelector('.text-red-500');
-        errorElement.classList.add('hidden');
-        input.classList.remove('border-red-500');
-    };
-
-    // Validate email format
-    const isValidEmail = (email) => {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    };
-
+// Function to toggle cyclist fields visibility
+roleSelect.addEventListener('change', function() {
+    // Assuming the cyclist role has a specific value (you'll need to adjust this)
+    const isCycliste = this.value === '3'; // Adjust '1' to match your cyclist role ID
+    cyclisteFields.classList.toggle('hidden', !isCycliste);
     
+    // Make fields required only when visible
+    
+    
+});
 
-    // Validate form on submit
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        let isValid = true;
-
-        // Check required fields
-        inputs.forEach(input => {
-            if (!input.value.trim()) {
-                isValid = false;
-                showError(input, 'Champ requis');
-            } else {
-                hideError(input);
-            }
-        });
-
-        // Validate email format
-        if (email.value && !isValidEmail(email.value)) {
-            isValid = false;
-            showError(email, 'Veuillez entrer une adresse email valide');
-        }
-
-        
-
-        // Validate password length
-        if (password.value.length < 8) {
-            isValid = false;
-            showError(password, 'Le mot de passe doit contenir au moins 8 caractères');
-        }
-
-        // Validate password match
-        if (password.value !== confirmPassword.value) {
-            isValid = false;
-            showError(confirmPassword, 'Les mots de passe ne correspondent pas');
-        }
-
-        // Check terms acceptance
-        const terms = document.getElementById('terms');
-        if (!terms.checked) {
-            isValid = false;
-            showError(terms, "Vous devez accepter les conditions d'utilisation");
-        }
-
-        if (isValid) {
-            // Here you would typically send the form data to your server
-            console.log('Form is valid, ready to submit');
-            // form.submit(); // Uncomment this line when ready to submit to server
-        }
-    });
-
-    // Real-time validation
-    inputs.forEach(input => {
-        input.addEventListener('input', () => {
-            if (input.value.trim()) {
-                hideError(input);
-            }
-        });
-    });
-
-    // Real-time password match validation
-    confirmPassword.addEventListener('input', () => {
-        if (password.value !== confirmPassword.value) {
-            showError(confirmPassword, 'Les mots de passe ne correspondent pas');
-        } else {
-            hideError(confirmPassword);
-        }
-    });
+// Initialize form state
+roleSelect.dispatchEvent(new Event('change'));
 </script>
 </body>
 </html>

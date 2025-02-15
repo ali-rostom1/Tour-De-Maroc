@@ -1,6 +1,7 @@
 <?php
 namespace App\Model;
 
+
 class User {
     protected ?int $id;
     protected ?string $nom;
