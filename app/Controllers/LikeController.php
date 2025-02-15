@@ -34,7 +34,9 @@ class LikeController extends Controller {
             $etape = new Etape($etapeId); 
              $this->likeService->addLike($fan, $etape);
     
-        
+             $likes = $this->likeService->getAllLikes();
+             $etapes = $this->etapeServise->getAllEtape();
+             $comments = $this->CommentService->getComentByEtape();
        require_once __DIR__."/../Views/Fans/Etapes.php";
         // if ($result) {
         //     $this->view("like_success", ["message" => "Like added successfully!"]);
