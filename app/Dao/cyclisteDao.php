@@ -41,30 +41,31 @@ class CyclisteDAO {
         return null;
     }
 
-    public function searchCyclistes($query) {
-        $query = "%$query%";
-        $stmt = $this->pdo->prepare("
-            SELECT c.user_id, c.nom, c.nationalite, c.equipe_id, e.nom as equipe_nom 
-            FROM cycliste c
-            LEFT JOIN equipe e ON c.equipe_id = e.equipe_id
-            WHERE c.nom LIKE :query 
-            OR c.nationalite LIKE :query 
-            OR (e.nom IS NOT NULL AND e.nom LIKE :query)
-            LIMIT 10
-        ");
-        $stmt->execute(['query' => $query]);
-        
-        $results = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $results[] = [
-                'id' => $row['user_id'],
-                'nom' => htmlspecialchars($row['nom']),
-                'nationalite' => htmlspecialchars($row['nationalite']),
-                'equipe' => $row['equipe_nom'] ? htmlspecialchars($row['equipe_nom']) : null,
-                'type' => 'cycliste'
-            ];
+    public function search($query) {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    c.id,
+                    c.nom,
+                    c.nationalite,
+                    e.nom as equipe
+                FROM cyclistes c
+                LEFT JOIN equipes e ON c.equipe_id = e.id
+                WHERE 
+                    c.nom LIKE :query OR 
+                    c.nationalite LIKE :query
+                LIMIT 5
+            ");
+            
+            $searchTerm = "%" . $query . "%";
+            $stmt->bindParam(':query', $searchTerm, PDO::PARAM_STR);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            error_log('CyclisteDAO search error: ' . $e->getMessage());
+            return [];
         }
-        
-        return $results;
     }
 }
+
