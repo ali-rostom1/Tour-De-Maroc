@@ -8,6 +8,7 @@ use App\Model\User;
 use App\Model\Cycliste;
 use App\Model\Fan;
 use App\Model\Role;
+use App\Model\Equipe;
 use Exception;
 
 class AuthService {
@@ -28,20 +29,23 @@ class AuthService {
 
 
         $role = new Role($roleId, null);
+        
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         if ($roleId == 3) { // Cycliste
-            if (!isset($extraData['dateNaissance']) || !isset($extraData['nationalite'])) {
+            if (!isset($extraData['dateNaissance']) || !isset($extraData['nationalite']) || !isset($extraData['poids'])) {
                 throw new Exception("Les informations du cycliste sont incomplètes.");
             }
-            $equipeId = $extraData['equipeId'] ?? null;
-            $poids = isset($extraData['poids']) ? (float) $extraData['poids'] : null;
-            $biographie = $extraData['biographie'] ?? null;
+            $equipeId = $extraData['equipe'] ?? null;
+            $poids =$extraData['poids'];
+            $biographie = $extraData['biographie'] ;
+            $equipe=new Equipe($equipeId,null,null);
+            var_dump($poids);
 
             $cycliste = new Cycliste(
                 0, $nom, $email, $hashedPassword, $role,
                 $extraData['dateNaissance'], $extraData['nationalite'],
-                $equipeId, $poids, $biographie
+                $poids, $biographie,$equipe
             );
             return $this->cyclisteDAO->createCycliste($cycliste);
         } 

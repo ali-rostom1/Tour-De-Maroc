@@ -3,12 +3,15 @@ namespace App\Model;
 
 
 
+
+
 class Cycliste extends User {
     private string $dateNaissance;
     private string $nationalite;
     private ?int $equipeId;
     private ?float $poids;
     private ?string $biographie;
+    private Equipe $equipe ;
 
     public function __construct(
         int $id,
@@ -16,18 +19,18 @@ class Cycliste extends User {
         string $email,
         string $password,
         Role $role,
-        string $dateNaissance,
-        string $nationalite,
-        ?int $equipeId = null,
-        ?float $poids = null,
-        ?string $biographie = null
+         $dateNaissance,
+         $nationalite,
+        $poids ,
+        $biographie ,
+        Equipe $equipe
     ) {
         parent::__construct($id, $nom, $email, $password, $role);
         $this->dateNaissance = $dateNaissance;
         $this->nationalite = $nationalite;
-        $this->equipeId = $equipeId;
         $this->poids = $poids;
         $this->biographie = $biographie;
+        $this->equipe = $equipe;
     }
 
     // Getters
@@ -39,8 +42,8 @@ class Cycliste extends User {
         return $this->nationalite;
     }
 
-    public function getEquipeId(): ?int {
-        return $this->equipeId;
+    public function getEquipe() {
+        return $this->equipe;
     }
 
     public function getPoids(): ?float {

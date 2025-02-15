@@ -107,12 +107,13 @@
         </div>
 
         <!-- Login Form -->
-        <form class="space-y-6" novalidate>
+        <form action="/tour-de-maroc/auth/login" method="POST" class="space-y-6" novalidate>
             <div class="space-y-1">
                 <label for="email" class="block text-sm font-medium text-gray-700">Adresse électronique ou numéro de téléphone</label>
                 <div class="relative">
                     <input 
                         type="email" 
+                        name="email" 
                         id="email"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
                         placeholder="exemple@email.com"
@@ -127,6 +128,7 @@
                 <div class="relative">
                     <input 
                         type="password" 
+                        name="password" 
                         id="password"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-colors"
                         placeholder="••••••••"
@@ -163,66 +165,10 @@
         <div class="mt-8 text-center space-y-2">
             <p class="text-gray-600">
                 Vous n'avez pas encore de compte ? 
-                <a href="Inscription.html" class="text-yellow-600 hover:text-yellow-500 hover:underline font-medium">Inscription</a>
+                <a href="/tour-de-maroc/home/register" class="text-yellow-600 hover:text-yellow-500 hover:underline font-medium">Inscription</a>
             </p>
         </div>
     </div>
 </div>
-    <script>
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const toggleButton = document.querySelector('.toggle-password i');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleButton.classList.remove('fa-eye');
-                toggleButton.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                toggleButton.classList.remove('fa-eye-slash');
-                toggleButton.classList.add('fa-eye');
-            }
-        }
-
-        // Form validation
-        const form = document.querySelector('form');
-        const inputs = form.querySelectorAll('input[required]');
-
-        inputs.forEach(input => {
-            input.addEventListener('blur', () => {
-                validateInput(input);
-            });
-        });
-
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            let isValid = true;
-            
-            inputs.forEach(input => {
-                if (!validateInput(input)) {
-                    isValid = false;
-                }
-            });
-
-            if (isValid) {
-                // Submit form
-                console.log('Form submitted');
-            }
-        });
-
-        function validateInput(input) {
-            const errorMessage = input.parentElement.nextElementSibling;
-            
-            if (!input.value.trim()) {
-                errorMessage.classList.remove('hidden');
-                input.classList.add('border-red-500');
-                return false;
-            } else {
-                errorMessage.classList.add('hidden');
-                input.classList.remove('border-red-500');
-                return true;
-            }
-        }
-    </script>
 </body>
 </html>
