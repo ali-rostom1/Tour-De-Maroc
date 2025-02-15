@@ -24,6 +24,7 @@ class EtapeController extends Controller{
 
     
     public function index(){
+        //  $this->dataEtape(6);
         $data = [
             "etapes" => $this->etapeService->getAllEtape(),
             "categories" => $this->categorieService->getAllCategories()
@@ -57,8 +58,8 @@ class EtapeController extends Controller{
     }
 
     public function delete($id){
-        if ($this->categorieService->deleteCategorie( $id)) {
-            header('Location:/tour-de-maroc/categorie/index');
+        if ($this->etapeService->delete( $id)) {
+            header('Location:/tour-de-maroc/etape/index');
             exit();  
         }
     }
@@ -89,9 +90,13 @@ class EtapeController extends Controller{
     }
 
     public function dataEtape($id){
+        header('Content-Type: application/json');
         if($etape = $this->etapeService->getById($id)){
             $json = $etape->toArray();
             echo json_encode($json);
+            die;
+
+            
         }
     }
 

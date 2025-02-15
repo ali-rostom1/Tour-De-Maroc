@@ -37,4 +37,10 @@ class etapeService
     public function getById($id){
         return $this->etapDAO->getByID($id);
     }
+
+    public function delete($id){
+        $etape = new Etape($id,null, null, null, null,null, null, null, null,null,  null);
+
+        return $this->etapDAO->delete($etape);
+    }
 }

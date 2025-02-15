@@ -7,6 +7,8 @@
     <title>Tour de Morocco 2025 - Étapes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
         
@@ -82,45 +84,58 @@
             <!-- Stage Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Stage 1 -->
+                <?php foreach ($etapes as $etape) { ?>
+
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
                     <div class="p-4">
                         <div class="flex justify-between items-start mb-4">
                             <div>
-                                <span class="text-sm font-semibold text-[#004D98]">Étape 1</span>
-                                <h3 class="text-lg font-bold">Casablanca → Rabat</h3>
+                                <span class="text-sm font-semibold text-[#004D98]"><?= $etape->nom ?></span>
+                                <h3 class="text-lg font-bold"><?= $etape->lieuDepart ?> → <?= $etape->lieuArrivee ?></h3>
                             </div>
-                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Plat</span>
+                            <span class="text-xs px-2 py-1 rounded-full 
+                                <?= $etape->categorie->getType() == 'MONTAGNE' ? 'bg-red-100 text-red-800' : '' ?>
+                                <?= $etape->categorie->getType() == 'PLAINE' ? 'bg-blue-100 text-blue-800' : '' ?>
+                                <?= $etape->categorie->getType() == 'TERRAIN' ? 'bg-yellow-100 text-yellow-800' : '' ?>
+                                <?= $etape->categorie->getType() == 'VELODROME' ? 'bg-green-100 text-green-800' : '' ?>
+                            ">
+                                <?= $etape->categorie->getType() ?>
+                            </span>
                         </div>
                         <div class="space-y-3">
                             <div class="flex items-center text-sm">
                                 <i class="fas fa-calendar-day w-5 text-gray-400"></i>
-                                <span>15 Février 2025</span>
+                                <span><?= $etape->status ?> </span>
                             </div>
                             <div class="flex items-center text-sm">
                                 <i class="fas fa-route w-5 text-gray-400"></i>
-                                <span>180 km</span>
+                                <span><?= $etape->distance ?> km</span>
                             </div>
                             <div class="flex items-center text-sm">
                                 <i class="fas fa-mountain w-5 text-gray-400"></i>
-                                <span>Dénivelé: +1200m</span>
+                                <span><?= $etape->description ?> </span>
                             </div>
                         </div>
                     </div>
                     <div class="border-t grid grid-cols-3 divide-x">
-                        <button class="p-3 text-sm flex items-center justify-center space-x-1 hover:bg-gray-50">
+                        <button onclick="fetchEtapeData(<?= $etape->id ?>)"  class="p-3 text-sm flex items-center justify-center space-x-1 hover:bg-gray-50">
                             <i class="fas fa-edit text-blue-500"></i>
                             <span>Modifier</span>
                         </button>
-                        <button class="p-3 text-sm flex items-center justify-center space-x-1 hover:bg-gray-50">
-                            <i class="fas fa-map-marked-alt text-green-500"></i>
-                            <span>Parcours</span>
+
+                        <button onclick="confirmDeleteEtape(<?= $etape->id ?>)" class="p-3 text-sm flex items-center justify-center space-x-1 hover:bg-gray-50">
+                            <i class="fas fa-trash-alt text-red-500"></i>
+                            <span>Supprimer</span>
                         </button>
+                        
                         <button class="p-3 text-sm flex items-center justify-center space-x-1 hover:bg-gray-50">
                             <i class="fas fa-list text-purple-500"></i>
                             <span>Résultats</span>
                         </button>
                     </div>
                 </div>
+
+                <?php } ?>
 
                 <!-- Stage 2 -->
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
@@ -307,6 +322,90 @@
         </div>
     </div>
 
+
+<div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+    <!-- Modal Content -->
+    <div class="bg-white rounded-lg w-full max-w-md mx-4">
+        <!-- Modal Header -->
+        <div class="p-6 border-b">
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-[#004D98]">Modifier Étape</h2>
+                <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Modal Body -->
+        <form id="editEtapeForm" class="p-6 space-y-4" action="/tour-de-maroc/etape/update" method="POST">
+            <!-- Hidden input for ID -->
+            <input type="hidden" name="etapeId" id="etapeId">
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nom de l'étape</label>
+                <input type="text" name="editNom" id="editNom" required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#004D98]"
+                    placeholder="Nom de l'étape">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Distance (km)</label>
+                    <input type="number" name="editDistance" id="editDistance" required step="0.1"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#004D98]"
+                        placeholder="Distance">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                    <select name="editCategorie_id" id="editCategorie_id" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#004D98]">
+                        <option value="">Sélectionner</option>
+                        <?php foreach ($categories as $categorie) { ?>
+                            <option value="<?= $categorie->getCategorieId() ?>"> <?= $categorie->getType() ?> </option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Lieu de départ</label>
+                    <input type="text" name="editLieuDepart" id="editLieuDepart" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#004D98]"
+                        placeholder="Lieu de départ">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Lieu d'arrivée</label>
+                    <input type="text" name="editLieuArrivee" id="editLieuArrivee" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#004D98]"
+                        placeholder="Lieu d'arrivée">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea name="editDescription" id="editDescription" rows="3"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#004D98]"
+                    placeholder="Description de l'étape..."></textarea>
+            </div>
+
+            <div class="p-6 border-t flex justify-end space-x-4">
+                <button type="button" onclick="closeModal()" 
+                    class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                    Annuler
+                </button>
+                <button type="submit" 
+                    class="px-4 py-2 bg-[#004D98] text-white rounded-md hover:bg-[#003d7a]">
+                    Enregistrer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
     <script>
         // Show modal when "Nouvelle Étape" button is clicked
         function openModal() {
@@ -319,6 +418,9 @@
             document.getElementById('newStageForm').reset();
         }
 
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
     
 
         // Add click event to "Nouvelle Étape" button
@@ -328,6 +430,53 @@
                 newStageBtn.addEventListener('click', openModal);
             }
         });
+
+
+        function fetchEtapeData(etapeId) {
+            fetch(`/tour-de-maroc/etape/dataEtape/${etapeId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error("Error:", data.error);
+                        return;
+                    }
+        
+                    // Populate the form with fetched data
+                    document.getElementById("etapeId").value = etapeId; // Hidden input for ID
+                    document.getElementById("editNom").value = data.nom; // Étape name
+                    document.getElementById("editDistance").value = data.distance; // Distance
+                    // document.getElementById("editCategorie_id").value = data.categorie_id; // Category ID
+                    document.getElementById("editLieuDepart").value = data.lieuDepart; // Departure location
+                    document.getElementById("editLieuArrivee").value = data.lieuArrivee; // Arrival location
+                    document.getElementById("editDescription").value = data.description; // Description
+
+                    setTimeout(() => {
+                       document.getElementById("editCategorie_id").value = data.categorie;
+                    }, 100);
+        
+                    // Show the modal form
+                    document.getElementById('editModal').classList.remove('hidden');
+        
+                })
+                .catch(error => console.error("Fetch error:", error));
+        }
+
+        function confirmDeleteEtape(etapeId) {
+        Swal.fire({
+            title: 'Êtes-vous sûr?',
+            text: "Vous ne pourrez pas revenir en arrière!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Oui, supprimer!',
+            cancelButtonText: 'Annuler',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = `/tour-de-maroc/etape/delete/${etapeId}`;
+            }
+        });
+    }
+
     </script>
 </body>
 </html>

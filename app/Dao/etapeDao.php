@@ -91,6 +91,7 @@
             $stmt = $this->db->prepare($query);
             $stmt->execute(["etape_id"=>$id]);
             $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+            // var_dump($row);
             return $this->mapRowToEtape($row);
         }
         public function save(Etape $etape) : bool
