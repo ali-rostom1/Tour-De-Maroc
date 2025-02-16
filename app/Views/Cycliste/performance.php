@@ -183,8 +183,10 @@
                                     Étape
                                 </th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Date
+                                Temps Depart
                                 </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Temps Arrivee                                </th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Distance
                                 </th>
@@ -213,12 +215,15 @@
 
 // Initialize charts and fetch data
 document.addEventListener('DOMContentLoaded', function() {
-    const cyclisteId = '123'; // Replace this with the actual cyclist ID you want to fetch
+    const cyclisteId = '3'; // Replace this with the actual cyclist ID you want to fetch
     fetch(`/tour-de-maroc/cyclistePerformance/dataResultatsByCyclisteId/${cyclisteId}`)
         .then(response => response.json())
         .then(data => {
             // Assuming the response is an array of stages with relevant data
             const performanceData = { stages: data };
+            
+
+
 
             // Initialize charts
             initializeCharts(performanceData);
@@ -231,15 +236,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize charts
 function initializeCharts(performanceData) {
+    console.log(performanceData);
+
     // Speed Chart
     const speedCtx = document.getElementById('speedChart').getContext('2d');
     new Chart(speedCtx, {
         type: 'line',
         data: {
-            labels: performanceData.stages.map(stage => stage.stage),
+            labels: performanceData.stages.map(stage => stage.nom),
             datasets: [{
                 label: 'Vitesse Moyenne (km/h)',
-                data: performanceData.stages.map(stage => stage.vitesse), // assuming 'vitesse' in your API response
+                data: performanceData.stages.map(stage => stage.vitesse), 
                 borderColor: '#004D98',
                 tension: 0.1
             }]
@@ -259,10 +266,10 @@ function initializeCharts(performanceData) {
     new Chart(comparisonCtx, {
         type: 'bar',
         data: {
-            labels: performanceData.stages.map(stage => stage.stage),
+            labels: performanceData.stages.map(stage => stage.nom),
             datasets: [{
                 label: 'Votre Position',
-                data: performanceData.stages.map(stage => stage.position),
+                data: performanceData.stages.map(stage => stage.classement),
                 backgroundColor: '#FED100'
             }]
         },
@@ -292,11 +299,13 @@ function populatePerformanceTable(performanceData) {
     performanceData.stages.forEach(stage => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td class="px-6 py-4 whitespace-nowrap">${stage.stage}</td>
-            <td class="px-6 py-4 whitespace-nowrap">${stage.date}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${stage.nom}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${stage.tempsDepart}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${stage.tempsArrivee}</td>
+
             <td class="px-6 py-4 whitespace-nowrap">${stage.distance} km</td>
             <td class="px-6 py-4 whitespace-nowrap">${stage.vitesse} km/h</td> <!-- Assuming 'vitesse' field -->
-            <td class="px-6 py-4 whitespace-nowrap">${stage.position}${getOrdinalSuffix(stage.position)}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${stage.classement}${getOrdinalSuffix(stage.position)}</td>
             <td class="px-6 py-4 whitespace-nowrap">${stage.points}</td>
         `;
         tableBody.appendChild(row);

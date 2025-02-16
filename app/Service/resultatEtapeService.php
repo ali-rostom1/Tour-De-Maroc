@@ -11,6 +11,8 @@ use App\DAO\CyclisteDAO;
 use App\Model\Cycliste;
 use App\Model\Etape;
 
+use DateTime;
+
 
 class ResultatEtapeService {
     private $resultatEtapeDAO;
@@ -60,7 +62,7 @@ class ResultatEtapeService {
     }
 
     public function calculeResultatsEtapePoints() {
-        $resultatsEtapes = $this->getAllResultats();
+        $resultatsEtapes = $this->resultatEtapeDAO->getResultatEtapes();
 
        $this->classerResultatsEtape($resultatsEtapes);
 
@@ -68,12 +70,12 @@ class ResultatEtapeService {
 
         $categorie= $resultatsEtape->getEtape()->categorie;
         $basePoints = $categorie->getBasePoints();
-        $Coefficient = $categorie->getCoefficient();
+        $coefficient = $categorie->getCoefficient();
         $classement = $resultatsEtape->getClassementEtape();
 
         if ($classement > 0) {
-            $points = $basePoints * $coefficient * (1 / $classement);
-            $resultatsEtape->setPoints($points);
+            $points = ceil($basePoints * $coefficient * (1 / $classement));
+            $resultatsEtape->setPointsEtape($points);
             $this->resultatEtapeDAO->updateResultatEtape($resultatsEtape);
         } else {
             error_log("Erreur: Classement invalide pour l'étape ID: " . $resultatsEtape->getId());
@@ -88,8 +90,16 @@ class ResultatEtapeService {
         $this->calculeResultatsEtapePoints();
 
         $results= $this->resultatEtapeDAO->getResultatEtapeByCyclisteId($id);
+        $sum = 0;
+        $count=0;
 
-        return $moyenne = array_sum($results->getPointsEtape()) / count($results);
+
+        foreach ($results as $result) {
+          $sum += $result->getPointsEtape();
+        }
+        // var_dump(count($results));
+
+        return $moyenne = $sum / count($results);
 
     }
 

@@ -3,6 +3,8 @@ namespace App\Dao;
 
 use App\Model\PerformanceCourse;
 use App\Model\Cycliste;
+use App\Model\Role;
+
 use App\Model\Course;
 use PDO;
 use Config\Database;
@@ -12,28 +14,36 @@ class PerformanceCourseDAO {
     private $pdo;
 
     public function __construct() {
-        $this->pdo = Database::getInstance(); 
+        $this->pdo = Database::getInstance()->getConnection(); 
 
     }
 
     private function mapRowToPerformanceCourse($row) {
+        // if (!$row) {
+        //     return false;
+        // }
+
+
         $course = new Course(
             $row['course_id'],
-            $row['course_nom'],
+            $row['coursenom'] ?? 'unknown course',
             $row['annee'],
-            $row['nombreEtapes'],
-            $row['date_debut'],
-            $row['date_fin'],
-            $row['statut']
+            $row['nombreetapes'],
+            null,
+            null,
+            null,
+            null
         );
+       
+
         
         $cycliste = new Cycliste(
             $row['user_id'],
-            $row['cycliste_nom'],
+            $row['nom'],
             $row['email'],
             $row['password'],
-            $row['role_id'],
-            $row['dateNaissance'],
+            new Role($row['role_id'] , null),
+            $row['datenaissance'],
             $row['nationalite'],
             $row['equipe_id'],
             $row['poids'],
@@ -42,25 +52,33 @@ class PerformanceCourseDAO {
 
         return new PerformanceCourse(
             $row['id'],
-            $row['classementGeneral'],
-            $row['pointsTotal'],
-            $row['pointsGrimpeur'],
-            $row['pointsSprint'],
-            $course,
-            $cycliste
+            $row['classementgeneral'],
+            $row['pointstotal'],
+            $row['pointsgrimpeur'],
+            $row['pointssprint'],
+            $cycliste,
+            $course
         );
+        
+
+
     }
 
     public function getPerformanceCourses($id=null) {
         $id=1;
-        $stmt = $this->pdo->query("
-            SELECT * , 
-            c.nom AS course_nom, cy.nom AS cycliste_nom
-            FROM performance_course pc
-            INNER JOIN course c ON pc.course_id = c.course_id
-            INNER JOIN cycliste cy ON pc.cycliste_id = cy.user_id
-            WHERE c.course_id= :id
-        ");
+        $stmt = $this->pdo->prepare("
+        SELECT 
+            c.course_id, 
+            c.nombreetapes, 
+            c.annee, 
+            c.nom AS coursenom,  
+            cy.*, 
+            pc.*
+        FROM performance_course pc
+        INNER JOIN course c ON pc.course_id = c.course_id
+        INNER JOIN cycliste cy ON pc.cycliste_id = cy.user_id
+        WHERE c.course_id = :id
+    ");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
         $stmt->execute();
@@ -127,7 +145,12 @@ class PerformanceCourseDAO {
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $this->mapRowToPerformanceCourse($result);
+
+        if ($result) {
+            return $this->mapRowToPerformanceCourse($result);
+        }
+        return false;
+        
 
     }
 
@@ -155,16 +178,20 @@ class PerformanceCourseDAO {
 
     public function insertPerformanceCourse(PerformanceCourse $performanceCourse) {
         $stmt = $this->pdo->prepare("
-            INSERT INTO performance_course (classementGeneral, pointsTotal, pointsGrimpeur, pointsSprint, course_id, cycliste_id)
-            VALUES (:classementGeneral, :pointsTotal, :pointsGrimpeur, :pointsSprint, :course_id, :cycliste_id)
+            INSERT INTO performance_course (classementGeneral, pointsTotal, course_id, cycliste_id)
+            VALUES (:classementGeneral, :pointsTotal, :course_id, :cycliste_id)
         ");
-        $stmt->bindParam(':classementGeneral', $performanceCourse->getClassementGeneral(), PDO::PARAM_INT);
-        $stmt->bindParam(':pointsTotal', $performanceCourse->getPointsTotal(), PDO::PARAM_INT);
-        $stmt->bindParam(':pointsGrimpeur', $performanceCourse->getPointsGrimpeur(), PDO::PARAM_INT);
-        $stmt->bindParam(':pointsSprint', $performanceCourse->getPointsSprint(), PDO::PARAM_INT);
-        $stmt->bindParam(':course_id', $performanceCourse->getCourse()->getCourseId(), PDO::PARAM_INT);
-        $stmt->bindParam(':cycliste_id', $performanceCourse->getCycliste()->getUserId(), PDO::PARAM_INT);
-
+    
+        $classementGeneral = $performanceCourse->getClassementGeneral();
+        $pointsTotal = $performanceCourse->getPointsTotal();
+        $courseId = $performanceCourse->getCourse()->getId();
+        $cyclisteId = $performanceCourse->getCycliste()->getId();
+    
+        $stmt->bindParam(':classementGeneral', $classementGeneral, PDO::PARAM_INT);
+        $stmt->bindParam(':pointsTotal', $pointsTotal, PDO::PARAM_INT);
+        $stmt->bindParam(':course_id', $courseId, PDO::PARAM_INT);
+        $stmt->bindParam(':cycliste_id', $cyclisteId, PDO::PARAM_INT);
+    
         return $stmt->execute();
     }
 
@@ -173,19 +200,22 @@ class PerformanceCourseDAO {
             UPDATE performance_course
             SET classementGeneral = :classementGeneral,
                 pointsTotal = :pointsTotal,
-                pointsGrimpeur = :pointsGrimpeur,
-                pointsSprint = :pointsSprint,
                 course_id = :course_id,
                 cycliste_id = :cycliste_id
             WHERE id = :id
         ");
-        $stmt->bindParam(':id', $performanceCourse->getId(), PDO::PARAM_INT);
-        $stmt->bindParam(':classementGeneral', $performanceCourse->getClassementGeneral(), PDO::PARAM_INT);
-        $stmt->bindParam(':pointsTotal', $performanceCourse->getPointsTotal(), PDO::PARAM_INT);
-        $stmt->bindParam(':pointsGrimpeur', $performanceCourse->getPointsGrimpeur(), PDO::PARAM_INT);
-        $stmt->bindParam(':pointsSprint', $performanceCourse->getPointsSprint(), PDO::PARAM_INT);
-        $stmt->bindParam(':course_id', $performanceCourse->getCourse()->getCourseId(), PDO::PARAM_INT);
-        $stmt->bindParam(':cycliste_id', $performanceCourse->getCycliste()->getUserId(), PDO::PARAM_INT);
+        $id =  $performanceCourse->getId();
+        $classement =$performanceCourse->getClassementGeneral();
+        $points = $performanceCourse->getPointsTotal();
+        // var_dump( $performanceCourse->getCourse());
+
+        $course_id= $performanceCourse->getCourse()->getId();
+        $cyclisteId= $performanceCourse->getCycliste()->getId();
+        $stmt->bindParam(':id',$id, PDO::PARAM_INT);
+        $stmt->bindParam(':classementGeneral', $classement, PDO::PARAM_INT);
+        $stmt->bindParam(':pointsTotal', $points, PDO::PARAM_INT);
+        $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
+        $stmt->bindParam(':cycliste_id', $cyclisteId, PDO::PARAM_INT);
 
         return $stmt->execute();
     }

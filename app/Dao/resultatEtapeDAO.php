@@ -5,17 +5,21 @@ use PDO;
 use App\DAO\EtapeDAO;
 use App\DAO\CyclisteDAO;
 use Config\Database;
+use App\Model\ResultatEtape;
 
 
 
 class ResultatEtapeDAO {
     private $db;
     private $etapeDAO;
+    private $cyclisteDAO;   
 
     public function __construct() {
-        $this->db = Database::getInstance(); 
+        $this->db = Database::getInstance()->getConnection(); 
 
         $this->etapeDAO = new EtapeDAO();
+        $this->cyclisteDAO = new CyclisteDAO();
+
        
     }
 
@@ -43,14 +47,14 @@ class ResultatEtapeDAO {
     public function createObject($row){
 
         $etape = $this->etapeDAO->getByID($row['etape_id']);
-        $cycliste = $this->cyclisteDAO->getCyclisteById($row['user_id']);
+        $cycliste = $this->cyclisteDAO->findById($row['user_id']);
       
         return $resultatEtape = new ResultatEtape(
             $row['id'], 
-            $row['tempsDepart'], 
-            $row['tempsArrivee'], 
-            $row['pointsEtape'], 
-            $row['classementEtape'],
+            $row['tempsdepart'], 
+            $row['tempsarrivee'], 
+            $row['pointsetape'], 
+            $row['classementetape'],
             $etape,
             $cycliste
         );
@@ -66,12 +70,15 @@ class ResultatEtapeDAO {
             WHERE c.user_id = :id
         ");
         $stmt->execute([':id' => $id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($row) {
-            return $this->createObject($row);   
-        }
-        return null;
+        $data = [];
+
+        foreach ($rows as $row) {
+            $data[] = $this->createObject($row);  
+        }                     
+        return $data;
+
     }
 
     public function getResultatEtapeById($id) {
@@ -118,7 +125,7 @@ class ResultatEtapeDAO {
             ':tempsArrivee' => $resultatEtape->getTempsArrivee(),
             ':pointsEtape' => $resultatEtape->getPointsEtape(),
             ':classementEtape' => $resultatEtape->getClassementEtape(),
-            ':etape_id' => $resultatEtape->getEtape()->getId(),
+            ':etape_id' => $resultatEtape->getEtape()->id,
             ':cycliste_id' => $resultatEtape->getCycliste()->getId(),
             ':id' => $resultatEtape->getId()
         ]);

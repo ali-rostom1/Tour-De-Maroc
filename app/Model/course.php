@@ -5,14 +5,14 @@
 
     class course
     {
-        private int $id;
-        private string $nom;
-        private int $anne;
-        private int $nombreEtapes;
-        private string $statut;
-        private array $cyclistes = [];
-        private array $Etapes = [];
-        private array $media = [];
+        private ?int $id;
+        private ?string $nom;
+        private ?int $anne;
+        private ?int $nombreEtapes;
+        private ?string $statut;
+        private ?array $cyclistes = [];
+        private ?array $Etapes = [];
+        private ?array $media = [];
         
         public function __construct($id , $nom ,$anne ,$nombreEtapes ,$statut,$cyclistes,$Etapes,$media)
         {
@@ -35,6 +35,11 @@
             if(property_exists($this,$attr)){
                 $this->$attr = $value;
             }
+        }
+
+        public function getId(): ?int
+        {
+            return $this->id;
         }
         
     }

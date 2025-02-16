@@ -1,5 +1,6 @@
 <?php
 namespace App\Model;
+use DateTime;
 
 class ResultatEtape {
     private $id;
@@ -84,7 +85,7 @@ class ResultatEtape {
         $intervalle = $tempsDepart->diff($tempsArrivee);
     
         $hours = $intervalle->h + ($intervalle->i / 60);
-        $distance = $this->etape->getDistance();
+        $distance = $this->etape->distance;
         if ($hours > 0) {
             $vitesse = $distance / $hours;
         }else {
@@ -97,9 +98,9 @@ class ResultatEtape {
             "tempsDepart" => $this->tempsDepart,
             "tempsArrivee" => $this->tempsArrivee,
             "points" => $this->pointsEtape,
-            "classement" => $this->classementEtape,
             "distance" => $distance,
-            "nom" => $this->etape->getNom(),
+            "nom" => $this->etape->nom,
+            "classement" => $this->classementEtape,
             "vitesse" => round($vitesse, 2) 
         ];
     }

@@ -2,6 +2,8 @@
 namespace App\DAO;
 
 use App\Model\Cycliste;
+use App\Model\Role;
+
 use Config\Database;
 use PDO;
 
@@ -39,6 +41,45 @@ class CyclisteDAO {
         }
         return null;
     }
+
+    
+    public function findById($id) {
+        $stmt = $this->pdo->prepare("SELECT u.*, r.nom as role_nom FROM cycliste u
+                                    JOIN role r ON u.role_id = r.role_id
+                                    WHERE u.user_id = ?");
+        $stmt->execute([$id]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $this->createObject($data);
+    }
+
+    private function createObject($data) {
+        if ($data) {
+            $role = new Role($data['role_id'], $data['role_nom']);
+            return new Cycliste($data['user_id'], $data['nom'], $data['email'], $data['password'], $role ,$data['datenaissance'],$data['nationalite'],$data['equipe_id'],$data['poids'],$data['biographie']);
+        }
+        return null;
+    }
+
+    public function getAll() {
+        $stmt = $this->pdo->prepare("SELECT u.*, r.nom as role_nom FROM cycliste u
+                                    JOIN role r ON u.role_id = r.role_id
+                                    ");
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $data= [];
+
+        foreach ($rows as $row) {
+            $data[]= $this->createObject($row);
+        }
+
+        return $data;
+
+    }
+
+
+
+
 
 
 }

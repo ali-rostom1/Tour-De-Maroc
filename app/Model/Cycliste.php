@@ -35,6 +35,10 @@ class Cycliste extends User {
         return $this->dateNaissance;
     }
 
+    public function getUserId(): string {
+        return $this->id;
+    }
+
     public function getNationalite(): string {
         return $this->nationalite;
     }

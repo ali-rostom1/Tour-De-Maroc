@@ -90,14 +90,22 @@ class PerformanceCourseService {
              $pointsTotal = $this->resultatEtapeService->calculeMoyennePointCycliste($cycliste->getId());
 
             if ($performanceCourse = $this->performanceCourseDAO->getByCyclisteId($cycliste->getId())) {
+                
+        //         var_dump($performanceCourse->getCourse());
+        // echo"<br>___________________________________________________________<br>";
+
                 $performanceCourse->setPointsTotal($pointsTotal);
                 $this->performanceCourseDAO->updatePerformanceCourse($performanceCourse);
 
 
                 
             } else {
+                echo"gggggggggggggggggggggggggg";
+
                 $course= new Course($cours_id,null,null,null,null,null,null,null);
                 $performanceCourse = new PerformanceCourse(null,null,$pointsTotal,null,null,$cycliste,$course);
+                // var_dump($performanceCourse);
+
                 $this->performanceCourseDAO->insertPerformanceCourse($performanceCourse);
             }
 
@@ -112,6 +120,9 @@ class PerformanceCourseService {
             $cours_id =1;
         }
         $performanceCourses = $this->performanceCourseDAO->getPerformanceCourses($cours_id);
+        // var_dump($performanceCourses);
+
+
     
         if (!is_array($performanceCourses) || empty($performanceCourses)) {
             return; 
