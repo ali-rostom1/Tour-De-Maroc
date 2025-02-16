@@ -46,4 +46,10 @@ class CommentController
         
         
     }
+
+    public function deleteComment(){
+        $comment_id = htmlspecialchars($_POST['id_comment']);
+        $this->commentService->deleteComment($comment_id);
+        header("Location: /like/getAll");
+    }
 }
