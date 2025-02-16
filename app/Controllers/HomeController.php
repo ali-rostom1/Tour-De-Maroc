@@ -56,7 +56,7 @@ class HomeController extends Controller{
     public function media() : void
     {
         $this->etapeService->getAllEtape();
-        $this->view("/fans/Etapes");
+        $this->view("/fans/media");
     }
     
 }   
