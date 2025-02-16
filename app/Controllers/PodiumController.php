@@ -2,18 +2,19 @@
 namespace App\Controllers;
 
 use App\Service\ResultatEtapeService;
+use Config\Database;  
 
 class PodiumController {
     private $resultatEtapeService;
 
-    public function __construct($db) {
+    public function __construct() {
+        $db = Database::getInstance()->getConnection();  // Get database instance
         $this->resultatEtapeService = new ResultatEtapeService($db);
     }
-
-    public function showPodium() {
-        $top3 = $this->resultatEtapeService->getTop3Cyclists();
+    public function index() {
+        $cyclists = $this->resultatEtapeService->getTop3Cyclists();
         
-        // Include the view
-        include __DIR__ . '/../Views/Fans/Page_Podium.php';
+        // No need for empty check since the view now handles missing cyclists
+        include __DIR__ . '/../Views/Fans/Podium.php';
     }
 }
