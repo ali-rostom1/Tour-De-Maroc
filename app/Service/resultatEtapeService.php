@@ -92,7 +92,15 @@ class ResultatEtapeService {
 
     }
 
-
+    public function getTop3Cyclists() {
+        $allResults = $this->resultatEtapeDAO->getAllCyclistesTotalPoints();
+        
+        usort($allResults, function($a, $b) {
+            return $b->getTotalPoints() - $a->getTotalPoints();
+        });
+        
+        return array_slice($allResults, 0, 3);
+    }
 
     public function getResultatById($id) {
         return $this->resultatEtapeDAO->getResultatEtapeById($id);

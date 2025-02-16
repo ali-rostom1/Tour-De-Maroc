@@ -58,4 +58,9 @@ class SignalDAO {
         $stmt = $this->pdo->prepare("DELETE FROM signal WHERE fan_id = ? AND etape_id = ?");
         return $stmt->execute([$fanId, $etapeId]);
     }
+
+    public function saveMessage($fanId, $etapeId, $message) {
+        $stmt = $this->pdo->prepare("UPDATE signal SET message = ?, updated_at = NOW() WHERE fan_id = ? AND etape_id = ?");
+        return $stmt->execute([$message, $fanId, $etapeId]);
+    }
 }

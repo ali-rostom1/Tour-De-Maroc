@@ -23,8 +23,8 @@ class SignalService {
     }
 
     public function addSignal($fanId, $etapeId, $type, $description) {
-        $fan = $this->fanDAO->find($fanId);
-        $etape = $this->etapeDAO->find($etapeId);
+        $fan = $this->fanDAO->findById($fanId);
+        $etape = $this->etapeDAO->getByID($etapeId);
 
         if (!$fan) {
             throw new \Exception("Fan not found");
@@ -38,5 +38,20 @@ class SignalService {
 
     public function removeSignal($fanId, $etapeId) {
         return $this->signalDAO->removeSignal($fanId, $etapeId);
+    }
+
+    public function saveMessage($fanId, $etapeId, $message) {
+        if (empty($message)) {
+            throw new \Exception("Message cannot be empty");
+        }
+
+        $fan = $this->fanDAO->findById($fanId);
+        $etape = $this->etapeDAO->getByID($etapeId);
+
+        if (!$fan || !$etape) {
+            throw new \Exception("Invalid fan or etape");
+        }
+
+        return $this->signalDAO->saveMessage($fanId, $etapeId, $message);
     }
 }

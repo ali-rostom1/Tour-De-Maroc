@@ -155,36 +155,75 @@
             }
         }
 
-        public function searchEtapes($query) {
-            $query = "%$query%";
-            $stmt = $this->db->prepare("
-            SELECT e.etape_id, e.nom, e.distance, e.lieuDepart, e.lieuArrivee, 
-                   c.description as categorie_nom
-            FROM etape e
-            LEFT JOIN categorie c ON e.categorie_id = c.categorie_id
-            WHERE e.nom LIKE ? 
-               OR e.lieuDepart LIKE ? 
-               OR e.lieuArrivee LIKE ?
-               OR e.description LIKE ?
-               OR (c.description IS NOT NULL AND c.description LIKE ?)
-            LIMIT 10
-        ");
-        $stmt->execute(["%$query%", "%$query%", "%$query%", "%$query%", "%$query%"]);
-        
-            
-            $results = [];
-            while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-                $results[] = [
-                    'id' => $row['etape_id'],
-                    'nom' => htmlspecialchars($row['nom']),
-                    'distance' => floatval($row['distance']),
-                    'lieuDepart' => htmlspecialchars($row['lieuDepart']),
-                    'lieuArrivee' => htmlspecialchars($row['lieuArrivee']),
-                    'categorie' => $row['categorie_nom'] ? htmlspecialchars($row['categorie_nom']) : null,
-                    'type' => 'etape'
-                ];
+        public function search($query) {
+            try {
+                $stmt = $this->db->prepare("
+                    SELECT 
+                        id,
+                        nom,
+                        distance,
+                        lieu_depart as lieuDepart,
+                        lieu_arrivee as lieuArrivee,
+                        categorie
+                    FROM etapes
+                    WHERE 
+                        nom LIKE :query OR 
+                        lieu_depart LIKE :query OR 
+                        lieu_arrivee LIKE :query OR
+                        categorie LIKE :query
+                    LIMIT 5
+                ");
+                
+                $searchTerm = "%" . $query . "%";
+                $stmt->bindParam(':query', $searchTerm, \PDO::PARAM_STR);
+                $stmt->execute();
+                
+                return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            } catch (\PDOException $e) {
+                error_log('EtapeDAO search error: ' . $e->getMessage());
+                return [];
             }
-            
-            return $results;
         }
+        public function getEtapesByRegion(string $region): array
+        
+            {
+                    // SQL query that uses pattern matching on lieuDepart and lieuArrivee
+                    // to identify stages in the specified region
+                    $query = "
+                        SELECT e.*, COUNT(s.etape_id) as likes_count 
+                        FROM etape e 
+                        LEFT JOIN likes s ON s.etape_id = e.etape_id 
+                        WHERE (
+                            LOWER(e.lieuDepart) LIKE LOWER(:regionPattern) 
+                            OR LOWER(e.lieuArrivee) LIKE LOWER(:regionPattern)
+                            OR LOWER(e.description) LIKE LOWER(:regionPattern)
+                        )
+                        GROUP BY e.etape_id
+                    ";
+
+                    // Define region-specific patterns
+                    $regionPattern = match(strtolower($region)) {
+                        'atlas' => '%atlas%',
+                        'sahara' => '%sahara%',
+                        'cote' => '%cote%',
+                        default => throw new \InvalidArgumentException('Invalid region specified. Must be Atlas, Sahara, or Cote.')
+                    };
+
+                    try {
+                        $stmt = $this->db->prepare($query);
+                        $stmt->execute(['regionPattern' => $regionPattern]);
+                        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+                        
+                        $etapes = [];
+                        foreach($rows as $row) {
+                            $etapes[] = $this->mapRowToEtape($row);
+                        }
+                        
+                        return $etapes;
+                    } catch(\PDOException $e) {
+                        // Log the error appropriately
+                        error_log('Error fetching etapes by region: ' . $e->getMessage());
+                        return [];
+                    }
+            }
     }

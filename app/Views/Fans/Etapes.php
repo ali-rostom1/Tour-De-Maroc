@@ -33,35 +33,92 @@
     </nav>
 
     <!-- Filtres -->
-    <div class="container mx-auto px-4 py-8">
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
-            <h2 class="text-xl font-bold mb-4">Filtrer les étapes</h2>
-            <div class="flex flex-wrap gap-4">
-                <div class="flex flex-wrap gap-2">
-                    <button class="px-4 py-2 rounded-full bg-blue-100 hover:bg-blue-200 transition-colors">
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <h2 class="text-xl font-bold mb-4">Filtrer les étapes</h2>
+        <div class="flex flex-wrap gap-4">
+            <!-- Region Filters -->
+            <div class="flex flex-wrap gap-2">
+                <form action="/Tour-De-Maroc/home/media/filter" method="GET" class="flex gap-2">
+                    <button type="submit" name="region" value="Atlas" 
+                            class="px-4 py-2 rounded-full bg-blue-100 hover:bg-blue-200 transition-colors <?= isset($_GET['region']) && $_GET['region'] === 'Atlas' ? 'ring-2 ring-blue-500' : '' ?>">
                         Atlas ⛰️
                     </button>
-                    <button class="px-4 py-2 rounded-full bg-yellow-100 hover:bg-yellow-200 transition-colors">
+                    <button type="submit" name="region" value="Sahara" 
+                            class="px-4 py-2 rounded-full bg-yellow-100 hover:bg-yellow-200 transition-colors <?= isset($_GET['region']) && $_GET['region'] === 'Sahara' ? 'ring-2 ring-yellow-500' : '' ?>">
                         Sahara 🏜️
                     </button>
-                    <button class="px-4 py-2 rounded-full bg-green-100 hover:bg-green-200 transition-colors">
+                    <button type="submit" name="region" value="Cote" 
+                            class="px-4 py-2 rounded-full bg-green-100 hover:bg-green-200 transition-colors <?= isset($_GET['region']) && $_GET['region'] === 'Cote' ? 'ring-2 ring-green-500' : '' ?>">
                         Côte 🌊
                     </button>
-                </div>
-                <div class="flex flex-wrap gap-2">
-                    <button class="px-4 py-2 rounded-full bg-green-100 hover:bg-green-200 transition-colors">
-                        Facile
-                    </button>
-                    <button class="px-4 py-2 rounded-full bg-yellow-100 hover:bg-yellow-200 transition-colors">
-                        Moyen
-                    </button>
-                    <button class="px-4 py-2 rounded-full bg-red-100 hover:bg-red-200 transition-colors">
-                        Difficile
-                    </button>
-                </div>
+                    <?php if(isset($_GET['region'])): ?>
+                        <a href="/Tour-De-Maroc/home/media" 
+                           class="px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors flex items-center gap-2">
+                            <span>Réinitialiser</span>
+                            <i class="fas fa-times"></i>
+                        </a>
+                    <?php endif; ?>
+                </form>
             </div>
+
+            <!-- Existing difficulty filters -->
+            
         </div>
 
+        <!-- Active Filters Display -->
+        <?php if(isset($_GET['region']) || isset($_GET['difficulty'])): ?>
+            <div class="mt-4 pt-4 border-t">
+                <h3 class="text-sm font-semibold text-gray-600 mb-2">Filtres actifs:</h3>
+                <div class="flex flex-wrap gap-2">
+                    <?php if(isset($_GET['region'])): ?>
+                        <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm flex items-center gap-2">
+                            Région: <?= htmlspecialchars($_GET['region']) ?>
+                            <a href="<?= removeQueryParam('region') ?>" class="hover:text-blue-900">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </span>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Results Count -->
+    <?php if(!empty($etapes)): ?>
+        <div class="mb-4 text-gray-600">
+            <?= count($etapes) ?> étape(s) trouvée(s)
+        </div>
+    <?php endif; ?>
+
+    <!-- No Results Message -->
+    <?php if(empty($etapes) && isset($_GET['region'])): ?>
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-info-circle text-yellow-500"></i>
+                <p>Aucune étape trouvée pour la région "<?= htmlspecialchars($_GET['region']) ?>". 
+                   <a href="/Tour-De-Maroc/home/media" class="text-blue-500 hover:underline">Voir toutes les étapes</a>
+                </p>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <!-- Existing stages grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <?php foreach($etapes as $etape): ?>
+            <!-- Your existing stage card code -->
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<?php
+// Helper function to remove a query parameter from the current URL
+function removeQueryParam($param) {
+    $params = $_GET;
+    unset($params[$param]);
+    return '?' . http_build_query($params);
+}
+?>
         <!-- Étapes -->
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

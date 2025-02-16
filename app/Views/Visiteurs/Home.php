@@ -418,67 +418,79 @@
     });
 
     async function performSearch(query) {
-        log('Initiating search for:', query);
+    try {
         showLoadingState();
 
-        // Updated endpoints with correct base URL
-        const endpoints = {
-            primary: `${BASE_URL}/search`,
-            fallback: `${BASE_URL}/api/search`,
-            backup: `${BASE_URL}/home/search`
-        };
-
-        for (const [name, endpoint] of Object.entries(endpoints)) {
-            try {
-                log(`Trying ${name} endpoint:`, endpoint);
-                const url = `${endpoint}?q=${encodeURIComponent(query)}`;
-                
-                const response = await fetch(url, {
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    signal: AbortSignal.timeout(5000)
-                });
-
-                log(`${name} endpoint status:`, response.status);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Server did not return JSON');
-                }
-
-                const data = await response.json();
-                displayResults(data);
-                return;
-                
-            } catch (error) {
-                log(`Error with ${name} endpoint:`, error);
-                
-                if (name === 'backup') {
-                    handleSearchError(error, {
-                        endpoint: name,
-                        query: query,
-                        url: endpoint
-                    });
-                }
-                continue;
+        const response = await fetch(`/Tour-De-Maroc/home/search?q=${encodeURIComponent(query)}`);
+        
+        // Handle HTTP errors properly
+        if (!response.ok) {
+            if (response.status === 404) {
+                throw new Error('Le service de recherche est introuvable. Veuillez vérifier l\'URL.');
             }
+            throw new Error(`Erreur HTTP: ${response.status} ${response.statusText}`);
         }
-    }
 
-    function showLoadingState() {
-        const loadingHTML = '<li class="py-2 text-gray-500">Chargement...</li>';
-        cyclistesResults.innerHTML = loadingHTML;
-        equipesResults.innerHTML = loadingHTML;
-        etapesResults.innerHTML = loadingHTML;
-        noResults.classList.add('hidden');
-        searchResults.classList.remove('hidden');
+        // Get response content type
+        const contentType = response.headers.get('content-type');
+        if (!contentType?.includes('application/json')) {
+            console.error('Invalid content type:', contentType);
+            throw new Error('Le serveur n\'a pas retourné de données JSON valides');
+        }
+
+        const data = await response.json();
+        
+        // Check if we have valid data structure
+        if (!data || typeof data !== 'object') {
+            throw new Error('Format de données invalide');
+        }
+
+        displayResults(data);
+
+    } catch (error) {
+        console.error('Search Error:', {
+            error,
+            query,
+            timestamp: new Date().toISOString()
+        });
+
+        let userMessage;
+        if (error.message.includes('404')) {
+            userMessage = 'Le service de recherche est temporairement indisponible';
+        } else if (error.name === 'SyntaxError') {
+            userMessage = 'Erreur de format des données. Notre équipe a été notifiée';
+        } else {
+            userMessage = 'Une erreur est survenue lors de la recherche. Veuillez réessayer';
+        }
+
+        // Clear existing results
+        cyclistesResults.innerHTML = '';
+        equipesResults.innerHTML = '';
+        etapesResults.innerHTML = '';
+        
+        // Show error message to user
+        noResults.textContent = userMessage;
+        noResults.classList.remove('hidden');
+        
+        // Hide result sections
+        document.getElementById('cyclistes-results').classList.add('hidden');
+        document.getElementById('equipes-results').classList.add('hidden');
+        document.getElementById('etapes-results').classList.add('hidden');
     }
+}
+
+// Update showLoadingState to be more resilient
+function showLoadingState() {
+    const loadingHTML = '<li class="py-2 text-gray-500">Chargement...</li>';
+    
+    // Safely update elements if they exist
+    if (cyclistesResults) cyclistesResults.innerHTML = loadingHTML;
+    if (equipesResults) equipesResults.innerHTML = loadingHTML;
+    if (etapesResults) etapesResults.innerHTML = loadingHTML;
+    
+    if (noResults) noResults.classList.add('hidden');
+    if (searchResults) searchResults.classList.remove('hidden');
+}
 
     function displayResults(data) {
         log('Displaying results:', data);
@@ -582,6 +594,7 @@
             .replace(/'/g, "&#039;");
     }
 });
+
 </script>
 <!-- <script src="/public/assets/js/search.js"></script> -->
 </body>
