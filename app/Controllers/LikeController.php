@@ -2,45 +2,52 @@
 
 namespace App\Controllers;
 
+use App\Model\Comment;
 use App\Service\LikeService;
+use App\Service\CommentService;
 use Core\Controller;
 use App\Model\Fan;
 use App\Model\Etape;
+use App\Model\Like;
 use App\Service\etapeService;
 
 class LikeController extends Controller {
     private $likeService;
     private $etapeServise;
+    private $CommentService;
     public $db;
 
     public function __construct() {
         $this->likeService = new LikeService();
         $this->etapeServise = new etapeService();
+        $this->CommentService = new CommentService();
     }
 
 
-    public function addLikeAction($etapeId) {
-        if ($_SERVER["REQUEST_METHOD"] == 'POST') {
+    public function addLikeAction() {
+        // if ($_SERVER["REQUEST_METHOD"] == 'POST') {
 
-            $fanId = $_SESSION['fanId'];
+            $fanId = 66;
+            $etapeId = $_POST['id_etape'];
             
             $fan = new Fan($fanId); 
             $etape = new Etape($etapeId); 
+             $this->likeService->addLike($fan, $etape);
     
-            $result = $this->likeService->addLike($fan, $etape);
-    
-        }
-       
-        if ($result) {
-            $this->view("like_success", ["message" => "Like added successfully!"]);
-        } else {
-            $this->view("like_error", ["message" => "You have already liked this!"]);
-        }
+             $likes = $this->likeService->getAllLikes();
+             $etapes = $this->etapeServise->getAllEtape();
+             $comments = $this->CommentService->getComentByEtape();
+       require_once __DIR__."/../Views/Fans/Etapes.php";
+        // if ($result) {
+        //     $this->view("like_success", ["message" => "Like added successfully!"]);
+        // } else {
+        //     $this->view("like_error", ["message" => "You have already liked this!"]);
+        // }
     }
 
 
     public function removeLikeAction($etapeId) {
-        $fanId = $_SESSION['fan_id'];
+        $fanId = 3;
         $fan = new Fan($fanId);
         $etape = new Etape($etapeId);
 
@@ -57,7 +64,6 @@ class LikeController extends Controller {
         $fan = new Fan($fanId);
         $likes = $this->likeService->getLikesByFan($fan);
         
-        // Return the likes data to the view
         $this->view("fan_likes", ["likes" => $likes]);
     }
 
@@ -70,9 +76,13 @@ class LikeController extends Controller {
 
     public function getAll(): void
         {
-            
+            $likes = $this->likeService->getAllLikes();
             $etapes = $this->etapeServise->getAllEtape();
-           
+            $comments = $this->CommentService->getComentByEtape();
+            var_dump($likes);
+            ($comments);
             require_once __DIR__."/../Views/Fans/Etapes.php";
         }
+
+  
 }

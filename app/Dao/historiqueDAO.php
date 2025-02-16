@@ -28,7 +28,7 @@ class historiqueDAO
             foreach ($results as $row) {
                 $historiques[] = new historique($row["historique_id"], $row["evenement"], $row['description'], $row['dateevenement'], null, null);
             }
-            var_dump($historiques);
+            ($historiques);
             return $historiques;
         } catch (PDOException $e) {
             die('Erreur : ' . $e->getMessage());

@@ -20,7 +20,7 @@ class historiqueController
     {
         
             $historique = $this->historiqueService->getAllHistoriques();
-            var_dump($historique);
+            ($historique);
             require_once __DIR__ . "/../Views/histoire.php";
         
     }

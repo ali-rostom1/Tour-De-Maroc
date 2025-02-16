@@ -1,5 +1,5 @@
 <?php
-namespace config;
+namespace Config;
 use PDO;
 use PDOException;
 use Exception;
@@ -35,4 +35,3 @@ class Database {
     }
 }
 ?>
-

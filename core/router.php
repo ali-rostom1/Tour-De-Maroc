@@ -17,6 +17,8 @@ class Router {
             {
                 $this->currentController = ucwords($url[0])."Controller";
                 unset($url[0]);
+                $this->currentController = ucwords($url[0])."Controller";
+                unset($url[0]);
 
             }else {
                 $this->currentController = 'NotFoundController';

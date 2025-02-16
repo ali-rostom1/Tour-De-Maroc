@@ -1,28 +1,55 @@
 <?php 
 
-namespace App\Contollers;
+namespace App\Controllers;
 
 use App\Service\CommentService;
+
 use Exception;
 
-class commentController
+class CommentController
 {
     private $commentService;
 
     public function __construct()
     {
-        
-        $commentService = new CommentService();
+
+        if (!class_exists('App\Service\CommentService')) {
+            die("Error: Class CommentService not found!");
+        }
+
+        $this->commentService = new CommentService(); // تأكد من إنشاء الكائن هنا
+
+        if ($this->commentService === null) {
+            die("Error: commentService is still null after initialization!");
+        }
     }
-    public function AddComment($id)
+    public function AddComment()
     {
-        try{
-        $this->commentService->setfan($id);
-        $fan = $_SESSION['fan_id'];
-        $this->commentService->setContenu();
-        $this->commentService->AddComment();
-        }catch(Exception){
+        
+        try{ 
+            if ($this->commentService === null) {
+                die("Error: commentService is null!");
+            }
+            $id = $_POST['id'];
+            $fan_id = 66;
+            $comment = $_POST["comment"];
+            
+            $this->commentService->AddComment($fan_id,$id,$comment);
+            header("Location: /like/getAll");
+            }catch(Exception){
             echo 'le comment in valid';
         }
+    }
+
+    public function affcherCommentByEtape()
+    {
+        
+        
+    }
+
+    public function deleteComment(){
+        $comment_id = htmlspecialchars($_POST['id_comment']);
+        $this->commentService->deleteComment($comment_id);
+        header("Location: /like/getAll");
     }
 }

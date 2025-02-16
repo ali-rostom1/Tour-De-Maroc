@@ -8,13 +8,17 @@ class Signal {
     private $type;
     private $description;
     private $dateCreation;
+    private $message;
+    private $updatedAt;
 
-    public function __construct(Fan $fan = null, Etape $etape = null, $type = null, $description = null, $dateCreation = null) {
+    public function __construct(Fan $fan = null, Etape $etape = null, $type = null, $description = null, $dateCreation = null, $message = null, $updatedAt = null) {
         $this->fan = $fan;
         $this->etape = $etape;
         $this->type = $type;
         $this->description = $description;
         $this->dateCreation = $dateCreation;
+        $this->message = $message;
+        $this->updatedAt = $updatedAt;
     }
 
     public function getFan() {
@@ -37,6 +41,14 @@ class Signal {
         return $this->dateCreation;
     }
 
+    public function getMessage() {
+        return $this->message;
+    }
+
+    public function getUpdatedAt() {
+        return $this->updatedAt;
+    }
+
     public function setFan(Fan $fan) {
         $this->fan = $fan;
     }
@@ -55,5 +67,13 @@ class Signal {
 
     public function setDateCreation($dateCreation) {
         $this->dateCreation = $dateCreation;
+    }
+
+    public function setMessage($message) {
+        $this->message = $message;
+    }
+
+    public function setUpdatedAt($updatedAt) {
+        $this->updatedAt = $updatedAt;
     }
 }

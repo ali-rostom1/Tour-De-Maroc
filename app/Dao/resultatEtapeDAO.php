@@ -1,11 +1,14 @@
 <?php
 namespace App\Dao;
+namespace App\Dao;
 
 use PDO;
+use App\Model\ResultatEtape;
+use App\Model\Equipe;
+use App\Model\Cycliste;
 use App\DAO\EtapeDAO;
 use App\DAO\CyclisteDAO;
 use Config\Database;
-use App\Model\ResultatEtape;
 
 
 
@@ -134,5 +137,47 @@ class ResultatEtapeDAO {
     public function deleteResultatEtape($id) {
         $stmt = $this->db->prepare("DELETE FROM resultat_etape WHERE id = :id");
         $stmt->execute([':id' => $id]);
+    }
+
+    public function getAllCyclistesTotalPoints() {
+        $stmt = $this->db->prepare("
+           SELECT 
+                c.user_id,
+                c.nom,
+                c.nationalite,
+                e.equipe_id,
+                e.nom AS equipe_nom,
+                SUM(re.pointsEtape) AS total_points
+            FROM cycliste c
+            JOIN resultat_etape re ON c.user_id = re.cycliste_id
+            JOIN equipe e ON c.equipe_id = e.equipe_id
+            GROUP BY 
+                c.user_id,
+                c.nom,
+                c.nationalite,
+                e.equipe_id,
+                e.nom
+            ORDER BY total_points DESC;"
+        );
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $cyclists = [];
+        foreach ($rows as $row) {
+            $equipe = new Equipe();
+            $equipe->setEquipeId($row['equipe_id']);
+            $equipe->setNom($row['equipe_nom']);
+            
+            $cyclist = new Cycliste();
+            $cyclist->setId($row['user_id']);
+            $cyclist->setNom($row['nom']);
+            $cyclist->setNationalite($row['nationalite']);
+            $cyclist->setEquipe($equipe);
+            $cyclist->setTotalPoints($row['total_points']); // Assuming you have this method in Cycliste class
+            
+            $cyclists[] = $cyclist;
+        }
+        
+        return $cyclists;
     }
 }

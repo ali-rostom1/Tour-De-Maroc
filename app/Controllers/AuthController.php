@@ -1,6 +1,5 @@
 <?php
 namespace  App\Controllers;
-
 use App\Service\AuthService;
 use Exception;
 use Config\Database; 
@@ -17,31 +16,29 @@ class AuthController extends Controller{
     }
 
     public function register() {
-        try {
             if ($_SERVER["REQUEST_METHOD"] !== "POST") {
                 throw new Exception("Méthode non autorisée.");
             }
 
-            // Récupération des données du formulaire
             $nom = $_POST['nom'] ?? null;
             $email = $_POST['email'] ?? null;
             $password = $_POST['password'] ?? null;
-            $roleId = $_POST['roleId'] ?? null; // 2 = Fan, 3 = Cycliste
+            $roleId = $_POST['role'] ?? null; // 2 = Fan, 3 = Cycliste
             $extraData = [];
 
             if (!$nom || !$email || !$password || !$roleId) {
                 throw new Exception("Tous les champs sont obligatoires.");
             }
 
-            // Ajout des données spécifiques selon le rôle
             if ($roleId == 3) { // Cycliste
                 $extraData = [
-                    'dateNaissance' => $_POST['dateNaissance'] ?? null,
+                    'dateNaissance' => $_POST['naissance'] ?? null,
                     'nationalite' => $_POST['nationalite'] ?? null,
-                    'equipeId' => $_POST['equipeId'] ?? null,
-                    'poids' => $_POST['poids'] ?? null,
-                    'biographie' => $_POST['biographie'] ?? null
+                    'equipe' => $_POST['equipe'] ?? null,
+                    'poids' => (float) $_POST['poids'] ,
+                    'biographie' => $_POST['biographie'] 
                 ];
+
             } elseif ($roleId == 2) { // Fan
                 $extraData = [
                     'pointsTotal' => $_POST['pointsTotal'] ?? 0,
@@ -51,19 +48,30 @@ class AuthController extends Controller{
                 throw new Exception("Rôle invalide.");
             }
 
-            // Création de l'utilisateur
             $success = $this->authService->register($nom, $email, $password, $roleId, $extraData);
 
             if ($success) {
-                header("Location: /login.php?success=1"); // Redirection après inscription
+                header("Location: /tour-de-maroc/home/login");
                 exit();
             } else {
                 throw new Exception("Erreur lors de l'inscription.");
             }
-        } catch (Exception $e) {
-            header("Location: /register.php?error=" . urlencode($e->getMessage()));
-            exit();
+        
+    }
+
+    public function login(){
+        if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+            throw new Exception("Méthode non autorisée.");
         }
+        $password = $_POST['password'] ;
+        $email = $_POST['email'] ;
+        $success=$this->authService->login($email,$password);
+        if ($success) { 
+            echo "truuee";
+        } else {
+            echo "false";
+        }
+
     }
 
     public function resetpasssword(){
@@ -166,7 +174,7 @@ class AuthController extends Controller{
         print_r($_SESSION);
         $userId=$_SESSION['userId'];
         $changeP = $this->authService->updatePassword($userId,$password);
-        var_dump($changeP);
+        ($changeP);
         if ($changeP) {
             unset($_SESSION['userId']);
             unset($_SESSION['token']);
@@ -174,6 +182,7 @@ class AuthController extends Controller{
         }
 
     }
+
 
 }
 
