@@ -27,39 +27,59 @@ class ResultatEtapeService {
     }
 
     
-    public function classerResultatsEtape($resultatsEtapes)
-    {
-        // $resultatsEtapes = $this->getAllResultats();
-        $result = [];
-        
-        foreach ($resultatsEtapes as $resultatsEtape) {
-            $tempsDepart = $resultatsEtape->getTempsDepart(); 
-            $tempsArrivee = $resultatsEtape->getTempsArrivee();
-        
-            $depart = new DateTime($tempsDepart);
-            $arrivee = new DateTime($tempsArrivee);
-            
-            $intervalle = $depart->diff($arrivee);
-            $minutes = ($intervalle->h * 60) + $intervalle->i; 
-            
-            $result[$minutes] = $resultatsEtape; 
-        }
-        
-        
-        ksort($result);
-        
-        if (!empty($result)) {
-            $order = 1;
 
-            foreach ($result as $minutes => $resultatsEtape) {
-                $resultatsEtape->setClassementEtape($order);
-                $this->resultatEtapeDAO->updateResultatEtape($resultatsEtape);
+
+    public function classerResultatsEtape($resultatsEtapes)
+{
+    $result = [];
+    
+    foreach ($resultatsEtapes as $resultatsEtape) {
+        $tempsDepart = $resultatsEtape->getTempsDepart(); 
+        $tempsArrivee = $resultatsEtape->getTempsArrivee();
+    
+        $depart = new DateTime($tempsDepart);
+        $arrivee = new DateTime($tempsArrivee);
+        
+        $intervalle = $depart->diff($arrivee);
+        $minutes = ($intervalle->h * 60) + $intervalle->i; 
+        
+        $result[] = [
+            'minutes' => $minutes,
+            'resultatsEtape' => $resultatsEtape
+        ];
+    }
+
+    usort($result, function ($a, $b) {
+        return $a['minutes'] - $b['minutes']; 
+    });
+
+    if (!empty($result)) {
+        $order = 1;
+        $previousMinutes = null; 
+
+        foreach ($result as $item) {
+            $minutes = $item['minutes'];
+            $resultatsEtape = $item['resultatsEtape'];
+
+            // var_dump($minutes); 
+
+            if ($previousMinutes != null && $minutes !== $previousMinutes) {
                 $order++;
             }
 
+            $resultatsEtape->setClassementEtape($order);
+            $this->resultatEtapeDAO->updateResultatEtape($resultatsEtape);
 
+            $previousMinutes = $minutes; 
         }
+
+        var_dump($order); 
+
+
+
     }
+}
+
 
     public function calculeResultatsEtapePoints() {
         $resultatsEtapes = $this->resultatEtapeDAO->getResultatEtapes();

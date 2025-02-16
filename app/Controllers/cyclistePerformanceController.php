@@ -31,7 +31,7 @@ class CyclistePerformanceController {
 
         $totalDistance =  $this->resultatEtapeService->calculeDistanceParcourueCycliste($id);
         $data = $this->resultatEtapeService->dataResultatsByCyclisteId($id);
-var_dump($data);
+// var_dump($data);
 
         require_once '../app/Views/Cycliste/performance.php';
 
