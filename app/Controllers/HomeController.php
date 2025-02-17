@@ -58,5 +58,10 @@ class HomeController extends Controller{
         $this->etapeService->getAllEtape();
         $this->view("/fans/media");
     }
+    // public function podium() 
+    // {
+    //     $data = ["title" => "Podium"];
+    //     return $this->view("/fans/Podium", $data);
+    // }
     
 }   

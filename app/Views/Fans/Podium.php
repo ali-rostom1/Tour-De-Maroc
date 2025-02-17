@@ -47,48 +47,66 @@
             <!-- 2nd Place -->
             <div class="flex flex-col items-center mb-8 md:mb-0">
                 <div class="relative w-64 mb-4">
-                    <img src="assets/images/default-cyclist.png" alt="Second Place" class="w-full h-60 object-cover rounded-lg shadow-lg">
+                    <img src="https://th.bing.com/th/id/OIP.xy0GhvspWi2QSxI8GFjLEgAAAA?rs=1&pid=ImgDetMain" alt="Second Place" class="w-full h-60 object-cover rounded-lg shadow-lg">
                     <div class="absolute top-4 left-4 bg-gray-100 rounded-full w-12 h-12 flex items-center justify-center">
                         <span class="text-2xl font-bold">2</span>
                     </div>
                 </div>
                 <div class="bg-white podium-2 w-64 rounded-t-lg shadow-lg p-4 text-center">
-                    <h3 class="text-xl font-bold"><?php echo $top3[1]->getNom() . ' ' . $top3[1]->getNom(); ?></h3>
-                    <p class="text-gray-600"><?php echo $top3[1]->getEquipe()->getNom(); ?></p>
-                    <p class="text-sm mt-2"><?php echo number_format($top3[1]->getTotalPoints(), 1); ?> pts</p>
-                    <div class="mt-2"><?php echo $top3[1]->getNationalite(); ?></div>
+                    <?php if (isset($cyclists[1])): ?>
+                        <h3 class="text-xl font-bold"><?php echo htmlspecialchars($cyclists[1]->getNom()); ?></h3>
+                        <p class="text-gray-600"><?php echo htmlspecialchars($cyclists[1]->getEquipe()->getNom()); ?></p>
+                        <p class="text-sm mt-2"><?php echo number_format($cyclists[1]->getTotalPoints(), 1); ?> pts</p>
+                        <div class="mt-2"><?php echo htmlspecialchars($cyclists[1]->getNationalite()); ?></div>
+                    <?php else: ?>
+                        <h3 class="text-xl font-bold">Position non attribuée</h3>
+                        <p class="text-gray-600">-</p>
+                        <p class="text-sm mt-2">0 pts</p>
+                    <?php endif; ?>
                 </div>
             </div>
 
             <!-- 1st Place -->
             <div class="flex flex-col items-center mb-8 md:mb-0">
                 <div class="relative w-72 mb-4">
-                    <img src="assets/images/default-cyclist.png" alt="First Place" class="w-full h-72 object-cover rounded-lg shadow-lg winner-glow">
+                    <img src="https://cdn1.vectorstock.com/i/1000x1000/09/80/gold-medal-metal-realistic-first-placement-vector-15690980.jpg" alt="First Place" class="w-full h-72 object-cover rounded-lg shadow-lg winner-glow">
                     <div class="absolute top-4 left-4 bg-[#FED100] rounded-full w-14 h-14 flex items-center justify-center">
                         <span class="text-3xl font-bold">1</span>
                     </div>
                 </div>
                 <div class="bg-[#FED100] podium-1 w-72 rounded-t-lg shadow-lg p-4 text-center">
-                    <h3 class="text-2xl font-bold"><?php echo $top3[0]->getNom() . ' ' . $top3[0]->getNom(); ?></h3>
-                    <p class="text-gray-800"><?php echo $top3[0]->getEquipe()->getNom(); ?></p>
-                    <p class="text-lg font-bold mt-2"><?php echo number_format($top3[0]->getTotalPoints(), 1); ?> pts</p>
-                    <div class="mt-2"><?php echo $top3[0]->getNationalite(); ?></div>
+                    <?php if (isset($cyclists[0])): ?>
+                        <h3 class="text-2xl font-bold"><?php echo htmlspecialchars($cyclists[0]->getNom()); ?></h3>
+                        <p class="text-gray-800"><?php echo htmlspecialchars($cyclists[0]->getEquipe()->getNom()); ?></p>
+                        <p class="text-lg font-bold mt-2"><?php echo number_format($cyclists[0]->getTotalPoints(), 1); ?> pts</p>
+                        <div class="mt-2"><?php echo htmlspecialchars($cyclists[0]->getNationalite()); ?></div>
+                    <?php else: ?>
+                        <h3 class="text-2xl font-bold">Position non attribuée</h3>
+                        <p class="text-gray-800">-</p>
+                        <p class="text-lg font-bold mt-2">0 pts</p>
+                    <?php endif; ?>
                 </div>
             </div>
 
             <!-- 3rd Place -->
             <div class="flex flex-col items-center">
                 <div class="relative w-56 mb-4">
-                    <img src="assets/images/default-cyclist.png" alt="Third Place" class="w-full h-52 object-cover rounded-lg shadow-lg">
+                    <img src="https://th.bing.com/th/id/R.0288f9e3e34d46d950f873c27d6c0f97?rik=F55j9CTcWDL%2bvw&riu=http%3a%2f%2fsc01.alicdn.com%2fkf%2fHTB122thKpXXXXc8aXXXq6xXFXXXZ%2fcustom-medal-zinc-alloy-casting-antique-copper.jpg&ehk=uMD5I3GUsOZejz9KkM6Z5IzikV%2fabFZL9KDJTWbz04g%3d&risl=&pid=ImgRaw&r=0" alt="Third Place" class="w-full h-52 object-cover rounded-lg shadow-lg">
                     <div class="absolute top-4 left-4 bg-[#CD7F32] rounded-full w-10 h-10 flex items-center justify-center">
                         <span class="text-xl font-bold text-white">3</span>
                     </div>
                 </div>
                 <div class="bg-white podium-3 w-56 rounded-t-lg shadow-lg p-4 text-center">
-                    <h3 class="text-lg font-bold"><?php echo $top3[2]->getNom() . ' ' . $top3[2]->getNom(); ?></h3>
-                    <p class="text-gray-600"><?php echo $top3[2]->getEquipe()->getNom(); ?></p>
-                    <p class="text-sm mt-2"><?php echo number_format($top3[2]->getTotalPoints(), 1); ?> pts</p>
-                    <div class="mt-2"><?php echo $top3[2]->getNationalite(); ?></div>
+                    <?php if (isset($cyclists[2])): ?>
+                        <h3 class="text-lg font-bold"><?php echo htmlspecialchars($cyclists[2]->getNom()); ?></h3>
+                        <p class="text-gray-600"><?php echo htmlspecialchars($cyclists[2]->getEquipe()->getNom()); ?></p>
+                        <p class="text-sm mt-2"><?php echo number_format($cyclists[2]->getTotalPoints(), 1); ?> pts</p>
+                        <div class="mt-2"><?php echo htmlspecialchars($cyclists[2]->getNationalite()); ?></div>
+                    <?php else: ?>
+                        <h3 class="text-lg font-bold">Position non attribuée</h3>
+                        <p class="text-gray-600">-</p>
+                        <p class="text-sm mt-2">0 pts</p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -113,12 +131,14 @@
         </div>
 
         <!-- Victory Quote -->
+        <?php if (isset($cyclists[0])): ?>
         <div class="max-w-2xl mx-auto text-center mt-12">
             <blockquote class="text-xl italic text-gray-600">
                 "Une victoire historique pour le cyclisme marocain. Merci à tous les fans pour leur soutien incroyable tout au long de cette aventure."
             </blockquote>
-            <p class="mt-4 font-bold">- Tadej POGACAR, Vainqueur du Tour de Morocco 2025</p>
+            <p class="mt-4 font-bold">- <?php echo htmlspecialchars($cyclists[0]->getNom()); ?>, Vainqueur du Tour de Morocco 2025</p>
         </div>
+        <?php endif; ?>
     </div>
 </body>
 </html>

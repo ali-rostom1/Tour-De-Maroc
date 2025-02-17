@@ -56,9 +56,7 @@ class SearchController {
         }
     }
 
-    /**
-     * Sends a JSON response with proper headers
-     */
+    
     private function jsonResponse($data, $statusCode = 200) {
         // Clear any previous output
         if (ob_get_length()) ob_clean();
